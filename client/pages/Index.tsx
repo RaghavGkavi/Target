@@ -361,13 +361,21 @@ export default function Index() {
 
   const markGoalComplete = (goalId: string, forceAdd: boolean = false) => {
     const today = new Date().toDateString();
+    console.log("🎯 markGoalComplete called for:", goalId, "forceAdd:", forceAdd);
 
     setGoals((currentGoals) => {
+      console.log("🎯 Current goals before update:", currentGoals);
       const goal = currentGoals.find((g) => g.id === goalId);
-      if (!goal) return currentGoals;
+      if (!goal) {
+        console.log("🎯 Goal not found!");
+        return currentGoals;
+      }
+
+      console.log("🎯 Found goal:", goal);
 
       // Check if already logged today
       if (goal.lastLoggedDate === today && !forceAdd) {
+        console.log("🎯 Already logged today, showing affirmation dialog");
         // Show affirmation dialog
         setAffirmationDialog({
           isOpen: true,
@@ -381,6 +389,15 @@ export default function Index() {
       const newDaysCompleted = goal.daysCompleted + 1;
       const newProgress = Math.min(100, (newDaysCompleted / goal.targetDays) * 100);
       const newStreak = goal.streak + 1;
+
+      console.log("🎯 Updating:", {
+        oldDaysCompleted: goal.daysCompleted,
+        newDaysCompleted,
+        oldProgress: goal.progress,
+        newProgress,
+        oldStreak: goal.streak,
+        newStreak,
+      });
 
       if (newProgress >= 100) {
         // Goal completed - move to completed goals and restart with higher target
