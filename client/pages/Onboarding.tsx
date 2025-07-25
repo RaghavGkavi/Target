@@ -472,7 +472,8 @@ export default function Onboarding() {
           <CardContent className="p-6">
             {currentStep === 1 && renderGoalsStep()}
             {currentStep === 2 && renderRecoveryStep()}
-            {currentStep === 3 && renderCompletionStep()}
+            {currentStep === 3 && renderDisciplineStep()}
+            {currentStep === 4 && renderCompletionStep()}
           </CardContent>
         </Card>
 
