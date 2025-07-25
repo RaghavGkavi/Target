@@ -52,6 +52,7 @@ interface Goal {
   daysCompleted: number;
   isCompleted: boolean;
   lastUpdated: Date;
+  lastLoggedDate?: string; // Track last date when goal was completed
   color: string;
 }
 
