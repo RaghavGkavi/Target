@@ -816,13 +816,7 @@ export default function Index() {
                         <CheckCircle2 className="h-4 w-4 mr-1" />
                         Complete
                       </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="rounded-lg"
-                      >
-                        <Clock className="h-4 w-4" />
-                      </Button>
+
                     </div>
                   </CardContent>
                 </Card>
@@ -1382,39 +1376,7 @@ export default function Index() {
                     </Card>
                   );
                 })()}
-              <Card className="rounded-xl">
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Award className="h-5 w-5 text-warning" />
-                    <span>Achievements</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-center space-x-3 p-3 bg-success/10 rounded-lg">
-                    <div className="h-10 w-10 bg-success rounded-full flex items-center justify-center">
-                      <CheckCircle2 className="h-5 w-5 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-medium">First Week Complete</p>
-                      <p className="text-sm text-muted-foreground">
-                        Completed 7 days in a row
-                      </p>
-                    </div>
-                  </div>
 
-                  <div className="flex items-center space-x-3 p-3 bg-warning/10 rounded-lg">
-                    <div className="h-10 w-10 bg-warning rounded-full flex items-center justify-center">
-                      <Flame className="h-5 w-5 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-medium">Streak Master</p>
-                      <p className="text-sm text-muted-foreground">
-                        Maintained 10+ day streak
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
 
               <Card className="rounded-xl">
                 <CardHeader>
