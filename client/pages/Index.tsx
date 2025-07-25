@@ -238,7 +238,8 @@ export default function Index() {
 
   // Load user data when component mounts or userData changes
   useEffect(() => {
-    if (userData) {
+    if (userData && isInitialLoad) {
+      console.log("📊 Loading initial data from userData:", userData);
       // Use empty arrays instead of mock data if user has no data yet
       setGoals(
         userData.goals && userData.goals.length > 0
@@ -259,14 +260,16 @@ export default function Index() {
       ) {
         setShowTutorial(true);
       }
-    } else if (user) {
+      setIsInitialLoad(false);
+    } else if (user && isInitialLoad) {
+      console.log("📊 Loading mock data for new user");
       // Use mock data for new users
       setGoals(mockGoals);
       setAddictions(mockAddictions);
       setCompletedGoals([]);
+      setIsInitialLoad(false);
     }
-    setIsInitialLoad(false);
-  }, [userData, user]);
+  }, [userData, user, isInitialLoad]);
 
   // Function to update discipline ranking
   const updateDisciplineRanking = () => {
