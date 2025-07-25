@@ -54,6 +54,20 @@ interface Addiction {
   longestStreak: number;
   triggers: string[];
   lastRelapse?: Date;
+  lastLoggedDate?: string; // Track last date when clean day was added
+}
+
+interface CompletedGoal {
+  id: string;
+  title: string;
+  description: string;
+  category: "health" | "career" | "personal" | "fitness" | "addiction";
+  completedCount: number;
+  totalDaysCompleted: number;
+  longestStreak: number;
+  completionDates: Date[];
+  currentLevel: number;
+  color: string;
 }
 
 const mockGoals: Goal[] = [
@@ -126,6 +140,7 @@ const motivationalQuotes = [
 export default function Index() {
   const [goals, setGoals] = useState<Goal[]>(mockGoals);
   const [addictions, setAddictions] = useState<Addiction[]>(mockAddictions);
+  const [completedGoals, setCompletedGoals] = useState<CompletedGoal[]>([]);
   const [currentQuote, setCurrentQuote] = useState("");
   const [editingAddiction, setEditingAddiction] = useState<Addiction | null>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -133,6 +148,11 @@ export default function Index() {
     name: "",
     triggers: "",
   });
+  const [affirmationDialog, setAffirmationDialog] = useState<{
+    isOpen: boolean;
+    addictionId: string;
+    affirmationText: string;
+  }>({ isOpen: false, addictionId: "", affirmationText: "" });
 
   useEffect(() => {
     setCurrentQuote(
@@ -166,33 +186,114 @@ export default function Index() {
   };
 
   const markGoalComplete = (goalId: string) => {
-    setGoals(
-      goals.map((goal) =>
-        goal.id === goalId
+    const goal = goals.find(g => g.id === goalId);
+    if (!goal) return;
+
+    const newProgress = Math.min(100, goal.progress + 100 / goal.targetDays);
+
+    if (newProgress >= 100) {
+      // Goal completed - move to completed goals and restart with higher target
+      const completedGoal: CompletedGoal = {
+        id: goal.id,
+        title: goal.title,
+        description: goal.description,
+        category: goal.category,
+        completedCount: 1,
+        totalDaysCompleted: goal.targetDays,
+        longestStreak: goal.streak + 1,
+        completionDates: [new Date()],
+        currentLevel: 1,
+        color: goal.color
+      };
+
+      // Check if goal already exists in completed goals
+      const existingCompleted = completedGoals.find(cg => cg.title === goal.title);
+      if (existingCompleted) {
+        setCompletedGoals(completedGoals.map(cg =>
+          cg.title === goal.title
+            ? {
+                ...cg,
+                completedCount: cg.completedCount + 1,
+                totalDaysCompleted: cg.totalDaysCompleted + goal.targetDays,
+                longestStreak: Math.max(cg.longestStreak, goal.streak + 1),
+                completionDates: [...cg.completionDates, new Date()],
+                currentLevel: Math.floor(cg.completedCount / 5) + 1
+              }
+            : cg
+        ));
+      } else {
+        setCompletedGoals([...completedGoals, completedGoal]);
+      }
+
+      // Restart goal with increased target (add 7 more days)
+      setGoals(goals.map(g =>
+        g.id === goalId
           ? {
-              ...goal,
-              daysCompleted: goal.daysCompleted + 1,
-              progress: Math.min(100, goal.progress + 100 / goal.targetDays),
-              streak: goal.streak + 1,
-              lastUpdated: new Date(),
+              ...g,
+              progress: 0,
+              daysCompleted: 0,
+              targetDays: g.targetDays + 7,
+              streak: 0,
+              lastUpdated: new Date()
             }
-          : goal,
+          : g
+      ));
+    } else {
+      // Normal progress update
+      setGoals(
+        goals.map((g) =>
+          g.id === goalId
+            ? {
+                ...g,
+                daysCompleted: g.daysCompleted + 1,
+                progress: newProgress,
+                streak: g.streak + 1,
+                lastUpdated: new Date(),
+              }
+            : g,
+        ),
+      );
+    }
+  };
+
+  const addCleanDay = (addictionId: string, forceAdd: boolean = false) => {
+    const today = new Date().toDateString();
+    const addiction = addictions.find(a => a.id === addictionId);
+
+    if (!addiction) return;
+
+    // Check if already logged today
+    if (addiction.lastLoggedDate === today && !forceAdd) {
+      // Show affirmation dialog
+      setAffirmationDialog({
+        isOpen: true,
+        addictionId,
+        affirmationText: ""
+      });
+      return;
+    }
+
+    setAddictions(
+      addictions.map((a) =>
+        a.id === addictionId
+          ? {
+              ...a,
+              cleanDays: a.cleanDays + 1,
+              longestStreak: Math.max(a.longestStreak, a.cleanDays + 1),
+              lastLoggedDate: today,
+            }
+          : a,
       ),
     );
   };
 
-  const addCleanDay = (addictionId: string) => {
-    setAddictions(
-      addictions.map((addiction) =>
-        addiction.id === addictionId
-          ? {
-              ...addiction,
-              cleanDays: addiction.cleanDays + 1,
-              longestStreak: Math.max(addiction.longestStreak, addiction.cleanDays + 1),
-            }
-          : addiction,
-      ),
-    );
+  const confirmAffirmation = () => {
+    const requiredAffirmation = "I pledge that I was clean for the extra day I am logging.";
+
+    if (affirmationDialog.affirmationText.trim() === requiredAffirmation) {
+      addCleanDay(affirmationDialog.addictionId, true);
+      setAffirmationDialog({ isOpen: false, addictionId: "", affirmationText: "" });
+    }
   };
 
   const reportRelapse = (addictionId: string) => {
@@ -261,12 +362,20 @@ export default function Index() {
                 </p>
               </div>
             </div>
-            <Link to="/create-goal">
-              <Button className="rounded-xl">
-                <Plus className="h-4 w-4 mr-2" />
-                New Goal
-              </Button>
-            </Link>
+            <div className="flex space-x-2">
+              <Link to="/completed-goals">
+                <Button variant="outline" className="rounded-xl">
+                  <Trophy className="h-4 w-4 mr-2" />
+                  Completed
+                </Button>
+              </Link>
+              <Link to="/create-goal">
+                <Button className="rounded-xl">
+                  <Plus className="h-4 w-4 mr-2" />
+                  New Goal
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </header>
