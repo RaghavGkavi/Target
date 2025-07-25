@@ -295,23 +295,23 @@ export default function Index() {
 
   const addCleanDay = (addictionId: string, forceAdd: boolean = false) => {
     const today = new Date().toDateString();
-    const addiction = addictions.find(a => a.id === addictionId);
 
-    if (!addiction) return;
+    setAddictions(currentAddictions => {
+      const addiction = currentAddictions.find(a => a.id === addictionId);
+      if (!addiction) return currentAddictions;
 
-    // Check if already logged today
-    if (addiction.lastLoggedDate === today && !forceAdd) {
-      // Show affirmation dialog
-      setAffirmationDialog({
-        isOpen: true,
-        addictionId,
-        affirmationText: ""
-      });
-      return;
-    }
+      // Check if already logged today
+      if (addiction.lastLoggedDate === today && !forceAdd) {
+        // Show affirmation dialog
+        setAffirmationDialog({
+          isOpen: true,
+          addictionId,
+          affirmationText: ""
+        });
+        return currentAddictions;
+      }
 
-    setAddictions(
-      addictions.map((a) =>
+      return currentAddictions.map((a) =>
         a.id === addictionId
           ? {
               ...a,
@@ -320,8 +320,8 @@ export default function Index() {
               lastLoggedDate: today,
             }
           : a,
-      ),
-    );
+      );
+    });
   };
 
   const confirmAffirmation = () => {
@@ -334,8 +334,8 @@ export default function Index() {
   };
 
   const reportRelapse = (addictionId: string) => {
-    setAddictions(
-      addictions.map((addiction) =>
+    setAddictions(currentAddictions =>
+      currentAddictions.map((addiction) =>
         addiction.id === addictionId
           ? {
               ...addiction,
@@ -343,23 +343,25 @@ export default function Index() {
               lastRelapse: new Date(),
             }
           : addiction,
-      ),
+      )
     );
   };
 
   const deleteAddiction = (addictionId: string) => {
-    setAddictions(addictions.filter((addiction) => addiction.id !== addictionId));
+    setAddictions(currentAddictions =>
+      currentAddictions.filter((addiction) => addiction.id !== addictionId)
+    );
   };
 
   const saveEditedAddiction = () => {
     if (!editingAddiction) return;
 
-    setAddictions(
-      addictions.map((addiction) =>
+    setAddictions(currentAddictions =>
+      currentAddictions.map((addiction) =>
         addiction.id === editingAddiction.id
           ? editingAddiction
           : addiction,
-      ),
+      )
     );
     setEditingAddiction(null);
   };
@@ -375,7 +377,7 @@ export default function Index() {
       triggers: newAddiction.triggers.split(",").map(t => t.trim()).filter(t => t),
     };
 
-    setAddictions([...addictions, addiction]);
+    setAddictions(currentAddictions => [...currentAddictions, addiction]);
     setNewAddiction({ name: "", triggers: "" });
     setIsAddDialogOpen(false);
   };
