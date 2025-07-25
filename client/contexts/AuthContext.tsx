@@ -14,6 +14,13 @@ export interface UserData {
   goals: any[];
   addictions: any[];
   completedGoals: any[];
+  disciplineData?: {
+    baseScore: number; // 0-100, determined from onboarding assessment
+    currentRank: string; // F-, F, F+, D-, D, D+, C-, C, C+, B-, B, B+, A-, A, A+
+    totalCompletions: number;
+    consistencyScore: number; // Based on streak maintenance
+    lastUpdated: Date;
+  };
   preferences: {
     theme: 'light' | 'dark' | 'system';
     notifications: boolean;
