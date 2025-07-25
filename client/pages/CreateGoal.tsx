@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/contexts/AuthContext";
 
 const categories = [
   {
@@ -51,6 +52,7 @@ const durations = [
 
 export default function CreateGoal() {
   const navigate = useNavigate();
+  const { userData, updateUserData } = useAuth();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -62,8 +64,33 @@ export default function CreateGoal() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically save the goal to your backend/state
-    console.log("Creating goal:", formData);
+    // Build new goal object
+    const categoryObj = categories.find((c) => c.id === formData.category);
+    const newGoal = {
+      id: Date.now().toString(),
+      title: formData.title,
+      description: formData.description,
+      category: formData.category,
+      progress: 0,
+      streak: 0,
+      targetDays: parseInt(formData.duration, 10),
+      daysCompleted: 0,
+      isCompleted: false,
+      lastUpdated: new Date(),
+      lastLoggedDate: undefined,
+      color: categoryObj?.color || "bg-gray-500",
+      // Optionally add reminderTime if you use it elsewhere
+      reminderTime: formData.reminderTime || undefined,
+    };
+
+    // Add to userData.goals and update
+    if (userData) {
+      updateUserData({
+        ...userData,
+        goals: [...(userData.goals || []), newGoal],
+      });
+    }
+
     // Navigate back to main page
     navigate("/");
   };
