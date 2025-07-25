@@ -161,35 +161,39 @@ export default function Index() {
     addictionId: string;
     affirmationText: string;
   }>({ isOpen: false, addictionId: "", affirmationText: "" });
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   useEffect(() => {
     setCurrentQuote(
       motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)],
     );
+  }, []);
 
-    // Load user data when component mounts
+  // Load user data when component mounts or userData changes
+  useEffect(() => {
     if (userData) {
       setGoals(userData.goals || mockGoals);
       setAddictions(userData.addictions || mockAddictions);
       setCompletedGoals(userData.completedGoals || []);
-    } else {
+    } else if (user) {
       // Use mock data for new users
       setGoals(mockGoals);
       setAddictions(mockAddictions);
       setCompletedGoals([]);
     }
-  }, [userData]);
+    setIsInitialLoad(false);
+  }, [userData, user]);
 
-  // Save user data whenever goals, addictions, or completed goals change
+  // Save user data whenever goals, addictions, or completed goals change (but not on initial load)
   useEffect(() => {
-    if (userData && user) {
+    if (!isInitialLoad && user && userData) {
       updateUserData({
         goals,
         addictions,
         completedGoals
       });
     }
-  }, [goals, addictions, completedGoals, user]);
+  }, [goals, addictions, completedGoals, isInitialLoad, user]);
 
   const totalActiveGoals = goals.filter((g) => !g.isCompleted).length;
   const completedToday = goals.filter(
