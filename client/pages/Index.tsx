@@ -209,6 +209,7 @@ export default function Index() {
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [showTutorial, setShowTutorial] = useState(false);
+  const [developerModeEnabled, setDeveloperModeEnabled] = useState(true);
 
   useEffect(() => {
     setCurrentQuote(
@@ -238,13 +239,10 @@ export default function Index() {
 
   // Load user data when component mounts or userData changes
   useEffect(() => {
-    if (userData) {
-      // Use empty arrays instead of mock data if user has no data yet
-      setGoals(
-        userData.goals && userData.goals.length > 0
-          ? userData.goals
-          : mockGoals,
-      );
+    if (userData && isInitialLoad) {
+      console.log("📊 Loading initial data from userData:", userData);
+      // Use actual user data or empty arrays (no mock data fallback)
+      setGoals(userData.goals || []);
       setAddictions(userData.addictions || []);
       setCompletedGoals(userData.completedGoals || []);
 
@@ -259,14 +257,16 @@ export default function Index() {
       ) {
         setShowTutorial(true);
       }
-    } else if (user) {
-      // Use mock data for new users
-      setGoals(mockGoals);
-      setAddictions(mockAddictions);
+      setIsInitialLoad(false);
+    } else if (user && isInitialLoad) {
+      console.log("📊 Loading empty data for new user");
+      // Start with empty arrays for new users
+      setGoals([]);
+      setAddictions([]);
       setCompletedGoals([]);
+      setIsInitialLoad(false);
     }
-    setIsInitialLoad(false);
-  }, [userData, user]);
+  }, [userData, user, isInitialLoad]);
 
   // Function to update discipline ranking
   const updateDisciplineRanking = () => {
@@ -388,19 +388,22 @@ export default function Index() {
       "forceAdd:",
       forceAdd,
     );
+    console.log("🎯 Current goals state:", goals);
 
     setGoals((currentGoals) => {
       console.log("🎯 Current goals before update:", currentGoals);
       const goal = currentGoals.find((g) => g.id === goalId);
       if (!goal) {
         console.log("🎯 Goal not found!");
-        return currentGoals;
+        return [...currentGoals]; // Return new array reference
       }
 
       console.log("🎯 Found goal:", goal);
 
-      // Check if already logged today
-      if (goal.lastLoggedDate === today && !forceAdd) {
+      // Check if already logged today (bypass for developer account)
+      const isDeveloper =
+        user?.email === "raghav.gkavi@gmail.com" && developerModeEnabled;
+      if (goal.lastLoggedDate === today && !forceAdd && !isDeveloper) {
         console.log("🎯 Already logged today, showing affirmation dialog");
         // Show affirmation dialog
         setAffirmationDialog({
@@ -409,6 +412,12 @@ export default function Index() {
           affirmationText: "",
         });
         return currentGoals;
+      }
+
+      if (isDeveloper && goal.lastLoggedDate === today && !forceAdd) {
+        console.log(
+          "🔓 Developer account detected - bypassing day restriction",
+        );
       }
 
       // Calculate new values
@@ -467,7 +476,7 @@ export default function Index() {
         });
 
         // Restart goal with increased target (add 7 more days) BUT KEEP THE STREAK
-        return currentGoals.map((g) =>
+        const updatedGoals = currentGoals.map((g) =>
           g.id === goalId
             ? {
                 ...g,
@@ -480,9 +489,14 @@ export default function Index() {
               }
             : g,
         );
+        console.log(
+          "🎯 Goal completed - returning updated goals:",
+          updatedGoals,
+        );
+        return updatedGoals;
       } else {
         // Normal progress update
-        return currentGoals.map((g) =>
+        const updatedGoals = currentGoals.map((g) =>
           g.id === goalId
             ? {
                 ...g,
@@ -494,8 +508,17 @@ export default function Index() {
               }
             : g,
         );
+        console.log(
+          "🎯 Normal update - returning updated goals:",
+          updatedGoals,
+        );
+        return updatedGoals;
       }
     });
+
+    console.log(
+      "🎯 Goal update completed, new goals state should trigger save effect",
+    );
   };
 
   const addCleanDay = (addictionId: string, forceAdd: boolean = false) => {
@@ -517,8 +540,10 @@ export default function Index() {
 
       console.log("🔧 Found addiction:", addiction);
 
-      // Check if already logged today
-      if (addiction.lastLoggedDate === today && !forceAdd) {
+      // Check if already logged today (bypass for developer account)
+      const isDeveloper =
+        user?.email === "raghav.gkavi@gmail.com" && developerModeEnabled;
+      if (addiction.lastLoggedDate === today && !forceAdd && !isDeveloper) {
         console.log("🔧 Already logged today, showing affirmation dialog");
         // Show affirmation dialog
         setAffirmationDialog({
@@ -527,6 +552,12 @@ export default function Index() {
           affirmationText: "",
         });
         return currentAddictions;
+      }
+
+      if (isDeveloper && addiction.lastLoggedDate === today && !forceAdd) {
+        console.log(
+          "🔓 Developer account detected - bypassing day restriction for addictions",
+        );
       }
 
       const newCleanDays = addiction.cleanDays + 1;
@@ -550,7 +581,7 @@ export default function Index() {
           : a,
       );
 
-      console.log("🔧 Updated addictions:", updatedAddictions);
+      console.log("��� Updated addictions:", updatedAddictions);
       return updatedAddictions;
     });
   };
@@ -670,6 +701,28 @@ export default function Index() {
                   New Goal
                 </Button>
               </Link>
+
+              {/* Developer Mode Toggle */}
+              {user?.email === "raghav.gkavi@gmail.com" && (
+                <Button
+                  variant={developerModeEnabled ? "secondary" : "outline"}
+                  size="sm"
+                  className={`text-xs px-2 py-1 h-auto cursor-pointer transition-all ${
+                    developerModeEnabled
+                      ? "bg-green-500/20 text-green-700 dark:text-green-400 hover:bg-green-500/30"
+                      : "bg-red-500/20 text-red-700 dark:text-red-400 hover:bg-red-500/30"
+                  }`}
+                  onClick={() => {
+                    setDeveloperModeEnabled(!developerModeEnabled);
+                    console.log(
+                      `🔓 Developer mode ${!developerModeEnabled ? "enabled" : "disabled"}`,
+                    );
+                  }}
+                  title={`Click to ${developerModeEnabled ? "disable" : "enable"} developer mode`}
+                >
+                  {developerModeEnabled ? "🔓 DEV MODE" : "🔒 DEV OFF"}
+                </Button>
+              )}
 
               {/* Theme Toggle */}
               <ThemeToggle />
