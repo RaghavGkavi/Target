@@ -36,8 +36,8 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Mock user database - in a real app, this would be a backend API
-const MOCK_USERS_KEY = 'lockin_users';
-const MOCK_USER_DATA_KEY = 'lockin_user_data_';
+const MOCK_USERS_KEY = 'target_users';
+const MOCK_USER_DATA_KEY = 'target_user_data_';
 
 const getMockUsers = (): Record<string, { password: string; user: User }> => {
   const stored = localStorage.getItem(MOCK_USERS_KEY);
