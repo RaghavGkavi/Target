@@ -11,6 +11,8 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import Index from "./pages/Index";
 import CreateGoal from "./pages/CreateGoal";
 import CompletedGoals from "./pages/CompletedGoals";
+import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 import Auth from "./pages/Auth";
 import Onboarding from "./pages/Onboarding";
 import Placeholder from "./pages/Placeholder";
