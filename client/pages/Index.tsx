@@ -240,11 +240,28 @@ export default function Index() {
   // Load user data when component mounts or userData changes
   useEffect(() => {
     if (userData && isInitialLoad) {
-      console.log("📊 Loading initial data from userData:", userData);
       // Use actual user data or empty arrays (no mock data fallback)
-      setGoals(userData.goals || []);
-      setAddictions(userData.addictions || []);
-      setCompletedGoals(userData.completedGoals || []);
+      setGoals(
+        (userData.goals || []).map((g) => ({
+          ...g,
+          // Convert date strings back to Date objects if needed
+          lastUpdated: g.lastUpdated ? new Date(g.lastUpdated) : new Date(),
+        }))
+      );
+      setAddictions(
+        (userData.addictions || []).map((a) => ({
+          ...a,
+          lastRelapse: a.lastRelapse ? new Date(a.lastRelapse) : undefined,
+        }))
+      );
+      setCompletedGoals(
+        (userData.completedGoals || []).map((cg) => ({
+          ...cg,
+          completionDates: Array.isArray(cg.completionDates)
+            ? cg.completionDates.map((d) => new Date(d))
+            : [],
+        }))
+      );
 
       // Check if user just completed onboarding (has no tutorial completion flag)
       const hasSeenTutorial = localStorage.getItem(
