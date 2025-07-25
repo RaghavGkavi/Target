@@ -166,6 +166,8 @@ export default function Index() {
     affirmationText: string;
   }>({ isOpen: false, addictionId: "", affirmationText: "" });
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
     setCurrentQuote(
@@ -246,7 +248,7 @@ export default function Index() {
       case "health":
         return "🧘‍♀️";
       case "personal":
-        return "📚";
+        return "����";
       case "career":
         return "💼";
       case "addiction":
