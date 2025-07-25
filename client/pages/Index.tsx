@@ -298,13 +298,24 @@ export default function Index() {
 
   // Save user data whenever goals, addictions, or completed goals change (but not on initial load)
   useEffect(() => {
+    console.log("💾 Data save effect triggered:", {
+      isInitialLoad,
+      hasUser: !!user,
+      hasUserData: !!userData,
+      goalsLength: goals.length,
+      addictionsLength: addictions.length
+    });
+
     if (!isInitialLoad && user && userData) {
+      console.log("💾 Saving user data...");
       const currentData = {
         ...userData,
         goals,
         addictions,
         completedGoals,
       };
+
+      console.log("💾 Data being saved:", currentData);
 
       // Check for new achievements
       const newAchievements = checkAchievements(currentData, userData);
@@ -331,6 +342,8 @@ export default function Index() {
           newAchievements.map((a) => a.title),
         );
       }
+    } else {
+      console.log("💾 Skipping save:", { isInitialLoad, hasUser: !!user, hasUserData: !!userData });
     }
   }, [goals, addictions, completedGoals, isInitialLoad, user]);
 
