@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { calculateDisciplineRank, calculateConsistencyScore, getDisciplineRankInfo } from "@/lib/disciplineRanking";
 import {
   Plus,
   Target,
