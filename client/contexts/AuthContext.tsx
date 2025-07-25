@@ -136,7 +136,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       saveMockUsers(users);
       
       setUser(updatedUser);
-      localStorage.setItem('lockin_current_user', JSON.stringify(updatedUser));
+      localStorage.setItem('target_current_user', JSON.stringify(updatedUser));
       
       // Load user data
       const userProgressData = getUserData(updatedUser.id);
