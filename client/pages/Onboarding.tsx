@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useAuth } from "@/contexts/AuthContext";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { DISCIPLINE_ASSESSMENT, calculateDisciplineRank, getDisciplineRankInfo } from "@/lib/disciplineRanking";
 
 interface PresetGoal {
   id: string;
