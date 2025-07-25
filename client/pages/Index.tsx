@@ -175,6 +175,26 @@ export default function Index() {
     );
   }, []);
 
+  // Handle scroll for header hiding
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY < lastScrollY || currentScrollY < 100) {
+        // Scrolling up or near top - show header
+        setIsHeaderVisible(true);
+      } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // Scrolling down and past threshold - hide header
+        setIsHeaderVisible(false);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
+
   // Load user data when component mounts or userData changes
   useEffect(() => {
     if (userData) {
@@ -248,7 +268,7 @@ export default function Index() {
       case "health":
         return "🧘‍♀️";
       case "personal":
-        return "����";
+        return "📚";
       case "career":
         return "💼";
       case "addiction":
