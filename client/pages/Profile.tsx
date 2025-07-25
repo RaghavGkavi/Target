@@ -79,6 +79,24 @@ export default function Profile() {
 
   const rankInfo = userData?.disciplineData ? getDisciplineRankInfo(userData.disciplineData.currentRank) : null;
 
+  // Handle scroll for header hiding
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY < lastScrollY || currentScrollY < 100) {
+        setIsHeaderVisible(true);
+      } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setIsHeaderVisible(false);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
+
   const getCategoryIcon = (category: string) => {
     switch (category) {
       case "fitness": return "🏃‍♂️";
