@@ -170,6 +170,7 @@ export default function Index() {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [showTutorial, setShowTutorial] = useState(false);
 
   useEffect(() => {
     setCurrentQuote(
