@@ -74,37 +74,43 @@ const presetAddictions: PresetAddiction[] = [
     id: "smoking",
     name: "Smoking/Vaping",
     icon: "🚭",
-    description: "Quit smoking and vaping habits"
+    description: "Quit smoking and vaping habits",
+    triggers: ["Stress", "Breaks at work", "Social situations", "After meals", "Boredom"]
   },
   {
     id: "social_media",
     name: "Social Media",
     icon: "📱",
-    description: "Reduce excessive social media usage"
+    description: "Reduce excessive social media usage",
+    triggers: ["Boredom", "FOMO", "Procrastination", "Waiting", "Before bed"]
   },
   {
     id: "masturbation",
     name: "Masturbation",
     icon: "🎯",
-    description: "Overcome compulsive behaviors"
+    description: "Overcome compulsive behaviors",
+    triggers: ["Stress", "Loneliness", "Boredom", "Insomnia", "Emotional distress"]
   },
   {
     id: "drugs",
     name: "Drugs",
     icon: "💊",
-    description: "Break free from substance use"
+    description: "Break free from substance use",
+    triggers: ["Peer pressure", "Stress", "Depression", "Social events", "Emotional pain"]
   },
   {
     id: "alcohol",
     name: "Alcohol",
     icon: "🍺",
-    description: "Reduce or quit alcohol consumption"
+    description: "Reduce or quit alcohol consumption",
+    triggers: ["Social events", "Stress", "Celebrations", "After work", "Weekends"]
   },
   {
     id: "other",
     name: "Other",
     icon: "❓",
-    description: "Custom addiction or habit"
+    description: "Custom addiction or habit",
+    triggers: ["Stress", "Boredom", "Habit", "Environment", "Emotions"]
   }
 ];
 
