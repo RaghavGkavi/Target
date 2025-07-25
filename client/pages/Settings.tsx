@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, Upload, User, Shield, Bell, Palette, LogOut } from "lucide-react";
+import { ArrowLeft, Save, Upload, User, Shield, Bell, Palette, LogOut, RotateCcw, Trash2, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
