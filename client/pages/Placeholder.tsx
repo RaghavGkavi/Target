@@ -1,7 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Construction, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 interface PlaceholderProps {
   title: string;
@@ -9,10 +15,10 @@ interface PlaceholderProps {
   suggestion?: string;
 }
 
-export default function Placeholder({ 
-  title, 
-  description, 
-  suggestion = "Let me know what you'd like to see on this page and I'll build it for you!" 
+export default function Placeholder({
+  title,
+  description,
+  suggestion = "Let me know what you'd like to see on this page and I'll build it for you!",
 }: PlaceholderProps) {
   const navigate = useNavigate();
 
@@ -22,9 +28,9 @@ export default function Placeholder({
       <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center space-x-4">
-            <Button 
-              variant="ghost" 
-              size="sm" 
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => navigate("/")}
               className="rounded-lg"
             >
@@ -47,26 +53,25 @@ export default function Placeholder({
                 <div className="h-16 w-16 mx-auto bg-muted rounded-full flex items-center justify-center">
                   <Construction className="h-8 w-8 text-muted-foreground" />
                 </div>
-                
+
                 <div className="space-y-2">
                   <h2 className="text-2xl font-bold">Coming Soon</h2>
                   <p className="text-muted-foreground max-w-md mx-auto">
-                    This page is under construction. We're working hard to bring you amazing features!
+                    This page is under construction. We're working hard to bring
+                    you amazing features!
                   </p>
                 </div>
-                
+
                 <div className="pt-4">
                   <div className="bg-muted/50 rounded-lg p-4 max-w-md mx-auto">
                     <div className="flex items-start space-x-3">
                       <MessageSquare className="h-5 w-5 text-primary mt-0.5" />
-                      <p className="text-sm text-left">
-                        {suggestion}
-                      </p>
+                      <p className="text-sm text-left">{suggestion}</p>
                     </div>
                   </div>
                 </div>
-                
-                <Button 
+
+                <Button
                   onClick={() => navigate("/")}
                   className="mt-6 rounded-lg"
                 >

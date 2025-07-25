@@ -1,8 +1,25 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Plus, Target, Flame, TrendingUp, Calendar, CheckCircle2, XCircle, Clock, Award, Zap } from "lucide-react";
+import {
+  Plus,
+  Target,
+  Flame,
+  TrendingUp,
+  Calendar,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  Award,
+  Zap,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -42,7 +59,7 @@ const mockGoals: Goal[] = [
     daysCompleted: 25,
     isCompleted: false,
     lastUpdated: new Date(),
-    color: "bg-green-500"
+    color: "bg-green-500",
   },
   {
     id: "2",
@@ -55,7 +72,7 @@ const mockGoals: Goal[] = [
     daysCompleted: 13,
     isCompleted: false,
     lastUpdated: new Date(),
-    color: "bg-blue-500"
+    color: "bg-blue-500",
   },
   {
     id: "3",
@@ -68,8 +85,8 @@ const mockGoals: Goal[] = [
     daysCompleted: 20,
     isCompleted: false,
     lastUpdated: new Date(),
-    color: "bg-purple-500"
-  }
+    color: "bg-purple-500",
+  },
 ];
 
 const mockAddictions: Addiction[] = [
@@ -78,15 +95,15 @@ const mockAddictions: Addiction[] = [
     name: "Social Media",
     cleanDays: 15,
     longestStreak: 23,
-    triggers: ["Boredom", "Stress", "Morning routine"]
+    triggers: ["Boredom", "Stress", "Morning routine"],
   },
   {
     id: "2",
     name: "Smoking",
     cleanDays: 45,
     longestStreak: 67,
-    triggers: ["Work stress", "Social situations"]
-  }
+    triggers: ["Work stress", "Social situations"],
+  },
 ];
 
 const motivationalQuotes = [
@@ -94,7 +111,7 @@ const motivationalQuotes = [
   "Success is the sum of small efforts repeated day in and day out.",
   "Don't watch the clock; do what it does. Keep going.",
   "You are stronger than your excuses.",
-  "Progress, not perfection."
+  "Progress, not perfection.",
 ];
 
 export default function Index() {
@@ -103,31 +120,50 @@ export default function Index() {
   const [currentQuote, setCurrentQuote] = useState("");
 
   useEffect(() => {
-    setCurrentQuote(motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)]);
+    setCurrentQuote(
+      motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)],
+    );
   }, []);
 
-  const totalActiveGoals = goals.filter(g => !g.isCompleted).length;
-  const completedToday = goals.filter(g => g.lastUpdated.toDateString() === new Date().toDateString()).length;
+  const totalActiveGoals = goals.filter((g) => !g.isCompleted).length;
+  const completedToday = goals.filter(
+    (g) => g.lastUpdated.toDateString() === new Date().toDateString(),
+  ).length;
   const totalStreak = goals.reduce((sum, goal) => sum + goal.streak, 0);
-  const avgProgress = goals.reduce((sum, goal) => sum + goal.progress, 0) / goals.length;
+  const avgProgress =
+    goals.reduce((sum, goal) => sum + goal.progress, 0) / goals.length;
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case "fitness": return "🏃‍♂️";
-      case "health": return "🧘‍♀️";
-      case "personal": return "📚";
-      case "career": return "💼";
-      case "addiction": return "🎯";
-      default: return "⭐";
+      case "fitness":
+        return "🏃‍♂️";
+      case "health":
+        return "🧘‍♀️";
+      case "personal":
+        return "📚";
+      case "career":
+        return "💼";
+      case "addiction":
+        return "🎯";
+      default:
+        return "⭐";
     }
   };
 
   const markGoalComplete = (goalId: string) => {
-    setGoals(goals.map(goal => 
-      goal.id === goalId 
-        ? { ...goal, daysCompleted: goal.daysCompleted + 1, progress: Math.min(100, goal.progress + (100 / goal.targetDays)), streak: goal.streak + 1, lastUpdated: new Date() }
-        : goal
-    ));
+    setGoals(
+      goals.map((goal) =>
+        goal.id === goalId
+          ? {
+              ...goal,
+              daysCompleted: goal.daysCompleted + 1,
+              progress: Math.min(100, goal.progress + 100 / goal.targetDays),
+              streak: goal.streak + 1,
+              lastUpdated: new Date(),
+            }
+          : goal,
+      ),
+    );
   };
 
   return (
@@ -144,7 +180,9 @@ export default function Index() {
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                   LockIn
                 </h1>
-                <p className="text-sm text-muted-foreground">Master your goals, break your chains</p>
+                <p className="text-sm text-muted-foreground">
+                  Master your goals, break your chains
+                </p>
               </div>
             </div>
             <Link to="/create-goal">
@@ -165,7 +203,9 @@ export default function Index() {
               <Zap className="h-8 w-8" />
               <div>
                 <p className="text-lg font-medium">{currentQuote}</p>
-                <p className="text-primary-foreground/80 text-sm">Your daily motivation</p>
+                <p className="text-primary-foreground/80 text-sm">
+                  Your daily motivation
+                </p>
               </div>
             </div>
           </CardContent>
@@ -184,7 +224,7 @@ export default function Index() {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card className="rounded-xl">
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
@@ -196,7 +236,7 @@ export default function Index() {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card className="rounded-xl">
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
@@ -208,13 +248,15 @@ export default function Index() {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card className="rounded-xl">
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
                 <TrendingUp className="h-5 w-5 text-info" />
                 <div>
-                  <p className="text-2xl font-bold">{Math.round(avgProgress)}%</p>
+                  <p className="text-2xl font-bold">
+                    {Math.round(avgProgress)}%
+                  </p>
                   <p className="text-xs text-muted-foreground">Avg Progress</p>
                 </div>
               </div>
@@ -225,9 +267,15 @@ export default function Index() {
         {/* Main Content Tabs */}
         <Tabs defaultValue="goals" className="space-y-6">
           <TabsList className="grid w-full grid-cols-3 rounded-xl">
-            <TabsTrigger value="goals" className="rounded-lg">Goals</TabsTrigger>
-            <TabsTrigger value="addictions" className="rounded-lg">Recovery</TabsTrigger>
-            <TabsTrigger value="insights" className="rounded-lg">Insights</TabsTrigger>
+            <TabsTrigger value="goals" className="rounded-lg">
+              Goals
+            </TabsTrigger>
+            <TabsTrigger value="addictions" className="rounded-lg">
+              Recovery
+            </TabsTrigger>
+            <TabsTrigger value="insights" className="rounded-lg">
+              Insights
+            </TabsTrigger>
           </TabsList>
 
           {/* Goals Tab */}
@@ -236,14 +284,20 @@ export default function Index() {
               <h2 className="text-xl font-semibold">Your Goals</h2>
               <Badge variant="secondary">{goals.length} total</Badge>
             </div>
-            
+
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {goals.map((goal) => (
-                <Card key={goal.id} className="rounded-xl border-l-4 hover:shadow-md transition-all duration-200" style={{ borderLeftColor: goal.color.replace('bg-', '#') }}>
+                <Card
+                  key={goal.id}
+                  className="rounded-xl border-l-4 hover:shadow-md transition-all duration-200"
+                  style={{ borderLeftColor: goal.color.replace("bg-", "#") }}
+                >
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <span className="text-lg">{getCategoryIcon(goal.category)}</span>
+                        <span className="text-lg">
+                          {getCategoryIcon(goal.category)}
+                        </span>
                         <CardTitle className="text-lg">{goal.title}</CardTitle>
                       </div>
                       <Badge variant="outline" className="text-xs">
@@ -257,22 +311,30 @@ export default function Index() {
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span>Progress</span>
-                        <span>{goal.daysCompleted}/{goal.targetDays} days</span>
+                        <span>
+                          {goal.daysCompleted}/{goal.targetDays} days
+                        </span>
                       </div>
                       <Progress value={goal.progress} className="h-2" />
-                      <p className="text-xs text-muted-foreground">{Math.round(goal.progress)}% complete</p>
+                      <p className="text-xs text-muted-foreground">
+                        {Math.round(goal.progress)}% complete
+                      </p>
                     </div>
-                    
+
                     <div className="flex space-x-2">
-                      <Button 
-                        size="sm" 
+                      <Button
+                        size="sm"
                         className="flex-1 rounded-lg"
                         onClick={() => markGoalComplete(goal.id)}
                       >
                         <CheckCircle2 className="h-4 w-4 mr-1" />
                         Complete
                       </Button>
-                      <Button size="sm" variant="outline" className="rounded-lg">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="rounded-lg"
+                      >
                         <Clock className="h-4 w-4" />
                       </Button>
                     </div>
@@ -288,7 +350,7 @@ export default function Index() {
               <h2 className="text-xl font-semibold">Recovery Tracker</h2>
               <Badge variant="secondary">{addictions.length} tracked</Badge>
             </div>
-            
+
             <div className="grid gap-4 md:grid-cols-2">
               {addictions.map((addiction) => (
                 <Card key={addiction.id} className="rounded-xl">
@@ -298,7 +360,10 @@ export default function Index() {
                         <span>🎯</span>
                         <span>{addiction.name}</span>
                       </CardTitle>
-                      <Badge variant="outline" className="bg-success/10 text-success border-success/20">
+                      <Badge
+                        variant="outline"
+                        className="bg-success/10 text-success border-success/20"
+                      >
                         {addiction.cleanDays} days clean
                       </Badge>
                     </div>
@@ -306,27 +371,44 @@ export default function Index() {
                   <CardContent className="space-y-4">
                     <div className="grid grid-cols-2 gap-4 text-center">
                       <div className="space-y-1">
-                        <p className="text-2xl font-bold text-success">{addiction.cleanDays}</p>
-                        <p className="text-xs text-muted-foreground">Days Clean</p>
+                        <p className="text-2xl font-bold text-success">
+                          {addiction.cleanDays}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Days Clean
+                        </p>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-2xl font-bold text-warning">{addiction.longestStreak}</p>
-                        <p className="text-xs text-muted-foreground">Best Streak</p>
+                        <p className="text-2xl font-bold text-warning">
+                          {addiction.longestStreak}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Best Streak
+                        </p>
                       </div>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <p className="text-sm font-medium">Common Triggers:</p>
                       <div className="flex flex-wrap gap-1">
                         {addiction.triggers.map((trigger, index) => (
-                          <Badge key={index} variant="secondary" className="text-xs">
+                          <Badge
+                            key={index}
+                            variant="secondary"
+                            className="text-xs"
+                          >
                             {trigger}
                           </Badge>
                         ))}
                       </div>
                     </div>
-                    
-                    <Progress value={(addiction.cleanDays / addiction.longestStreak) * 100} className="h-2" />
+
+                    <Progress
+                      value={
+                        (addiction.cleanDays / addiction.longestStreak) * 100
+                      }
+                      className="h-2"
+                    />
                   </CardContent>
                 </Card>
               ))}
@@ -336,7 +418,7 @@ export default function Index() {
           {/* Insights Tab */}
           <TabsContent value="insights" className="space-y-4">
             <h2 className="text-xl font-semibold">Your Progress Insights</h2>
-            
+
             <div className="grid gap-4 md:grid-cols-2">
               <Card className="rounded-xl">
                 <CardHeader>
@@ -352,22 +434,26 @@ export default function Index() {
                     </div>
                     <div>
                       <p className="font-medium">First Week Complete</p>
-                      <p className="text-sm text-muted-foreground">Completed 7 days in a row</p>
+                      <p className="text-sm text-muted-foreground">
+                        Completed 7 days in a row
+                      </p>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center space-x-3 p-3 bg-warning/10 rounded-lg">
                     <div className="h-10 w-10 bg-warning rounded-full flex items-center justify-center">
                       <Flame className="h-5 w-5 text-white" />
                     </div>
                     <div>
                       <p className="font-medium">Streak Master</p>
-                      <p className="text-sm text-muted-foreground">Maintained 10+ day streak</p>
+                      <p className="text-sm text-muted-foreground">
+                        Maintained 10+ day streak
+                      </p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
-              
+
               <Card className="rounded-xl">
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
@@ -383,7 +469,7 @@ export default function Index() {
                     </div>
                     <Progress value={85} className="h-2" />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-sm">Consistency score</span>
@@ -391,15 +477,19 @@ export default function Index() {
                     </div>
                     <Progress value={92} className="h-2" />
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-4 pt-2">
                     <div className="text-center">
                       <p className="text-lg font-bold text-success">12</p>
-                      <p className="text-xs text-muted-foreground">Days Active</p>
+                      <p className="text-xs text-muted-foreground">
+                        Days Active
+                      </p>
                     </div>
                     <div className="text-center">
                       <p className="text-lg font-bold text-primary">3</p>
-                      <p className="text-xs text-muted-foreground">New Records</p>
+                      <p className="text-xs text-muted-foreground">
+                        New Records
+                      </p>
                     </div>
                   </div>
                 </CardContent>

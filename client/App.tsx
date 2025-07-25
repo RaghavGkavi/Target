@@ -22,11 +22,56 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/create-goal" element={<CreateGoal />} />
-          <Route path="/goals" element={<Placeholder title="Goal Management" description="Manage and edit your existing goals" suggestion="I can add features like goal editing, deletion, and detailed progress tracking here!" />} />
-          <Route path="/habits" element={<Placeholder title="Habit Tracker" description="Track your daily habits and routines" suggestion="I can build a comprehensive habit tracking system with calendars and analytics!" />} />
-          <Route path="/recovery" element={<Placeholder title="Addiction Recovery" description="Detailed addiction recovery tools and support" suggestion="I can add features like trigger tracking, support groups, and recovery milestones!" />} />
-          <Route path="/analytics" element={<Placeholder title="Analytics & Insights" description="Detailed progress analytics and insights" suggestion="I can create charts, graphs, and detailed analytics to track your progress over time!" />} />
-          <Route path="/settings" element={<Placeholder title="Settings" description="Customize your LockIn experience" suggestion="I can add user preferences, notification settings, and theme customization!" />} />
+          <Route
+            path="/goals"
+            element={
+              <Placeholder
+                title="Goal Management"
+                description="Manage and edit your existing goals"
+                suggestion="I can add features like goal editing, deletion, and detailed progress tracking here!"
+              />
+            }
+          />
+          <Route
+            path="/habits"
+            element={
+              <Placeholder
+                title="Habit Tracker"
+                description="Track your daily habits and routines"
+                suggestion="I can build a comprehensive habit tracking system with calendars and analytics!"
+              />
+            }
+          />
+          <Route
+            path="/recovery"
+            element={
+              <Placeholder
+                title="Addiction Recovery"
+                description="Detailed addiction recovery tools and support"
+                suggestion="I can add features like trigger tracking, support groups, and recovery milestones!"
+              />
+            }
+          />
+          <Route
+            path="/analytics"
+            element={
+              <Placeholder
+                title="Analytics & Insights"
+                description="Detailed progress analytics and insights"
+                suggestion="I can create charts, graphs, and detailed analytics to track your progress over time!"
+              />
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <Placeholder
+                title="Settings"
+                description="Customize your LockIn experience"
+                suggestion="I can add user preferences, notification settings, and theme customization!"
+              />
+            }
+          />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

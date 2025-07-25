@@ -2,17 +2,39 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Target, Calendar, Flag, Zap, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 
 const categories = [
-  { id: "health", name: "Health & Wellness", icon: "🧘‍♀️", color: "bg-green-500" },
+  {
+    id: "health",
+    name: "Health & Wellness",
+    icon: "🧘‍♀️",
+    color: "bg-green-500",
+  },
   { id: "fitness", name: "Fitness", icon: "🏃‍♂️", color: "bg-blue-500" },
-  { id: "personal", name: "Personal Growth", icon: "📚", color: "bg-purple-500" },
+  {
+    id: "personal",
+    name: "Personal Growth",
+    icon: "📚",
+    color: "bg-purple-500",
+  },
   { id: "career", name: "Career", icon: "💼", color: "bg-orange-500" },
   { id: "addiction", name: "Break Addiction", icon: "🎯", color: "bg-red-500" },
   { id: "creativity", name: "Creativity", icon: "🎨", color: "bg-pink-500" },
@@ -47,7 +69,7 @@ export default function CreateGoal() {
   };
 
   const handleCategorySelect = (categoryId: string) => {
-    const category = categories.find(c => c.id === categoryId);
+    const category = categories.find((c) => c.id === categoryId);
     setSelectedCategory(category);
     setFormData({ ...formData, category: categoryId });
   };
@@ -58,9 +80,9 @@ export default function CreateGoal() {
       <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center space-x-4">
-            <Button 
-              variant="ghost" 
-              size="sm" 
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => navigate("/")}
               className="rounded-lg"
             >
@@ -69,7 +91,9 @@ export default function CreateGoal() {
             </Button>
             <div>
               <h1 className="text-xl font-bold">Create New Goal</h1>
-              <p className="text-sm text-muted-foreground">Build a new habit or break an old one</p>
+              <p className="text-sm text-muted-foreground">
+                Build a new habit or break an old one
+              </p>
             </div>
           </div>
         </div>
@@ -84,9 +108,7 @@ export default function CreateGoal() {
                 <Target className="h-5 w-5 text-primary" />
                 <span>Goal Details</span>
               </CardTitle>
-              <CardDescription>
-                Define what you want to achieve
-              </CardDescription>
+              <CardDescription>Define what you want to achieve</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -95,19 +117,23 @@ export default function CreateGoal() {
                   id="title"
                   placeholder="e.g., Exercise for 30 minutes daily"
                   value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
                   className="rounded-lg"
                   required
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="description">Description (Optional)</Label>
                 <Textarea
                   id="description"
                   placeholder="Add more details about your goal..."
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                   className="rounded-lg resize-none"
                   rows={3}
                 />
@@ -158,14 +184,17 @@ export default function CreateGoal() {
                 <Calendar className="h-5 w-5 text-primary" />
                 <span>Duration & Schedule</span>
               </CardTitle>
-              <CardDescription>
-                Set your timeline and reminders
-              </CardDescription>
+              <CardDescription>Set your timeline and reminders</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="duration">Goal Duration</Label>
-                <Select value={formData.duration} onValueChange={(value) => setFormData({ ...formData, duration: value })}>
+                <Select
+                  value={formData.duration}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, duration: value })
+                  }
+                >
                   <SelectTrigger className="rounded-lg">
                     <SelectValue placeholder="Choose duration" />
                   </SelectTrigger>
@@ -178,14 +207,16 @@ export default function CreateGoal() {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="reminderTime">Daily Reminder (Optional)</Label>
                 <Input
                   id="reminderTime"
                   type="time"
                   value={formData.reminderTime}
-                  onChange={(e) => setFormData({ ...formData, reminderTime: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, reminderTime: e.target.value })
+                  }
                   className="rounded-lg"
                 />
                 <p className="text-xs text-muted-foreground">
@@ -210,16 +241,19 @@ export default function CreateGoal() {
                     <span className="text-2xl">{selectedCategory.icon}</span>
                     <div>
                       <h3 className="font-semibold">{formData.title}</h3>
-                      <p className="text-sm text-muted-foreground">{formData.description || "No description"}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {formData.description || "No description"}
+                      </p>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center space-x-4 text-sm">
-                    <Badge variant="secondary">
-                      {selectedCategory.name}
-                    </Badge>
+                    <Badge variant="secondary">{selectedCategory.name}</Badge>
                     <span className="text-muted-foreground">
-                      {durations.find(d => d.value === formData.duration)?.label}
+                      {
+                        durations.find((d) => d.value === formData.duration)
+                          ?.label
+                      }
                     </span>
                     {formData.reminderTime && (
                       <span className="text-muted-foreground">
@@ -245,7 +279,9 @@ export default function CreateGoal() {
             <Button
               type="submit"
               className="flex-1 rounded-lg"
-              disabled={!formData.title || !formData.category || !formData.duration}
+              disabled={
+                !formData.title || !formData.category || !formData.duration
+              }
             >
               <Zap className="h-4 w-4 mr-2" />
               Create Goal
