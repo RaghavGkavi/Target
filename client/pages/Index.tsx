@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Plus,
   Target,
@@ -139,8 +140,9 @@ const motivationalQuotes = [
 ];
 
 export default function Index() {
-  const [goals, setGoals] = useState<Goal[]>(mockGoals);
-  const [addictions, setAddictions] = useState<Addiction[]>(mockAddictions);
+  const { user, userData, updateUserData, signOut } = useAuth();
+  const [goals, setGoals] = useState<Goal[]>([]);
+  const [addictions, setAddictions] = useState<Addiction[]>([]);
   const [completedGoals, setCompletedGoals] = useState<CompletedGoal[]>([]);
   const [currentQuote, setCurrentQuote] = useState("");
   const [editingAddiction, setEditingAddiction] = useState<Addiction | null>(null);
@@ -159,7 +161,30 @@ export default function Index() {
     setCurrentQuote(
       motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)],
     );
-  }, []);
+
+    // Load user data when component mounts
+    if (userData) {
+      setGoals(userData.goals || mockGoals);
+      setAddictions(userData.addictions || mockAddictions);
+      setCompletedGoals(userData.completedGoals || []);
+    } else {
+      // Use mock data for new users
+      setGoals(mockGoals);
+      setAddictions(mockAddictions);
+      setCompletedGoals([]);
+    }
+  }, [userData]);
+
+  // Save user data whenever goals, addictions, or completed goals change
+  useEffect(() => {
+    if (userData && user) {
+      updateUserData({
+        goals,
+        addictions,
+        completedGoals
+      });
+    }
+  }, [goals, addictions, completedGoals, user]);
 
   const totalActiveGoals = goals.filter((g) => !g.isCompleted).length;
   const completedToday = goals.filter(
