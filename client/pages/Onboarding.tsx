@@ -461,10 +461,10 @@ export default function Onboarding() {
         {/* Progress Bar */}
         <div className="space-y-2">
           <div className="flex justify-between text-sm text-muted-foreground">
-            <span>Step {currentStep} of 3</span>
-            <span>{Math.round((currentStep / 3) * 100)}% complete</span>
+            <span>Step {currentStep} of 4</span>
+            <span>{Math.round((currentStep / 4) * 100)}% complete</span>
           </div>
-          <Progress value={(currentStep / 3) * 100} className="h-2" />
+          <Progress value={(currentStep / 4) * 100} className="h-2" />
         </div>
 
         {/* Content Card */}
