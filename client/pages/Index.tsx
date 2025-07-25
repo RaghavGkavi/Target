@@ -394,7 +394,7 @@ export default function Index() {
           color: goal.color,
         };
 
-        // Compute new completedGoals here
+        // Update completed goals
         setCompletedGoals((currentCompleted) => {
           const existingCompleted = currentCompleted.find(
             (cg) => cg.title === goal.title,
@@ -1123,8 +1123,8 @@ export default function Index() {
                           ? (addiction.cleanDays / addiction.longestStreak) *
                             100
                           : addiction.cleanDays > 0
-                          ? 100
-                          : 0
+                            ? 100
+                            : 0
                       }
                       className="h-2"
                     />
