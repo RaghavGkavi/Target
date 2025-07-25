@@ -317,8 +317,8 @@ export const ACHIEVEMENTS: Achievement[] = [
 
   // Recovery Achievements
   {
-    id: "clean_week",
-    title: "Clean Week",
+    id: "clean_one_week",
+    title: "First Week Clean",
     description: "Stay clean for 7 days",
     icon: "🌟",
     category: "milestones",
@@ -331,7 +331,21 @@ export const ACHIEVEMENTS: Achievement[] = [
     },
   },
   {
-    id: "clean_month",
+    id: "clean_two_weeks",
+    title: "Two Weeks Strong",
+    description: "Stay clean for 14 days",
+    icon: "💪",
+    category: "milestones",
+    rarity: "common",
+    condition: (userData) => {
+      const maxCleanDays = Math.max(
+        ...(userData.addictions?.map((a: any) => a.cleanDays || 0) || [0]),
+      );
+      return maxCleanDays >= 14;
+    },
+  },
+  {
+    id: "clean_one_month",
     title: "Clean Month",
     description: "Stay clean for 30 days",
     icon: "🎊",
@@ -345,7 +359,49 @@ export const ACHIEVEMENTS: Achievement[] = [
     },
   },
   {
-    id: "clean_year",
+    id: "clean_three_months",
+    title: "Quarter Year Clean",
+    description: "Stay clean for 90 days",
+    icon: "🏆",
+    category: "milestones",
+    rarity: "rare",
+    condition: (userData) => {
+      const maxCleanDays = Math.max(
+        ...(userData.addictions?.map((a: any) => a.cleanDays || 0) || [0]),
+      );
+      return maxCleanDays >= 90;
+    },
+  },
+  {
+    id: "clean_six_months",
+    title: "Half Year Victory",
+    description: "Stay clean for 180 days",
+    icon: "🎖️",
+    category: "milestones",
+    rarity: "epic",
+    condition: (userData) => {
+      const maxCleanDays = Math.max(
+        ...(userData.addictions?.map((a: any) => a.cleanDays || 0) || [0]),
+      );
+      return maxCleanDays >= 180;
+    },
+  },
+  {
+    id: "clean_nine_months",
+    title: "Nine Month Warrior",
+    description: "Stay clean for 270 days",
+    icon: "⚔️",
+    category: "milestones",
+    rarity: "epic",
+    condition: (userData) => {
+      const maxCleanDays = Math.max(
+        ...(userData.addictions?.map((a: any) => a.cleanDays || 0) || [0]),
+      );
+      return maxCleanDays >= 270;
+    },
+  },
+  {
+    id: "clean_one_year",
     title: "Year of Freedom",
     description: "Stay clean for 365 days",
     icon: "🏅",
@@ -356,6 +412,48 @@ export const ACHIEVEMENTS: Achievement[] = [
         ...(userData.addictions?.map((a: any) => a.cleanDays || 0) || [0]),
       );
       return maxCleanDays >= 365;
+    },
+  },
+  {
+    id: "clean_two_years",
+    title: "Two Year Champion",
+    description: "Stay clean for 730 days",
+    icon: "🥇",
+    category: "milestones",
+    rarity: "legendary",
+    condition: (userData) => {
+      const maxCleanDays = Math.max(
+        ...(userData.addictions?.map((a: any) => a.cleanDays || 0) || [0]),
+      );
+      return maxCleanDays >= 730;
+    },
+  },
+  {
+    id: "clean_three_years",
+    title: "Three Year Master",
+    description: "Stay clean for 1095 days",
+    icon: "🏆",
+    category: "milestones",
+    rarity: "legendary",
+    condition: (userData) => {
+      const maxCleanDays = Math.max(
+        ...(userData.addictions?.map((a: any) => a.cleanDays || 0) || [0]),
+      );
+      return maxCleanDays >= 1095;
+    },
+  },
+  {
+    id: "clean_five_years",
+    title: "Five Year Legend",
+    description: "Stay clean for 1825 days",
+    icon: "👑",
+    category: "milestones",
+    rarity: "legendary",
+    condition: (userData) => {
+      const maxCleanDays = Math.max(
+        ...(userData.addictions?.map((a: any) => a.cleanDays || 0) || [0]),
+      );
+      return maxCleanDays >= 1825;
     },
   },
 
