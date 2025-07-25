@@ -18,6 +18,13 @@ import Onboarding from "./pages/Onboarding";
 import Placeholder from "./pages/Placeholder";
 import NotFound from "./pages/NotFound";
 
+// Extend HTMLElement type to include our custom property
+declare global {
+  interface HTMLElement {
+    _reactRoot?: ReturnType<typeof createRoot>;
+  }
+}
+
 const queryClient = new QueryClient();
 
 function AppContent() {
