@@ -204,6 +204,12 @@ export default function Index() {
       setGoals(userData.goals || mockGoals);
       setAddictions(userData.addictions || mockAddictions);
       setCompletedGoals(userData.completedGoals || []);
+
+      // Check if user just completed onboarding (has no tutorial completion flag)
+      const hasSeenTutorial = localStorage.getItem(`tutorial_completed_${user?.id}`);
+      if (!hasSeenTutorial && userData.preferences?.onboardingCompleted && (userData.goals?.length > 0 || userData.addictions?.length > 0)) {
+        setShowTutorial(true);
+      }
     } else if (user) {
       // Use mock data for new users
       setGoals(mockGoals);
