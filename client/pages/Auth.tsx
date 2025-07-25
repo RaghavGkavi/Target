@@ -331,7 +331,7 @@ export default function Auth() {
             {/* Demo Account */}
             <div className="text-center space-y-2">
               <p className="text-xs text-muted-foreground">
-                Demo Account: demo@lockin.app / demo123
+                Demo Account: demo@target.app / demo123
               </p>
             </div>
           </CardContent>
