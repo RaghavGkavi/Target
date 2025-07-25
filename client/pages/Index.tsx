@@ -187,6 +187,35 @@ export default function Index() {
     setIsInitialLoad(false);
   }, [userData, user]);
 
+  // Function to update discipline ranking
+  const updateDisciplineRanking = () => {
+    if (!userData?.disciplineData) return;
+
+    const totalCompletions = completedGoals.reduce((sum, goal) => sum + goal.completedCount, 0);
+    const consistencyScore = calculateConsistencyScore(goals);
+
+    const newRank = calculateDisciplineRank(
+      userData.disciplineData.baseScore,
+      totalCompletions,
+      consistencyScore,
+      goals,
+      completedGoals
+    );
+
+    const updatedDisciplineData = {
+      ...userData.disciplineData,
+      currentRank: newRank,
+      totalCompletions,
+      consistencyScore,
+      lastUpdated: new Date()
+    };
+
+    updateUserData({
+      ...userData,
+      disciplineData: updatedDisciplineData
+    });
+  };
+
   // Save user data whenever goals, addictions, or completed goals change (but not on initial load)
   useEffect(() => {
     if (!isInitialLoad && user && userData) {
@@ -195,6 +224,9 @@ export default function Index() {
         addictions,
         completedGoals
       });
+
+      // Update discipline ranking
+      updateDisciplineRanking();
     }
   }, [goals, addictions, completedGoals, isInitialLoad, user]);
 
