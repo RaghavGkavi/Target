@@ -32,6 +32,10 @@ export interface UserData {
     showRecoveries: boolean;
     profileVisibility: 'public' | 'private';
   };
+  achievements?: Array<{
+    id: string;
+    earnedAt: Date;
+  }>;
 }
 
 interface AuthContextType {
