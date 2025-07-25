@@ -222,15 +222,29 @@ export default function Index() {
     }
   };
 
-  const markGoalComplete = (goalId: string) => {
+  const markGoalComplete = (goalId: string, forceAdd: boolean = false) => {
+    const today = new Date().toDateString();
+
     setGoals(currentGoals => {
       const goal = currentGoals.find(g => g.id === goalId);
       if (!goal) return currentGoals;
+
+      // Check if already logged today
+      if (goal.lastLoggedDate === today && !forceAdd) {
+        // Show affirmation dialog
+        setAffirmationDialog({
+          isOpen: true,
+          addictionId: goalId, // Reuse the same dialog for goals
+          affirmationText: ""
+        });
+        return currentGoals;
+      }
 
       const newProgress = Math.min(100, goal.progress + 100 / goal.targetDays);
 
       if (newProgress >= 100) {
         // Goal completed - move to completed goals and restart with higher target
+        const finalStreak = goal.streak + 1;
         const completedGoal: CompletedGoal = {
           id: goal.id,
           title: goal.title,
@@ -238,7 +252,7 @@ export default function Index() {
           category: goal.category,
           completedCount: 1,
           totalDaysCompleted: goal.targetDays,
-          longestStreak: goal.streak + 1,
+          longestStreak: finalStreak,
           completionDates: [new Date()],
           currentLevel: 1,
           color: goal.color
@@ -254,9 +268,9 @@ export default function Index() {
                     ...cg,
                     completedCount: cg.completedCount + 1,
                     totalDaysCompleted: cg.totalDaysCompleted + goal.targetDays,
-                    longestStreak: Math.max(cg.longestStreak, goal.streak + 1),
+                    longestStreak: Math.max(cg.longestStreak, finalStreak),
                     completionDates: [...cg.completionDates, new Date()],
-                    currentLevel: Math.floor(cg.completedCount / 5) + 1
+                    currentLevel: Math.floor((cg.completedCount + 1) / 5) + 1
                   }
                 : cg
             );
@@ -265,7 +279,7 @@ export default function Index() {
           }
         });
 
-        // Restart goal with increased target (add 7 more days)
+        // Restart goal with increased target (add 7 more days) BUT KEEP THE STREAK
         return currentGoals.map(g =>
           g.id === goalId
             ? {
@@ -273,8 +287,9 @@ export default function Index() {
                 progress: 0,
                 daysCompleted: 0,
                 targetDays: g.targetDays + 7,
-                streak: 0,
-                lastUpdated: new Date()
+                streak: finalStreak, // CARRY OVER THE STREAK!
+                lastUpdated: new Date(),
+                lastLoggedDate: today
               }
             : g
         );
@@ -288,6 +303,7 @@ export default function Index() {
                 progress: newProgress,
                 streak: g.streak + 1,
                 lastUpdated: new Date(),
+                lastLoggedDate: today,
               }
             : g,
         );
