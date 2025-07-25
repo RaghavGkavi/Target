@@ -973,6 +973,54 @@ export default function Index() {
             <h2 className="text-xl font-semibold">Your Progress Insights</h2>
 
             <div className="grid gap-4 md:grid-cols-2">
+              {/* Discipline Ranking Details */}
+              {userData?.disciplineData && (() => {
+                const rankInfo = getDisciplineRankInfo(userData.disciplineData.currentRank);
+                const nextRankIndex = Math.min(14, DISCIPLINE_RANKS.indexOf(userData.disciplineData.currentRank) + 1);
+                const nextRank = DISCIPLINE_RANKS[nextRankIndex];
+                const progress = ((DISCIPLINE_RANKS.indexOf(userData.disciplineData.currentRank) + 1) / DISCIPLINE_RANKS.length) * 100;
+
+                return (
+                  <Card className="rounded-xl md:col-span-2">
+                    <CardHeader>
+                      <CardTitle className="flex items-center space-x-2">
+                        <div className="text-lg">{rankInfo.emoji}</div>
+                        <span>Discipline Ranking</span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          <div className={`text-4xl font-bold ${rankInfo.color}`}>
+                            {userData.disciplineData.currentRank}
+                          </div>
+                          <div>
+                            <p className="font-semibold">{rankInfo.description}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {userData.disciplineData.totalCompletions} total completions
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm text-muted-foreground">Consistency</p>
+                          <p className="font-semibold">{userData.disciplineData.consistencyScore}%</p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span>Progress to {nextRank}</span>
+                          <span>{Math.round(progress)}%</span>
+                        </div>
+                        <Progress value={progress} className="h-2" />
+                        <p className="text-xs text-muted-foreground">
+                          Keep completing goals and maintaining streaks to improve your ranking!
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })()}
               <Card className="rounded-xl">
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
