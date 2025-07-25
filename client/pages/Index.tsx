@@ -816,7 +816,6 @@ export default function Index() {
                         <CheckCircle2 className="h-4 w-4 mr-1" />
                         Complete
                       </Button>
-
                     </div>
                   </CardContent>
                 </Card>
@@ -1376,7 +1375,6 @@ export default function Index() {
                     </Card>
                   );
                 })()}
-
 
               <Card className="rounded-xl">
                 <CardHeader>
