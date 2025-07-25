@@ -376,11 +376,13 @@ export default function Index() {
         return currentGoals;
       }
 
-      const newProgress = Math.min(100, goal.progress + 100 / goal.targetDays);
+      // Calculate new values
+      const newDaysCompleted = goal.daysCompleted + 1;
+      const newProgress = Math.min(100, (newDaysCompleted / goal.targetDays) * 100);
+      const newStreak = goal.streak + 1;
 
       if (newProgress >= 100) {
         // Goal completed - move to completed goals and restart with higher target
-        const finalStreak = goal.streak + 1;
         const completedGoal: CompletedGoal = {
           id: goal.id,
           title: goal.title,
@@ -388,7 +390,7 @@ export default function Index() {
           category: goal.category,
           completedCount: 1,
           totalDaysCompleted: goal.targetDays,
-          longestStreak: finalStreak,
+          longestStreak: newStreak,
           completionDates: [new Date()],
           currentLevel: 1,
           color: goal.color,
@@ -406,7 +408,7 @@ export default function Index() {
                     ...cg,
                     completedCount: cg.completedCount + 1,
                     totalDaysCompleted: cg.totalDaysCompleted + goal.targetDays,
-                    longestStreak: Math.max(cg.longestStreak, finalStreak),
+                    longestStreak: Math.max(cg.longestStreak, newStreak),
                     completionDates: [...cg.completionDates, new Date()],
                     currentLevel: Math.floor((cg.completedCount + 1) / 5) + 1,
                   }
@@ -425,7 +427,7 @@ export default function Index() {
                 progress: 0,
                 daysCompleted: 0,
                 targetDays: g.targetDays + 7,
-                streak: finalStreak, // CARRY OVER THE STREAK!
+                streak: newStreak, // CARRY OVER THE STREAK!
                 lastUpdated: new Date(),
                 lastLoggedDate: today,
               }
@@ -437,9 +439,9 @@ export default function Index() {
           g.id === goalId
             ? {
                 ...g,
-                daysCompleted: g.daysCompleted + 1,
+                daysCompleted: newDaysCompleted,
                 progress: newProgress,
-                streak: g.streak + 1,
+                streak: newStreak,
                 lastUpdated: new Date(),
                 lastLoggedDate: today,
               }
