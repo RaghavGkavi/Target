@@ -691,6 +691,13 @@ export default function Index() {
                 </Button>
               </Link>
 
+              {/* Developer Mode Indicator */}
+              {user?.email === "raghav.gkavi@gmail.com" && (
+                <Badge variant="secondary" className="text-xs px-2 py-1">
+                  🔓 DEV MODE
+                </Badge>
+              )}
+
               {/* Theme Toggle */}
               <ThemeToggle />
 
