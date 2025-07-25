@@ -204,7 +204,7 @@ function AppRoutes() {
           <ProtectedRoute>
             <Placeholder
               title="Settings"
-              description="Customize your LockIn experience"
+              description="Customize your Target experience"
               suggestion="I can add user preferences, notification settings, and theme customization!"
             />
           </ProtectedRoute>
