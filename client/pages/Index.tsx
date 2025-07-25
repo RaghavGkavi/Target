@@ -532,8 +532,9 @@ export default function Index() {
 
       console.log("🔧 Found addiction:", addiction);
 
-      // Check if already logged today
-      if (addiction.lastLoggedDate === today && !forceAdd) {
+      // Check if already logged today (bypass for developer account)
+      const isDeveloper = user?.email === "raghav.gkavi@gmail.com";
+      if (addiction.lastLoggedDate === today && !forceAdd && !isDeveloper) {
         console.log("🔧 Already logged today, showing affirmation dialog");
         // Show affirmation dialog
         setAffirmationDialog({
@@ -542,6 +543,10 @@ export default function Index() {
           affirmationText: "",
         });
         return currentAddictions;
+      }
+
+      if (isDeveloper && addiction.lastLoggedDate === today && !forceAdd) {
+        console.log("🔓 Developer account detected - bypassing day restriction for addictions");
       }
 
       const newCleanDays = addiction.cleanDays + 1;
