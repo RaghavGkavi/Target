@@ -2,7 +2,13 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Target, Mail, Lock, User, Eye, EyeOff, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
@@ -14,28 +20,28 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 export default function Auth() {
   const navigate = useNavigate();
   const { signIn, signUp, signInWithGoogle } = useAuth();
-  
+
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  
+
   const [signInForm, setSignInForm] = useState({
     email: "",
-    password: ""
+    password: "",
   });
-  
+
   const [signUpForm, setSignUpForm] = useState({
     displayName: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
-    
+
     try {
       const result = await signIn(signInForm.email, signInForm.password);
       if (result.success) {
@@ -53,21 +59,25 @@ export default function Auth() {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    
+
     if (signUpForm.password !== signUpForm.confirmPassword) {
       setError("Passwords do not match");
       return;
     }
-    
+
     if (signUpForm.password.length < 6) {
       setError("Password must be at least 6 characters");
       return;
     }
-    
+
     setIsLoading(true);
-    
+
     try {
-      const result = await signUp(signUpForm.email, signUpForm.password, signUpForm.displayName);
+      const result = await signUp(
+        signUpForm.email,
+        signUpForm.password,
+        signUpForm.displayName,
+      );
       if (result.success) {
         navigate("/");
       } else {
@@ -83,7 +93,7 @@ export default function Auth() {
   const handleGoogleSignIn = async () => {
     setError("");
     setIsLoading(true);
-    
+
     try {
       const result = await signInWithGoogle();
       if (result.success) {
@@ -129,7 +139,7 @@ export default function Auth() {
               Sign in to your account or create a new one to start your journey
             </CardDescription>
           </CardHeader>
-          
+
           <CardContent className="space-y-6">
             {error && (
               <Alert variant="destructive" className="rounded-lg">
@@ -139,8 +149,12 @@ export default function Auth() {
 
             <Tabs defaultValue="signin" className="space-y-4">
               <TabsList className="grid w-full grid-cols-2 rounded-lg">
-                <TabsTrigger value="signin" className="rounded-md">Sign In</TabsTrigger>
-                <TabsTrigger value="signup" className="rounded-md">Sign Up</TabsTrigger>
+                <TabsTrigger value="signin" className="rounded-md">
+                  Sign In
+                </TabsTrigger>
+                <TabsTrigger value="signup" className="rounded-md">
+                  Sign Up
+                </TabsTrigger>
               </TabsList>
 
               {/* Sign In Tab */}
@@ -155,13 +169,18 @@ export default function Auth() {
                         type="email"
                         placeholder="Enter your email"
                         value={signInForm.email}
-                        onChange={(e) => setSignInForm({ ...signInForm, email: e.target.value })}
+                        onChange={(e) =>
+                          setSignInForm({
+                            ...signInForm,
+                            email: e.target.value,
+                          })
+                        }
                         className="pl-10 rounded-lg"
                         required
                       />
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="signin-password">Password</Label>
                     <div className="relative">
@@ -171,7 +190,12 @@ export default function Auth() {
                         type={showPassword ? "text" : "password"}
                         placeholder="Enter your password"
                         value={signInForm.password}
-                        onChange={(e) => setSignInForm({ ...signInForm, password: e.target.value })}
+                        onChange={(e) =>
+                          setSignInForm({
+                            ...signInForm,
+                            password: e.target.value,
+                          })
+                        }
                         className="pl-10 pr-10 rounded-lg"
                         required
                       />
@@ -184,10 +208,10 @@ export default function Auth() {
                       </button>
                     </div>
                   </div>
-                  
-                  <Button 
-                    type="submit" 
-                    className="w-full rounded-lg" 
+
+                  <Button
+                    type="submit"
+                    className="w-full rounded-lg"
                     disabled={isLoading}
                   >
                     {isLoading ? (
@@ -214,13 +238,18 @@ export default function Auth() {
                         type="text"
                         placeholder="Enter your name"
                         value={signUpForm.displayName}
-                        onChange={(e) => setSignUpForm({ ...signUpForm, displayName: e.target.value })}
+                        onChange={(e) =>
+                          setSignUpForm({
+                            ...signUpForm,
+                            displayName: e.target.value,
+                          })
+                        }
                         className="pl-10 rounded-lg"
                         required
                       />
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="signup-email">Email</Label>
                     <div className="relative">
@@ -230,13 +259,18 @@ export default function Auth() {
                         type="email"
                         placeholder="Enter your email"
                         value={signUpForm.email}
-                        onChange={(e) => setSignUpForm({ ...signUpForm, email: e.target.value })}
+                        onChange={(e) =>
+                          setSignUpForm({
+                            ...signUpForm,
+                            email: e.target.value,
+                          })
+                        }
                         className="pl-10 rounded-lg"
                         required
                       />
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="signup-password">Password</Label>
                     <div className="relative">
@@ -246,7 +280,12 @@ export default function Auth() {
                         type={showPassword ? "text" : "password"}
                         placeholder="Create a password"
                         value={signUpForm.password}
-                        onChange={(e) => setSignUpForm({ ...signUpForm, password: e.target.value })}
+                        onChange={(e) =>
+                          setSignUpForm({
+                            ...signUpForm,
+                            password: e.target.value,
+                          })
+                        }
                         className="pl-10 pr-10 rounded-lg"
                         required
                         minLength={6}
@@ -260,7 +299,7 @@ export default function Auth() {
                       </button>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="signup-confirm">Confirm Password</Label>
                     <div className="relative">
@@ -270,16 +309,21 @@ export default function Auth() {
                         type={showPassword ? "text" : "password"}
                         placeholder="Confirm your password"
                         value={signUpForm.confirmPassword}
-                        onChange={(e) => setSignUpForm({ ...signUpForm, confirmPassword: e.target.value })}
+                        onChange={(e) =>
+                          setSignUpForm({
+                            ...signUpForm,
+                            confirmPassword: e.target.value,
+                          })
+                        }
                         className="pl-10 rounded-lg"
                         required
                       />
                     </div>
                   </div>
-                  
-                  <Button 
-                    type="submit" 
-                    className="w-full rounded-lg" 
+
+                  <Button
+                    type="submit"
+                    className="w-full rounded-lg"
                     disabled={isLoading}
                   >
                     {isLoading ? (
@@ -301,7 +345,9 @@ export default function Auth() {
                 <Separator className="w-full" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
+                <span className="bg-card px-2 text-muted-foreground">
+                  Or continue with
+                </span>
               </div>
             </div>
 

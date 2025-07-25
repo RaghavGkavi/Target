@@ -90,90 +90,126 @@ function AppRoutes() {
   return (
     <Routes>
       {/* Public Routes */}
-      <Route path="/auth" element={
-        <PublicRoute>
-          <Auth />
-        </PublicRoute>
-      } />
+      <Route
+        path="/auth"
+        element={
+          <PublicRoute>
+            <Auth />
+          </PublicRoute>
+        }
+      />
 
       {/* Onboarding Route - requires auth but not full onboarding */}
-      <Route path="/onboarding" element={
-        <OnboardingRoute>
-          <Onboarding />
-        </OnboardingRoute>
-      } />
+      <Route
+        path="/onboarding"
+        element={
+          <OnboardingRoute>
+            <Onboarding />
+          </OnboardingRoute>
+        }
+      />
 
       {/* Protected Routes */}
-      <Route path="/" element={
-        <ProtectedRoute>
-          <Index />
-        </ProtectedRoute>
-      } />
-      <Route path="/create-goal" element={
-        <ProtectedRoute>
-          <CreateGoal />
-        </ProtectedRoute>
-      } />
-      <Route path="/completed-goals" element={
-        <ProtectedRoute>
-          <CompletedGoals />
-        </ProtectedRoute>
-      } />
-      <Route path="/profile" element={
-        <ProtectedRoute>
-          <Profile />
-        </ProtectedRoute>
-      } />
-      <Route path="/settings" element={
-        <ProtectedRoute>
-          <Settings />
-        </ProtectedRoute>
-      } />
-      <Route path="/goals" element={
-        <ProtectedRoute>
-          <Placeholder
-            title="Goal Management"
-            description="Manage and edit your existing goals"
-            suggestion="I can add features like goal editing, deletion, and detailed progress tracking here!"
-          />
-        </ProtectedRoute>
-      } />
-      <Route path="/habits" element={
-        <ProtectedRoute>
-          <Placeholder
-            title="Habit Tracker"
-            description="Track your daily habits and routines"
-            suggestion="I can build a comprehensive habit tracking system with calendars and analytics!"
-          />
-        </ProtectedRoute>
-      } />
-      <Route path="/recovery" element={
-        <ProtectedRoute>
-          <Placeholder
-            title="Addiction Recovery"
-            description="Detailed addiction recovery tools and support"
-            suggestion="I can add features like trigger tracking, support groups, and recovery milestones!"
-          />
-        </ProtectedRoute>
-      } />
-      <Route path="/analytics" element={
-        <ProtectedRoute>
-          <Placeholder
-            title="Analytics & Insights"
-            description="Detailed progress analytics and insights"
-            suggestion="I can create charts, graphs, and detailed analytics to track your progress over time!"
-          />
-        </ProtectedRoute>
-      } />
-      <Route path="/settings" element={
-        <ProtectedRoute>
-          <Placeholder
-            title="Settings"
-            description="Customize your LockIn experience"
-            suggestion="I can add user preferences, notification settings, and theme customization!"
-          />
-        </ProtectedRoute>
-      } />
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <Index />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/create-goal"
+        element={
+          <ProtectedRoute>
+            <CreateGoal />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/completed-goals"
+        element={
+          <ProtectedRoute>
+            <CompletedGoals />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <Settings />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/goals"
+        element={
+          <ProtectedRoute>
+            <Placeholder
+              title="Goal Management"
+              description="Manage and edit your existing goals"
+              suggestion="I can add features like goal editing, deletion, and detailed progress tracking here!"
+            />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/habits"
+        element={
+          <ProtectedRoute>
+            <Placeholder
+              title="Habit Tracker"
+              description="Track your daily habits and routines"
+              suggestion="I can build a comprehensive habit tracking system with calendars and analytics!"
+            />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/recovery"
+        element={
+          <ProtectedRoute>
+            <Placeholder
+              title="Addiction Recovery"
+              description="Detailed addiction recovery tools and support"
+              suggestion="I can add features like trigger tracking, support groups, and recovery milestones!"
+            />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/analytics"
+        element={
+          <ProtectedRoute>
+            <Placeholder
+              title="Analytics & Insights"
+              description="Detailed progress analytics and insights"
+              suggestion="I can create charts, graphs, and detailed analytics to track your progress over time!"
+            />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <Placeholder
+              title="Settings"
+              description="Customize your LockIn experience"
+              suggestion="I can add user preferences, notification settings, and theme customization!"
+            />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Catch-all route */}
       <Route path="*" element={<NotFound />} />

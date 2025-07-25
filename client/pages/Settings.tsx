@@ -1,16 +1,58 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, Upload, User, Shield, Bell, Palette, LogOut, RotateCcw, Trash2, AlertTriangle } from "lucide-react";
+import {
+  ArrowLeft,
+  Save,
+  Upload,
+  User,
+  Shield,
+  Bell,
+  Palette,
+  LogOut,
+  RotateCcw,
+  Trash2,
+  AlertTriangle,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -19,13 +61,21 @@ export default function Settings() {
   const navigate = useNavigate();
   const { user, userData, updateUserData, signOut } = useAuth();
   const { theme } = useTheme();
-  
+
   const [displayName, setDisplayName] = useState(user?.displayName || "");
   const [profileImage, setProfileImage] = useState(user?.photoURL || "");
-  const [showGoals, setShowGoals] = useState(userData?.privacy?.showGoals ?? true);
-  const [showRecoveries, setShowRecoveries] = useState(userData?.privacy?.showRecoveries ?? false);
-  const [profileVisibility, setProfileVisibility] = useState(userData?.privacy?.profileVisibility || "private");
-  const [notifications, setNotifications] = useState(userData?.preferences?.notifications ?? true);
+  const [showGoals, setShowGoals] = useState(
+    userData?.privacy?.showGoals ?? true,
+  );
+  const [showRecoveries, setShowRecoveries] = useState(
+    userData?.privacy?.showRecoveries ?? false,
+  );
+  const [profileVisibility, setProfileVisibility] = useState(
+    userData?.privacy?.profileVisibility || "private",
+  );
+  const [notifications, setNotifications] = useState(
+    userData?.preferences?.notifications ?? true,
+  );
   const [isSaving, setIsSaving] = useState(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -59,8 +109,8 @@ export default function Settings() {
       setLastScrollY(currentScrollY);
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
   const handleSave = async () => {
@@ -71,22 +121,22 @@ export default function Settings() {
         privacy: {
           showGoals,
           showRecoveries,
-          profileVisibility: profileVisibility as 'public' | 'private'
+          profileVisibility: profileVisibility as "public" | "private",
         },
         preferences: {
           ...userData?.preferences,
-          notifications
-        }
+          notifications,
+        },
       });
-      
+
       // Note: In a real app, you would also update the user's profile information
       // This would require backend API calls to update name and profile picture
-      
+
       setTimeout(() => {
         setIsSaving(false);
       }, 1000);
     } catch (error) {
-      console.error('Failed to save settings:', error);
+      console.error("Failed to save settings:", error);
       setIsSaving(false);
     }
   };
@@ -94,15 +144,17 @@ export default function Settings() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
       {/* Header */}
-      <header className={`border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50 transition-transform duration-300 ${
-        isHeaderVisible ? 'translate-y-0' : '-translate-y-full'
-      }`}>
+      <header
+        className={`border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50 transition-transform duration-300 ${
+          isHeaderVisible ? "translate-y-0" : "-translate-y-full"
+        }`}
+      >
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => navigate("/")}
                 className="rounded-lg"
               >
@@ -111,12 +163,14 @@ export default function Settings() {
               </Button>
               <div>
                 <h1 className="text-xl font-bold">Settings</h1>
-                <p className="text-sm text-muted-foreground">Customize your Target experience</p>
+                <p className="text-sm text-muted-foreground">
+                  Customize your Target experience
+                </p>
               </div>
             </div>
             <div className="flex items-center space-x-2">
               <ThemeToggle />
-              <Button 
+              <Button
                 onClick={handleSave}
                 disabled={isSaving}
                 className="rounded-lg"
@@ -147,26 +201,29 @@ export default function Settings() {
               <Avatar className="h-24 w-24">
                 <AvatarImage src={profileImage} alt={displayName} />
                 <AvatarFallback className="bg-primary text-primary-foreground text-2xl">
-                  {displayName?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase()}
+                  {displayName?.charAt(0)?.toUpperCase() ||
+                    user?.email?.charAt(0)?.toUpperCase()}
                 </AvatarFallback>
               </Avatar>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="picture">Profile Picture</Label>
                 <div className="flex space-x-2">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="sm"
-                    onClick={() => document.getElementById('picture')?.click()}
+                    onClick={() => document.getElementById("picture")?.click()}
                     className="rounded-lg"
                   >
                     <Upload className="h-4 w-4 mr-2" />
                     Upload Image
                   </Button>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="sm"
-                    onClick={() => setProfileImage(generateAvatarUrl(displayName))}
+                    onClick={() =>
+                      setProfileImage(generateAvatarUrl(displayName))
+                    }
                     className="rounded-lg"
                   >
                     Generate Avatar
@@ -184,9 +241,9 @@ export default function Settings() {
                 </p>
               </div>
             </div>
-            
+
             <Separator />
-            
+
             {/* Display Name */}
             <div className="space-y-2">
               <Label htmlFor="displayName">Display Name</Label>
@@ -219,22 +276,30 @@ export default function Settings() {
             {/* Profile Visibility */}
             <div className="space-y-2">
               <Label htmlFor="profileVisibility">Profile Visibility</Label>
-              <Select value={profileVisibility} onValueChange={setProfileVisibility}>
+              <Select
+                value={profileVisibility}
+                onValueChange={setProfileVisibility}
+              >
                 <SelectTrigger className="rounded-lg">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="private">Private - Only visible to you</SelectItem>
-                  <SelectItem value="public">Public - Visible to others when shared</SelectItem>
+                  <SelectItem value="private">
+                    Private - Only visible to you
+                  </SelectItem>
+                  <SelectItem value="public">
+                    Public - Visible to others when shared
+                  </SelectItem>
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground">
-                Private profiles can still be shared manually via the share button
+                Private profiles can still be shared manually via the share
+                button
               </p>
             </div>
-            
+
             <Separator />
-            
+
             {/* Goals Visibility */}
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
@@ -249,13 +314,14 @@ export default function Settings() {
                 onCheckedChange={setShowGoals}
               />
             </div>
-            
+
             {/* Recovery Visibility */}
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label htmlFor="showRecoveries">Show Recovery Progress</Label>
                 <p className="text-xs text-muted-foreground">
-                  Display your addiction recovery tracking (sensitive information)
+                  Display your addiction recovery tracking (sensitive
+                  information)
                 </p>
               </div>
               <Switch
@@ -322,7 +388,9 @@ export default function Settings() {
         {/* Account Actions */}
         <Card className="rounded-xl border-destructive/20">
           <CardHeader>
-            <CardTitle className="text-destructive">Dangerous Actions</CardTitle>
+            <CardTitle className="text-destructive">
+              Dangerous Actions
+            </CardTitle>
             <CardDescription>
               These actions cannot be undone. Please proceed with caution.
             </CardDescription>
@@ -368,21 +436,21 @@ function GoalResetDialog() {
         completedGoals: [],
         disciplineData: {
           baseScore: 50, // Reset to middle baseline
-          currentRank: 'C',
+          currentRank: "C",
           totalCompletions: 0,
           consistencyScore: 0,
-          lastUpdated: new Date()
+          lastUpdated: new Date(),
         },
         preferences: {
-          theme: 'system',
+          theme: "system",
           notifications: true,
-          onboardingCompleted: true // Keep onboarding completed
+          onboardingCompleted: true, // Keep onboarding completed
         },
         privacy: {
           showGoals: true,
           showRecoveries: false,
-          profileVisibility: 'private'
-        }
+          profileVisibility: "private",
+        },
       });
 
       setIsOpen(false);
@@ -391,7 +459,7 @@ function GoalResetDialog() {
       // Reload the page to reset the app state
       window.location.reload();
     } catch (error) {
-      console.error('Failed to reset goals:', error);
+      console.error("Failed to reset goals:", error);
     } finally {
       setIsResetting(false);
     }
@@ -415,14 +483,17 @@ function GoalResetDialog() {
             <span>Reset All Progress</span>
           </DialogTitle>
           <DialogDescription>
-            This will permanently delete all your goals, progress, streaks, and achievements.
-            Your discipline rank will be reset to baseline. This action cannot be undone.
+            This will permanently delete all your goals, progress, streaks, and
+            achievements. Your discipline rank will be reset to baseline. This
+            action cannot be undone.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
           <div className="bg-warning/10 p-4 rounded-lg">
-            <h4 className="font-semibold text-warning mb-2">What will be reset:</h4>
+            <h4 className="font-semibold text-warning mb-2">
+              What will be reset:
+            </h4>
             <ul className="text-sm space-y-1">
               <li>• All active goals and progress</li>
               <li>• All recovery tracking data</li>
@@ -434,7 +505,9 @@ function GoalResetDialog() {
 
           {showPasswordField && (
             <div className="space-y-2">
-              <Label htmlFor="reset-password">Enter your password to confirm:</Label>
+              <Label htmlFor="reset-password">
+                Enter your password to confirm:
+              </Label>
               <Input
                 id="reset-password"
                 type="password"
@@ -448,11 +521,14 @@ function GoalResetDialog() {
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => {
-            setIsOpen(false);
-            setPassword("");
-            setShowPasswordField(false);
-          }}>
+          <Button
+            variant="outline"
+            onClick={() => {
+              setIsOpen(false);
+              setPassword("");
+              setShowPasswordField(false);
+            }}
+          >
             Cancel
           </Button>
           <Button
@@ -460,7 +536,11 @@ function GoalResetDialog() {
             disabled={isResetting}
             className="bg-warning text-warning-foreground hover:bg-warning/90"
           >
-            {isResetting ? "Resetting..." : showPasswordField ? "Confirm Reset" : "I Understand, Reset Everything"}
+            {isResetting
+              ? "Resetting..."
+              : showPasswordField
+                ? "Confirm Reset"
+                : "I Understand, Reset Everything"}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -486,16 +566,16 @@ function DeleteAccountDialog() {
     try {
       // In a real app, this would call an API to delete the account
       // For now, we'll just clear all local data and sign out
-      localStorage.removeItem('target_current_user');
-      Object.keys(localStorage).forEach(key => {
-        if (key.startsWith('target_user_data_')) {
+      localStorage.removeItem("target_current_user");
+      Object.keys(localStorage).forEach((key) => {
+        if (key.startsWith("target_user_data_")) {
           localStorage.removeItem(key);
         }
       });
 
       await signOut();
     } catch (error) {
-      console.error('Failed to delete account:', error);
+      console.error("Failed to delete account:", error);
     } finally {
       setIsDeleting(false);
     }
@@ -520,13 +600,16 @@ function DeleteAccountDialog() {
           </DialogTitle>
           <DialogDescription>
             This will permanently delete your account and all associated data.
-            This action cannot be undone and you will lose access to your profile forever.
+            This action cannot be undone and you will lose access to your
+            profile forever.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
           <div className="bg-destructive/10 p-4 rounded-lg">
-            <h4 className="font-semibold text-destructive mb-2">What will be deleted:</h4>
+            <h4 className="font-semibold text-destructive mb-2">
+              What will be deleted:
+            </h4>
             <ul className="text-sm space-y-1">
               <li>• Your entire account and profile</li>
               <li>• All goals, progress, and achievements</li>
@@ -538,7 +621,9 @@ function DeleteAccountDialog() {
 
           {showPasswordField && (
             <div className="space-y-2">
-              <Label htmlFor="delete-password">Enter your password to confirm:</Label>
+              <Label htmlFor="delete-password">
+                Enter your password to confirm:
+              </Label>
               <Input
                 id="delete-password"
                 type="password"
@@ -552,11 +637,14 @@ function DeleteAccountDialog() {
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => {
-            setIsOpen(false);
-            setPassword("");
-            setShowPasswordField(false);
-          }}>
+          <Button
+            variant="outline"
+            onClick={() => {
+              setIsOpen(false);
+              setPassword("");
+              setShowPasswordField(false);
+            }}
+          >
             Cancel
           </Button>
           <Button
@@ -564,7 +652,11 @@ function DeleteAccountDialog() {
             disabled={isDeleting}
             variant="destructive"
           >
-            {isDeleting ? "Deleting..." : showPasswordField ? "Delete Forever" : "I Understand, Delete My Account"}
+            {isDeleting
+              ? "Deleting..."
+              : showPasswordField
+                ? "Delete Forever"
+                : "I Understand, Delete My Account"}
           </Button>
         </DialogFooter>
       </DialogContent>

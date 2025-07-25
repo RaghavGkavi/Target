@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { calculateDisciplineRank, calculateConsistencyScore, getDisciplineRankInfo, DISCIPLINE_RANKS } from "@/lib/disciplineRanking";
+import {
+  calculateDisciplineRank,
+  calculateConsistencyScore,
+  getDisciplineRankInfo,
+  DISCIPLINE_RANKS,
+} from "@/lib/disciplineRanking";
 import {
   Plus,
   Target,
@@ -33,12 +38,37 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -154,7 +184,9 @@ export default function Index() {
   const [addictions, setAddictions] = useState<Addiction[]>([]);
   const [completedGoals, setCompletedGoals] = useState<CompletedGoal[]>([]);
   const [currentQuote, setCurrentQuote] = useState("");
-  const [editingAddiction, setEditingAddiction] = useState<Addiction | null>(null);
+  const [editingAddiction, setEditingAddiction] = useState<Addiction | null>(
+    null,
+  );
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [newAddiction, setNewAddiction] = useState({
     name: "",
@@ -191,8 +223,8 @@ export default function Index() {
       setLastScrollY(currentScrollY);
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
   // Load user data when component mounts or userData changes
@@ -214,7 +246,10 @@ export default function Index() {
   const updateDisciplineRanking = () => {
     if (!userData?.disciplineData) return;
 
-    const totalCompletions = completedGoals.reduce((sum, goal) => sum + goal.completedCount, 0);
+    const totalCompletions = completedGoals.reduce(
+      (sum, goal) => sum + goal.completedCount,
+      0,
+    );
     const consistencyScore = calculateConsistencyScore(goals);
 
     const newRank = calculateDisciplineRank(
@@ -222,7 +257,7 @@ export default function Index() {
       totalCompletions,
       consistencyScore,
       goals,
-      completedGoals
+      completedGoals,
     );
 
     const updatedDisciplineData = {
@@ -230,12 +265,12 @@ export default function Index() {
       currentRank: newRank,
       totalCompletions,
       consistencyScore,
-      lastUpdated: new Date()
+      lastUpdated: new Date(),
     };
 
     updateUserData({
       ...userData,
-      disciplineData: updatedDisciplineData
+      disciplineData: updatedDisciplineData,
     });
   };
 
@@ -245,7 +280,7 @@ export default function Index() {
       updateUserData({
         goals,
         addictions,
-        completedGoals
+        completedGoals,
       });
 
       // Update discipline ranking
@@ -281,8 +316,8 @@ export default function Index() {
   const markGoalComplete = (goalId: string, forceAdd: boolean = false) => {
     const today = new Date().toDateString();
 
-    setGoals(currentGoals => {
-      const goal = currentGoals.find(g => g.id === goalId);
+    setGoals((currentGoals) => {
+      const goal = currentGoals.find((g) => g.id === goalId);
       if (!goal) return currentGoals;
 
       // Check if already logged today
@@ -291,7 +326,7 @@ export default function Index() {
         setAffirmationDialog({
           isOpen: true,
           addictionId: goalId, // Reuse the same dialog for goals
-          affirmationText: ""
+          affirmationText: "",
         });
         return currentGoals;
       }
@@ -311,14 +346,16 @@ export default function Index() {
           longestStreak: finalStreak,
           completionDates: [new Date()],
           currentLevel: 1,
-          color: goal.color
+          color: goal.color,
         };
 
         // Update completed goals
-        setCompletedGoals(currentCompleted => {
-          const existingCompleted = currentCompleted.find(cg => cg.title === goal.title);
+        setCompletedGoals((currentCompleted) => {
+          const existingCompleted = currentCompleted.find(
+            (cg) => cg.title === goal.title,
+          );
           if (existingCompleted) {
-            return currentCompleted.map(cg =>
+            return currentCompleted.map((cg) =>
               cg.title === goal.title
                 ? {
                     ...cg,
@@ -326,9 +363,9 @@ export default function Index() {
                     totalDaysCompleted: cg.totalDaysCompleted + goal.targetDays,
                     longestStreak: Math.max(cg.longestStreak, finalStreak),
                     completionDates: [...cg.completionDates, new Date()],
-                    currentLevel: Math.floor((cg.completedCount + 1) / 5) + 1
+                    currentLevel: Math.floor((cg.completedCount + 1) / 5) + 1,
                   }
-                : cg
+                : cg,
             );
           } else {
             return [...currentCompleted, completedGoal];
@@ -336,7 +373,7 @@ export default function Index() {
         });
 
         // Restart goal with increased target (add 7 more days) BUT KEEP THE STREAK
-        return currentGoals.map(g =>
+        return currentGoals.map((g) =>
           g.id === goalId
             ? {
                 ...g,
@@ -345,9 +382,9 @@ export default function Index() {
                 targetDays: g.targetDays + 7,
                 streak: finalStreak, // CARRY OVER THE STREAK!
                 lastUpdated: new Date(),
-                lastLoggedDate: today
+                lastLoggedDate: today,
               }
-            : g
+            : g,
         );
       } else {
         // Normal progress update
@@ -370,8 +407,8 @@ export default function Index() {
   const addCleanDay = (addictionId: string, forceAdd: boolean = false) => {
     const today = new Date().toDateString();
 
-    setAddictions(currentAddictions => {
-      const addiction = currentAddictions.find(a => a.id === addictionId);
+    setAddictions((currentAddictions) => {
+      const addiction = currentAddictions.find((a) => a.id === addictionId);
       if (!addiction) return currentAddictions;
 
       // Check if already logged today
@@ -380,7 +417,7 @@ export default function Index() {
         setAffirmationDialog({
           isOpen: true,
           addictionId,
-          affirmationText: ""
+          affirmationText: "",
         });
         return currentAddictions;
       }
@@ -399,11 +436,12 @@ export default function Index() {
   };
 
   const confirmAffirmation = () => {
-    const requiredAffirmation = "I pledge that I was clean for the extra day I am logging.";
+    const requiredAffirmation =
+      "I pledge that I was clean for the extra day I am logging.";
 
     if (affirmationDialog.affirmationText.trim() === requiredAffirmation) {
       // Check if this is for a goal or addiction based on ID format
-      const isGoal = goals.some(g => g.id === affirmationDialog.addictionId);
+      const isGoal = goals.some((g) => g.id === affirmationDialog.addictionId);
 
       if (isGoal) {
         markGoalComplete(affirmationDialog.addictionId, true);
@@ -411,12 +449,16 @@ export default function Index() {
         addCleanDay(affirmationDialog.addictionId, true);
       }
 
-      setAffirmationDialog({ isOpen: false, addictionId: "", affirmationText: "" });
+      setAffirmationDialog({
+        isOpen: false,
+        addictionId: "",
+        affirmationText: "",
+      });
     }
   };
 
   const reportRelapse = (addictionId: string) => {
-    setAddictions(currentAddictions =>
+    setAddictions((currentAddictions) =>
       currentAddictions.map((addiction) =>
         addiction.id === addictionId
           ? {
@@ -425,25 +467,23 @@ export default function Index() {
               lastRelapse: new Date(),
             }
           : addiction,
-      )
+      ),
     );
   };
 
   const deleteAddiction = (addictionId: string) => {
-    setAddictions(currentAddictions =>
-      currentAddictions.filter((addiction) => addiction.id !== addictionId)
+    setAddictions((currentAddictions) =>
+      currentAddictions.filter((addiction) => addiction.id !== addictionId),
     );
   };
 
   const saveEditedAddiction = () => {
     if (!editingAddiction) return;
 
-    setAddictions(currentAddictions =>
+    setAddictions((currentAddictions) =>
       currentAddictions.map((addiction) =>
-        addiction.id === editingAddiction.id
-          ? editingAddiction
-          : addiction,
-      )
+        addiction.id === editingAddiction.id ? editingAddiction : addiction,
+      ),
     );
     setEditingAddiction(null);
   };
@@ -456,10 +496,13 @@ export default function Index() {
       name: newAddiction.name,
       cleanDays: 0,
       longestStreak: 0,
-      triggers: newAddiction.triggers.split(",").map(t => t.trim()).filter(t => t),
+      triggers: newAddiction.triggers
+        .split(",")
+        .map((t) => t.trim())
+        .filter((t) => t),
     };
 
-    setAddictions(currentAddictions => [...currentAddictions, addiction]);
+    setAddictions((currentAddictions) => [...currentAddictions, addiction]);
     setNewAddiction({ name: "", triggers: "" });
     setIsAddDialogOpen(false);
   };
@@ -467,9 +510,11 @@ export default function Index() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 overflow-x-hidden">
       {/* Header */}
-      <header className={`border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50 transition-transform duration-300 ${
-        isHeaderVisible ? 'translate-y-0' : '-translate-y-full'
-      }`}>
+      <header
+        className={`border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50 transition-transform duration-300 ${
+          isHeaderVisible ? "translate-y-0" : "-translate-y-full"
+        }`}
+      >
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -505,11 +550,18 @@ export default function Index() {
               {/* User Menu */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                  <Button
+                    variant="ghost"
+                    className="relative h-10 w-10 rounded-full"
+                  >
                     <Avatar className="h-10 w-10">
-                      <AvatarImage src={user?.photoURL} alt={user?.displayName} />
+                      <AvatarImage
+                        src={user?.photoURL}
+                        alt={user?.displayName}
+                      />
                       <AvatarFallback className="bg-primary text-primary-foreground">
-                        {user?.displayName?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase()}
+                        {user?.displayName?.charAt(0)?.toUpperCase() ||
+                          user?.email?.charAt(0)?.toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                   </Button>
@@ -517,8 +569,12 @@ export default function Index() {
                 <DropdownMenuContent className="w-56" align="end" forceMount>
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">{user?.displayName}</p>
-                      <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
+                      <p className="text-sm font-medium leading-none">
+                        {user?.displayName}
+                      </p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        {user?.email}
+                      </p>
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
@@ -531,7 +587,10 @@ export default function Index() {
                     <span>Settings</span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={signOut} className="text-destructive focus:text-destructive">
+                  <DropdownMenuItem
+                    onClick={signOut}
+                    className="text-destructive focus:text-destructive"
+                  >
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Sign out</span>
                   </DropdownMenuItem>
@@ -611,24 +670,29 @@ export default function Index() {
           </Card>
 
           {/* Discipline Ranking Card */}
-          {userData?.disciplineData && (() => {
-            const rankInfo = getDisciplineRankInfo(userData.disciplineData.currentRank);
-            return (
-              <Card className="rounded-xl">
-                <CardContent className="p-4">
-                  <div className="flex items-center space-x-2">
-                    <div className="text-lg">{rankInfo.emoji}</div>
-                    <div>
-                      <p className={`text-2xl font-bold ${rankInfo.color}`}>
-                        {userData.disciplineData.currentRank}
-                      </p>
-                      <p className="text-xs text-muted-foreground">Discipline</p>
+          {userData?.disciplineData &&
+            (() => {
+              const rankInfo = getDisciplineRankInfo(
+                userData.disciplineData.currentRank,
+              );
+              return (
+                <Card className="rounded-xl">
+                  <CardContent className="p-4">
+                    <div className="flex items-center space-x-2">
+                      <div className="text-lg">{rankInfo.emoji}</div>
+                      <div>
+                        <p className={`text-2xl font-bold ${rankInfo.color}`}>
+                          {userData.disciplineData.currentRank}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Discipline
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })()}
+                  </CardContent>
+                </Card>
+              );
+            })()}
         </div>
 
         {/* Main Content Tabs */}
@@ -717,7 +781,10 @@ export default function Index() {
               <h2 className="text-xl font-semibold">Recovery Tracker</h2>
               <div className="flex items-center space-x-2">
                 <Badge variant="secondary">{addictions.length} tracked</Badge>
-                <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+                <Dialog
+                  open={isAddDialogOpen}
+                  onOpenChange={setIsAddDialogOpen}
+                >
                   <DialogTrigger asChild>
                     <Button size="sm" className="rounded-lg">
                       <Plus className="h-4 w-4 mr-1" />
@@ -738,16 +805,28 @@ export default function Index() {
                           id="name"
                           placeholder="e.g., Social Media, Smoking, Gaming"
                           value={newAddiction.name}
-                          onChange={(e) => setNewAddiction({ ...newAddiction, name: e.target.value })}
+                          onChange={(e) =>
+                            setNewAddiction({
+                              ...newAddiction,
+                              name: e.target.value,
+                            })
+                          }
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="triggers">Common Triggers (optional)</Label>
+                        <Label htmlFor="triggers">
+                          Common Triggers (optional)
+                        </Label>
                         <Input
                           id="triggers"
                           placeholder="e.g., Stress, Boredom, Social situations"
                           value={newAddiction.triggers}
-                          onChange={(e) => setNewAddiction({ ...newAddiction, triggers: e.target.value })}
+                          onChange={(e) =>
+                            setNewAddiction({
+                              ...newAddiction,
+                              triggers: e.target.value,
+                            })
+                          }
                         />
                         <p className="text-xs text-muted-foreground">
                           Separate multiple triggers with commas
@@ -755,10 +834,16 @@ export default function Index() {
                       </div>
                     </div>
                     <DialogFooter>
-                      <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+                      <Button
+                        variant="outline"
+                        onClick={() => setIsAddDialogOpen(false)}
+                      >
                         Cancel
                       </Button>
-                      <Button onClick={addNewAddiction} disabled={!newAddiction.name.trim()}>
+                      <Button
+                        onClick={addNewAddiction}
+                        disabled={!newAddiction.name.trim()}
+                      >
                         Add Tracker
                       </Button>
                     </DialogFooter>
@@ -809,56 +894,80 @@ export default function Index() {
                                     <Input
                                       id="edit-name"
                                       value={editingAddiction.name}
-                                      onChange={(e) => setEditingAddiction({
-                                        ...editingAddiction,
-                                        name: e.target.value
-                                      })}
+                                      onChange={(e) =>
+                                        setEditingAddiction({
+                                          ...editingAddiction,
+                                          name: e.target.value,
+                                        })
+                                      }
                                     />
                                   </div>
                                   <div className="space-y-2">
-                                    <Label htmlFor="edit-triggers">Triggers</Label>
+                                    <Label htmlFor="edit-triggers">
+                                      Triggers
+                                    </Label>
                                     <Input
                                       id="edit-triggers"
-                                      value={editingAddiction.triggers.join(", ")}
-                                      onChange={(e) => setEditingAddiction({
-                                        ...editingAddiction,
-                                        triggers: e.target.value.split(",").map(t => t.trim()).filter(t => t)
-                                      })}
+                                      value={editingAddiction.triggers.join(
+                                        ", ",
+                                      )}
+                                      onChange={(e) =>
+                                        setEditingAddiction({
+                                          ...editingAddiction,
+                                          triggers: e.target.value
+                                            .split(",")
+                                            .map((t) => t.trim())
+                                            .filter((t) => t),
+                                        })
+                                      }
                                       placeholder="Separate with commas"
                                     />
                                   </div>
                                   <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
-                                      <Label htmlFor="edit-clean-days">Clean Days</Label>
+                                      <Label htmlFor="edit-clean-days">
+                                        Clean Days
+                                      </Label>
                                       <Input
                                         id="edit-clean-days"
                                         type="number"
                                         min="0"
                                         value={editingAddiction.cleanDays}
-                                        onChange={(e) => setEditingAddiction({
-                                          ...editingAddiction,
-                                          cleanDays: parseInt(e.target.value) || 0
-                                        })}
+                                        onChange={(e) =>
+                                          setEditingAddiction({
+                                            ...editingAddiction,
+                                            cleanDays:
+                                              parseInt(e.target.value) || 0,
+                                          })
+                                        }
                                       />
                                     </div>
                                     <div className="space-y-2">
-                                      <Label htmlFor="edit-longest-streak">Best Streak</Label>
+                                      <Label htmlFor="edit-longest-streak">
+                                        Best Streak
+                                      </Label>
                                       <Input
                                         id="edit-longest-streak"
                                         type="number"
                                         min="0"
                                         value={editingAddiction.longestStreak}
-                                        onChange={(e) => setEditingAddiction({
-                                          ...editingAddiction,
-                                          longestStreak: parseInt(e.target.value) || 0
-                                        })}
+                                        onChange={(e) =>
+                                          setEditingAddiction({
+                                            ...editingAddiction,
+                                            longestStreak:
+                                              parseInt(e.target.value) || 0,
+                                          })
+                                        }
                                       />
                                     </div>
                                   </div>
                                 </div>
                               )}
                               <DialogFooter>
-                                <Button variant="outline" onClick={() => setEditingAddiction(null)}>
+                                <Button
+                                  variant="outline"
+                                  onClick={() => setEditingAddiction(null)}
+                                >
                                   Cancel
                                 </Button>
                                 <Button onClick={saveEditedAddiction}>
@@ -880,9 +989,13 @@ export default function Index() {
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                               <AlertDialogHeader>
-                                <AlertDialogTitle>Delete Recovery Tracker</AlertDialogTitle>
+                                <AlertDialogTitle>
+                                  Delete Recovery Tracker
+                                </AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  Are you sure you want to delete the {addiction.name} tracker? This action cannot be undone and you'll lose all progress data.
+                                  Are you sure you want to delete the{" "}
+                                  {addiction.name} tracker? This action cannot
+                                  be undone and you'll lose all progress data.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
@@ -934,7 +1047,9 @@ export default function Index() {
                             </Badge>
                           ))
                         ) : (
-                          <p className="text-xs text-muted-foreground">No triggers specified</p>
+                          <p className="text-xs text-muted-foreground">
+                            No triggers specified
+                          </p>
                         )}
                       </div>
                     </div>
@@ -942,8 +1057,11 @@ export default function Index() {
                     <Progress
                       value={
                         addiction.longestStreak > 0
-                          ? (addiction.cleanDays / addiction.longestStreak) * 100
-                          : addiction.cleanDays > 0 ? 100 : 0
+                          ? (addiction.cleanDays / addiction.longestStreak) *
+                            100
+                          : addiction.cleanDays > 0
+                            ? 100
+                            : 0
                       }
                       className="h-2"
                     />
@@ -972,7 +1090,9 @@ export default function Index() {
                           <AlertDialogHeader>
                             <AlertDialogTitle>Report Relapse</AlertDialogTitle>
                             <AlertDialogDescription>
-                              This will reset your clean days counter to 0. Remember, setbacks are part of recovery. You can start again immediately.
+                              This will reset your clean days counter to 0.
+                              Remember, setbacks are part of recovery. You can
+                              start again immediately.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
@@ -999,53 +1119,77 @@ export default function Index() {
 
             <div className="grid gap-4 md:grid-cols-2">
               {/* Discipline Ranking Details */}
-              {userData?.disciplineData && (() => {
-                const rankInfo = getDisciplineRankInfo(userData.disciplineData.currentRank);
-                const nextRankIndex = Math.min(14, DISCIPLINE_RANKS.indexOf(userData.disciplineData.currentRank) + 1);
-                const nextRank = DISCIPLINE_RANKS[nextRankIndex];
-                const progress = ((DISCIPLINE_RANKS.indexOf(userData.disciplineData.currentRank) + 1) / DISCIPLINE_RANKS.length) * 100;
+              {userData?.disciplineData &&
+                (() => {
+                  const rankInfo = getDisciplineRankInfo(
+                    userData.disciplineData.currentRank,
+                  );
+                  const nextRankIndex = Math.min(
+                    14,
+                    DISCIPLINE_RANKS.indexOf(
+                      userData.disciplineData.currentRank,
+                    ) + 1,
+                  );
+                  const nextRank = DISCIPLINE_RANKS[nextRankIndex];
+                  const progress =
+                    ((DISCIPLINE_RANKS.indexOf(
+                      userData.disciplineData.currentRank,
+                    ) +
+                      1) /
+                      DISCIPLINE_RANKS.length) *
+                    100;
 
-                return (
-                  <Card className="rounded-xl md:col-span-2">
-                    <CardHeader>
-                      <CardTitle className="flex items-center space-x-2">
-                        <div className="text-lg">{rankInfo.emoji}</div>
-                        <span>Discipline Ranking</span>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          <div className={`text-4xl font-bold ${rankInfo.color}`}>
-                            {userData.disciplineData.currentRank}
+                  return (
+                    <Card className="rounded-xl md:col-span-2">
+                      <CardHeader>
+                        <CardTitle className="flex items-center space-x-2">
+                          <div className="text-lg">{rankInfo.emoji}</div>
+                          <span>Discipline Ranking</span>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-4">
+                            <div
+                              className={`text-4xl font-bold ${rankInfo.color}`}
+                            >
+                              {userData.disciplineData.currentRank}
+                            </div>
+                            <div>
+                              <p className="font-semibold">
+                                {rankInfo.description}
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                {userData.disciplineData.totalCompletions} total
+                                completions
+                              </p>
+                            </div>
                           </div>
-                          <div>
-                            <p className="font-semibold">{rankInfo.description}</p>
+                          <div className="text-right">
                             <p className="text-sm text-muted-foreground">
-                              {userData.disciplineData.totalCompletions} total completions
+                              Consistency
+                            </p>
+                            <p className="font-semibold">
+                              {userData.disciplineData.consistencyScore}%
                             </p>
                           </div>
                         </div>
-                        <div className="text-right">
-                          <p className="text-sm text-muted-foreground">Consistency</p>
-                          <p className="font-semibold">{userData.disciplineData.consistencyScore}%</p>
-                        </div>
-                      </div>
 
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span>Progress to {nextRank}</span>
-                          <span>{Math.round(progress)}%</span>
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-sm">
+                            <span>Progress to {nextRank}</span>
+                            <span>{Math.round(progress)}%</span>
+                          </div>
+                          <Progress value={progress} className="h-2" />
+                          <p className="text-xs text-muted-foreground">
+                            Keep completing goals and maintaining streaks to
+                            improve your ranking!
+                          </p>
                         </div>
-                        <Progress value={progress} className="h-2" />
-                        <p className="text-xs text-muted-foreground">
-                          Keep completing goals and maintaining streaks to improve your ranking!
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })()}
+                      </CardContent>
+                    </Card>
+                  );
+                })()}
               <Card className="rounded-xl">
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
@@ -1126,7 +1270,17 @@ export default function Index() {
       </main>
 
       {/* Affirmation Dialog */}
-      <Dialog open={affirmationDialog.isOpen} onOpenChange={(open) => !open && setAffirmationDialog({ isOpen: false, addictionId: "", affirmationText: "" })}>
+      <Dialog
+        open={affirmationDialog.isOpen}
+        onOpenChange={(open) =>
+          !open &&
+          setAffirmationDialog({
+            isOpen: false,
+            addictionId: "",
+            affirmationText: "",
+          })
+        }
+      >
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle className="flex items-center space-x-2">
@@ -1134,8 +1288,9 @@ export default function Index() {
               <span>Confirm Extra Clean Day</span>
             </DialogTitle>
             <DialogDescription>
-              You've already logged a clean day today. To add another day (for missed logging),
-              please type the affirmation below exactly as shown.
+              You've already logged a clean day today. To add another day (for
+              missed logging), please type the affirmation below exactly as
+              shown.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
@@ -1150,32 +1305,44 @@ export default function Index() {
               <Textarea
                 id="affirmation"
                 value={affirmationDialog.affirmationText}
-                onChange={(e) => setAffirmationDialog({
-                  ...affirmationDialog,
-                  affirmationText: e.target.value
-                })}
+                onChange={(e) =>
+                  setAffirmationDialog({
+                    ...affirmationDialog,
+                    affirmationText: e.target.value,
+                  })
+                }
                 placeholder="Type the exact affirmation here..."
                 className="resize-none"
                 rows={3}
               />
             </div>
             {affirmationDialog.affirmationText &&
-             affirmationDialog.affirmationText.trim() !== "I pledge that I was clean for the extra day I am logging." && (
-              <p className="text-sm text-destructive">
-                The affirmation must match exactly as written above.
-              </p>
-            )}
+              affirmationDialog.affirmationText.trim() !==
+                "I pledge that I was clean for the extra day I am logging." && (
+                <p className="text-sm text-destructive">
+                  The affirmation must match exactly as written above.
+                </p>
+              )}
           </div>
           <DialogFooter>
             <Button
               variant="outline"
-              onClick={() => setAffirmationDialog({ isOpen: false, addictionId: "", affirmationText: "" })}
+              onClick={() =>
+                setAffirmationDialog({
+                  isOpen: false,
+                  addictionId: "",
+                  affirmationText: "",
+                })
+              }
             >
               Cancel
             </Button>
             <Button
               onClick={confirmAffirmation}
-              disabled={affirmationDialog.affirmationText.trim() !== "I pledge that I was clean for the extra day I am logging."}
+              disabled={
+                affirmationDialog.affirmationText.trim() !==
+                "I pledge that I was clean for the extra day I am logging."
+              }
             >
               Confirm & Add Day
             </Button>

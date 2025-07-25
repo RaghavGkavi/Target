@@ -1,8 +1,23 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Share2, Copy, Check, Trophy, Target, Calendar, Flame } from "lucide-react";
+import {
+  ArrowLeft,
+  Share2,
+  Copy,
+  Check,
+  Trophy,
+  Target,
+  Calendar,
+  Flame,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -18,14 +33,14 @@ export default function Profile() {
   const [lastScrollY, setLastScrollY] = useState(0);
 
   const handleShare = async () => {
-    const shareText = `Check out my progress on Target! I'm currently rank ${userData?.disciplineData?.currentRank} with ${userData?.goals?.filter(g => !g.isCompleted).length} active goals. Join me in building better habits!`;
-    
+    const shareText = `Check out my progress on Target! I'm currently rank ${userData?.disciplineData?.currentRank} with ${userData?.goals?.filter((g) => !g.isCompleted).length} active goals. Join me in building better habits!`;
+
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'My Target Progress',
+          title: "My Target Progress",
           text: shareText,
-          url: window.location.origin
+          url: window.location.origin,
         });
       } catch (err) {
         // Fallback to clipboard
@@ -47,37 +62,50 @@ export default function Profile() {
       }
 
       // Fallback to the older execCommand method
-      const textArea = document.createElement('textarea');
+      const textArea = document.createElement("textarea");
       textArea.value = text;
-      textArea.style.position = 'fixed';
-      textArea.style.left = '-999999px';
-      textArea.style.top = '-999999px';
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
       document.body.appendChild(textArea);
       textArea.focus();
       textArea.select();
 
-      const successful = document.execCommand('copy');
+      const successful = document.execCommand("copy");
       document.body.removeChild(textArea);
 
       if (successful) {
         setCopySuccess(true);
         setTimeout(() => setCopySuccess(false), 2000);
       } else {
-        throw new Error('execCommand failed');
+        throw new Error("execCommand failed");
       }
     } catch (err) {
-      console.error('Failed to copy to clipboard:', err);
+      console.error("Failed to copy to clipboard:", err);
       // Show a prompt with the text as final fallback
-      prompt('Copy this text manually:', text);
+      prompt("Copy this text manually:", text);
     }
   };
 
-  const activeGoals = userData?.goals?.filter(g => !g.isCompleted) || [];
-  const completedCycles = userData?.completedGoals?.reduce((sum, goal) => sum + (goal.completedCount || 0), 0) || 0;
-  const totalStreak = activeGoals.reduce((sum, goal) => sum + (goal.streak || 0), 0);
-  const avgProgress = activeGoals.length > 0 ? activeGoals.reduce((sum, goal) => sum + (goal.progress || 0), 0) / activeGoals.length : 0;
+  const activeGoals = userData?.goals?.filter((g) => !g.isCompleted) || [];
+  const completedCycles =
+    userData?.completedGoals?.reduce(
+      (sum, goal) => sum + (goal.completedCount || 0),
+      0,
+    ) || 0;
+  const totalStreak = activeGoals.reduce(
+    (sum, goal) => sum + (goal.streak || 0),
+    0,
+  );
+  const avgProgress =
+    activeGoals.length > 0
+      ? activeGoals.reduce((sum, goal) => sum + (goal.progress || 0), 0) /
+        activeGoals.length
+      : 0;
 
-  const rankInfo = userData?.disciplineData ? getDisciplineRankInfo(userData.disciplineData.currentRank) : null;
+  const rankInfo = userData?.disciplineData
+    ? getDisciplineRankInfo(userData.disciplineData.currentRank)
+    : null;
 
   // Handle scroll for header hiding
   useEffect(() => {
@@ -93,33 +121,41 @@ export default function Profile() {
       setLastScrollY(currentScrollY);
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case "fitness": return "🏃‍♂️";
-      case "health": return "🧘‍♀️";
-      case "personal": return "📚";
-      case "career": return "💼";
-      case "addiction": return "🎯";
-      default: return "⭐";
+      case "fitness":
+        return "🏃‍♂️";
+      case "health":
+        return "🧘‍♀️";
+      case "personal":
+        return "📚";
+      case "career":
+        return "💼";
+      case "addiction":
+        return "🎯";
+      default:
+        return "⭐";
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
       {/* Header */}
-      <header className={`border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50 transition-transform duration-300 ${
-        isHeaderVisible ? 'translate-y-0' : '-translate-y-full'
-      }`}>
+      <header
+        className={`border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50 transition-transform duration-300 ${
+          isHeaderVisible ? "translate-y-0" : "-translate-y-full"
+        }`}
+      >
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => navigate("/")}
                 className="rounded-lg"
               >
@@ -128,12 +164,14 @@ export default function Profile() {
               </Button>
               <div>
                 <h1 className="text-xl font-bold">Profile</h1>
-                <p className="text-sm text-muted-foreground">Your progress and achievements</p>
+                <p className="text-sm text-muted-foreground">
+                  Your progress and achievements
+                </p>
               </div>
             </div>
             <div className="flex items-center space-x-2">
               <ThemeToggle />
-              <Button 
+              <Button
                 onClick={handleShare}
                 variant="outline"
                 className="rounded-lg"
@@ -163,15 +201,17 @@ export default function Profile() {
               <Avatar className="h-24 w-24">
                 <AvatarImage src={user?.photoURL} alt={user?.displayName} />
                 <AvatarFallback className="bg-primary text-primary-foreground text-2xl">
-                  {user?.displayName?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase()}
+                  {user?.displayName?.charAt(0)?.toUpperCase() ||
+                    user?.email?.charAt(0)?.toUpperCase()}
                 </AvatarFallback>
               </Avatar>
-              
+
               <div className="flex-1">
                 <h2 className="text-2xl font-bold">{user?.displayName}</h2>
                 <p className="text-muted-foreground">{user?.email}</p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Member since {new Date(user?.createdAt || '').toLocaleDateString()}
+                  Member since{" "}
+                  {new Date(user?.createdAt || "").toLocaleDateString()}
                 </p>
               </div>
 
@@ -183,7 +223,9 @@ export default function Profile() {
                   </div>
                   <div className="flex items-center space-x-1">
                     <span className="text-lg">{rankInfo.emoji}</span>
-                    <span className="font-medium text-sm">{rankInfo.description}</span>
+                    <span className="font-medium text-sm">
+                      {rankInfo.description}
+                    </span>
                   </div>
                 </div>
               )}
@@ -204,7 +246,7 @@ export default function Profile() {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card className="rounded-xl">
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
@@ -216,7 +258,7 @@ export default function Profile() {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card className="rounded-xl">
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
@@ -228,13 +270,15 @@ export default function Profile() {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card className="rounded-xl">
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
                 <Calendar className="h-5 w-5 text-info" />
                 <div>
-                  <p className="text-2xl font-bold">{Math.round(avgProgress)}%</p>
+                  <p className="text-2xl font-bold">
+                    {Math.round(avgProgress)}%
+                  </p>
                   <p className="text-xs text-muted-foreground">Avg Progress</p>
                 </div>
               </div>
@@ -247,18 +291,25 @@ export default function Profile() {
           <Card className="rounded-xl">
             <CardHeader>
               <CardTitle>Current Goals</CardTitle>
-              <CardDescription>
-                My active goals and progress
-              </CardDescription>
+              <CardDescription>My active goals and progress</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid gap-4 md:grid-cols-2">
                 {activeGoals.map((goal) => (
-                  <Card key={goal.id} className="rounded-lg border-l-4" style={{ borderLeftColor: goal.color?.replace('bg-', '#') || '#6366f1' }}>
+                  <Card
+                    key={goal.id}
+                    className="rounded-lg border-l-4"
+                    style={{
+                      borderLeftColor:
+                        goal.color?.replace("bg-", "#") || "#6366f1",
+                    }}
+                  >
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center space-x-2">
-                          <span className="text-lg">{getCategoryIcon(goal.category)}</span>
+                          <span className="text-lg">
+                            {getCategoryIcon(goal.category)}
+                          </span>
                           <h3 className="font-semibold">{goal.title}</h3>
                         </div>
                         <Badge variant="outline" className="text-xs">
@@ -266,16 +317,22 @@ export default function Profile() {
                           {goal.streak}
                         </Badge>
                       </div>
-                      
-                      <p className="text-sm text-muted-foreground mb-3">{goal.description}</p>
-                      
+
+                      <p className="text-sm text-muted-foreground mb-3">
+                        {goal.description}
+                      </p>
+
                       <div className="space-y-2">
                         <div className="flex justify-between text-sm">
                           <span>Progress</span>
-                          <span>{goal.daysCompleted}/{goal.targetDays} days</span>
+                          <span>
+                            {goal.daysCompleted}/{goal.targetDays} days
+                          </span>
                         </div>
                         <Progress value={goal.progress || 0} className="h-2" />
-                        <p className="text-xs text-muted-foreground">{Math.round(goal.progress || 0)}% complete</p>
+                        <p className="text-xs text-muted-foreground">
+                          {Math.round(goal.progress || 0)}% complete
+                        </p>
                       </div>
                     </CardContent>
                   </Card>
@@ -290,29 +347,35 @@ export default function Profile() {
           <Card className="rounded-xl">
             <CardHeader>
               <CardTitle>Achievement Highlights</CardTitle>
-              <CardDescription>
-                Milestones and accomplishments
-              </CardDescription>
+              <CardDescription>Milestones and accomplishments</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid gap-4 md:grid-cols-3">
                 <div className="text-center p-4 bg-warning/10 rounded-lg">
                   <Trophy className="h-8 w-8 text-warning mx-auto mb-2" />
                   <p className="font-semibold">{completedCycles}</p>
-                  <p className="text-sm text-muted-foreground">Goals Completed</p>
+                  <p className="text-sm text-muted-foreground">
+                    Goals Completed
+                  </p>
                 </div>
-                
+
                 <div className="text-center p-4 bg-streak/10 rounded-lg">
                   <Flame className="h-8 w-8 text-streak mx-auto mb-2" />
                   <p className="font-semibold">{totalStreak}</p>
-                  <p className="text-sm text-muted-foreground">Current Streak</p>
+                  <p className="text-sm text-muted-foreground">
+                    Current Streak
+                  </p>
                 </div>
-                
+
                 {rankInfo && (
                   <div className="text-center p-4 bg-primary/10 rounded-lg">
                     <div className="text-2xl mb-2">{rankInfo.emoji}</div>
-                    <p className="font-semibold">{userData?.disciplineData?.currentRank}</p>
-                    <p className="text-sm text-muted-foreground">Discipline Rank</p>
+                    <p className="font-semibold">
+                      {userData?.disciplineData?.currentRank}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Discipline Rank
+                    </p>
                   </div>
                 )}
               </div>
@@ -321,12 +384,15 @@ export default function Profile() {
         )}
 
         {/* Privacy Notice */}
-        {userData?.privacy?.profileVisibility === 'private' && (
+        {userData?.privacy?.profileVisibility === "private" && (
           <Card className="rounded-xl border-muted">
             <CardContent className="p-4">
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <div className="h-2 w-2 bg-muted-foreground rounded-full"></div>
-                <span>Your profile is set to private. Only you can see this information.</span>
+                <span>
+                  Your profile is set to private. Only you can see this
+                  information.
+                </span>
               </div>
             </CardContent>
           </Card>
