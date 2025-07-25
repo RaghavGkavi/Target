@@ -403,8 +403,9 @@ export default function Index() {
 
       console.log("🎯 Found goal:", goal);
 
-      // Check if already logged today
-      if (goal.lastLoggedDate === today && !forceAdd) {
+      // Check if already logged today (bypass for developer account)
+      const isDeveloper = user?.email === "raghav.gkavi@gmail.com";
+      if (goal.lastLoggedDate === today && !forceAdd && !isDeveloper) {
         console.log("🎯 Already logged today, showing affirmation dialog");
         // Show affirmation dialog
         setAffirmationDialog({
@@ -413,6 +414,10 @@ export default function Index() {
           affirmationText: "",
         });
         return currentGoals;
+      }
+
+      if (isDeveloper && goal.lastLoggedDate === today && !forceAdd) {
+        console.log("🔓 Developer account detected - bypassing day restriction");
       }
 
       // Calculate new values
