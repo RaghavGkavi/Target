@@ -1320,6 +1320,9 @@ export default function Index() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Tutorial */}
+      <Tutorial isOpen={showTutorial} onComplete={handleTutorialComplete} />
     </div>
   );
 }
