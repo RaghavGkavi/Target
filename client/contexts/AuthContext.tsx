@@ -244,46 +244,137 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     error?: string;
   }> => {
     try {
-      // Simulate Google OAuth flow
-      const mockGoogleUser: User = {
-        id: `google_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-        email: `user${Math.floor(Math.random() * 1000)}@gmail.com`,
-        displayName: "Google User",
-        photoURL: `https://ui-avatars.com/api/?name=Google+User&background=random`,
-        provider: "google",
-        createdAt: new Date(),
-        lastLoginAt: new Date(),
-      };
+      return new Promise((resolve) => {
+        // Initialize Google Identity Services
+        if (typeof window.google === 'undefined') {
+          resolve({ success: false, error: "Google services not available. Please ensure you have an internet connection." });
+          return;
+        }
 
-      setUser(mockGoogleUser);
-      localStorage.setItem(
-        "target_current_user",
-        JSON.stringify(mockGoogleUser),
-      );
+        window.google.accounts.id.initialize({
+          client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID || "demo-client-id",
+          callback: async (response: any) => {
+            try {
+              // Decode JWT token to get user info
+              const credential = response.credential;
+              const payload = JSON.parse(atob(credential.split('.')[1]));
 
-      // Initialize user data
-      const defaultData: UserData = {
-        goals: [],
-        addictions: [],
-        completedGoals: [],
-        preferences: {
-          theme: "system",
-          notifications: true,
-          onboardingCompleted: false,
-        },
-        privacy: {
-          showGoals: true,
-          showRecoveries: false,
-          profileVisibility: "private",
-        },
-      };
+              const googleUser: User = {
+                id: `google_${payload.sub}`,
+                email: payload.email,
+                displayName: payload.name,
+                photoURL: payload.picture,
+                provider: "google",
+                createdAt: new Date(),
+                lastLoginAt: new Date(),
+              };
 
-      setUserData(defaultData);
-      saveUserData(mockGoogleUser.id, defaultData);
+              setUser(googleUser);
+              localStorage.setItem("target_current_user", JSON.stringify(googleUser));
 
-      return { success: true };
+              // Check if user data exists
+              const existingData = getUserData(googleUser.id);
+              let userDataToSet: UserData;
+
+              if (existingData) {
+                userDataToSet = existingData;
+              } else {
+                // Initialize user data for new Google user
+                userDataToSet = {
+                  goals: [],
+                  addictions: [],
+                  completedGoals: [],
+                  preferences: {
+                    theme: "system",
+                    notifications: true,
+                    onboardingCompleted: false,
+                  },
+                  privacy: {
+                    showGoals: true,
+                    showRecoveries: false,
+                    profileVisibility: "private",
+                  },
+                };
+                saveUserData(googleUser.id, userDataToSet);
+              }
+
+              setUserData(userDataToSet);
+              resolve({ success: true });
+            } catch (error) {
+              console.error("Error processing Google auth response:", error);
+              resolve({ success: false, error: "Failed to process Google authentication" });
+            }
+          },
+          auto_select: false,
+          cancel_on_tap_outside: true,
+        });
+
+        // Check if we have a client ID configured
+        const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+        if (!clientId || clientId === "demo-client-id") {
+          // Fall back to demo mode if no client ID is configured
+          const mockGoogleUser: User = {
+            id: `google_demo_${Date.now()}`,
+            email: "demo@gmail.com",
+            displayName: "Demo Google User",
+            photoURL: `https://ui-avatars.com/api/?name=Demo+Google+User&background=4285f4&color=ffffff`,
+            provider: "google",
+            createdAt: new Date(),
+            lastLoginAt: new Date(),
+          };
+
+          setUser(mockGoogleUser);
+          localStorage.setItem("target_current_user", JSON.stringify(mockGoogleUser));
+
+          const existingData = getUserData(mockGoogleUser.id);
+          let userDataToSet: UserData;
+
+          if (existingData) {
+            userDataToSet = existingData;
+          } else {
+            userDataToSet = {
+              goals: [],
+              addictions: [],
+              completedGoals: [],
+              preferences: {
+                theme: "system",
+                notifications: true,
+                onboardingCompleted: false,
+              },
+              privacy: {
+                showGoals: true,
+                showRecoveries: false,
+                profileVisibility: "private",
+              },
+            };
+            saveUserData(mockGoogleUser.id, userDataToSet);
+          }
+
+          setUserData(userDataToSet);
+          resolve({ success: true });
+          return;
+        }
+
+        // Trigger Google Sign-In popup
+        window.google.accounts.id.prompt((notification: any) => {
+          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+            // Fall back to manual sign-in
+            window.google.accounts.id.renderButton(
+              document.createElement('div'),
+              { theme: "outline", size: "large" }
+            );
+
+            // Since we can't directly trigger the popup, we'll show an error
+            resolve({
+              success: false,
+              error: "Please enable popups and try again, or contact support if you continue having issues."
+            });
+          }
+        });
+      });
     } catch (error) {
-      return { success: false, error: "Google sign in failed" };
+      console.error("Google sign-in error:", error);
+      return { success: false, error: "Google sign in failed. Please try again or contact support." };
     }
   };
 
