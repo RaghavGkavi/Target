@@ -319,7 +319,7 @@ export default function Index() {
         completedGoals,
       };
 
-      console.log("💾 Data being saved:", currentData);
+      console.log("���� Data being saved:", currentData);
 
       // Check for new achievements
       const newAchievements = checkAchievements(currentData, userData);
@@ -1533,28 +1533,62 @@ export default function Index() {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-sm">Goals completed this week</span>
-                      <span className="text-sm font-medium">85%</span>
+                      <span className="text-sm font-medium">{(() => {
+                        const oneWeekAgo = new Date();
+                        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                        const weeklyCompletions = (userData?.completedGoals || []).filter(
+                          (goal: any) => new Date(goal.completedAt) >= oneWeekAgo
+                        ).length;
+                        const totalActiveGoals = (userData?.goals || []).length + weeklyCompletions;
+                        const percentage = totalActiveGoals > 0 ? Math.round((weeklyCompletions / totalActiveGoals) * 100) : 0;
+                        return `${percentage}%`;
+                      })()}</span>
                     </div>
-                    <Progress value={85} className="h-2" />
+                    <Progress value={(() => {
+                      const oneWeekAgo = new Date();
+                      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                      const weeklyCompletions = (userData?.completedGoals || []).filter(
+                        (goal: any) => new Date(goal.completedAt) >= oneWeekAgo
+                      ).length;
+                      const totalActiveGoals = (userData?.goals || []).length + weeklyCompletions;
+                      return totalActiveGoals > 0 ? Math.round((weeklyCompletions / totalActiveGoals) * 100) : 0;
+                    })()} className="h-2" />
                   </div>
 
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-sm">Consistency score</span>
-                      <span className="text-sm font-medium">92%</span>
+                      <span className="text-sm font-medium">{userData?.disciplineData?.consistencyScore || 0}%</span>
                     </div>
-                    <Progress value={92} className="h-2" />
+                    <Progress value={userData?.disciplineData?.consistencyScore || 0} className="h-2" />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 pt-2">
                     <div className="text-center">
-                      <p className="text-lg font-bold text-success">12</p>
+                      <p className="text-lg font-bold text-success">{(() => {
+                        const oneWeekAgo = new Date();
+                        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                        const activeDays = new Set();
+                        (userData?.completedGoals || []).forEach((goal: any) => {
+                          const completedAt = new Date(goal.completedAt);
+                          if (completedAt >= oneWeekAgo) {
+                            activeDays.add(completedAt.toDateString());
+                          }
+                        });
+                        return activeDays.size;
+                      })()}</p>
                       <p className="text-xs text-muted-foreground">
                         Days Active
                       </p>
                     </div>
                     <div className="text-center">
-                      <p className="text-lg font-bold text-primary">3</p>
+                      <p className="text-lg font-bold text-primary">{(() => {
+                        const oneWeekAgo = new Date();
+                        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                        return (userData?.achievements || []).filter(
+                          (achievement: any) => new Date(achievement.earnedAt) >= oneWeekAgo
+                        ).length;
+                      })()}</p>
                       <p className="text-xs text-muted-foreground">
                         New Records
                       </p>
