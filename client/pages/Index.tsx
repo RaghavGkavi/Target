@@ -395,7 +395,7 @@ export default function Index() {
       const goal = currentGoals.find((g) => g.id === goalId);
       if (!goal) {
         console.log("🎯 Goal not found!");
-        return currentGoals;
+        return [...currentGoals]; // Return new array reference
       }
 
       console.log("🎯 Found goal:", goal);
