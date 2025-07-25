@@ -82,7 +82,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Check for existing session on mount
   useEffect(() => {
     const checkAuth = () => {
-      const currentUser = localStorage.getItem('lockin_current_user');
+      const currentUser = localStorage.getItem('target_current_user');
       if (currentUser) {
         const userData = JSON.parse(currentUser);
         setUser({
