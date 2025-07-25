@@ -181,7 +181,7 @@ export default function Onboarding() {
         name: preset.name,
         cleanDays: 0,
         longestStreak: 0,
-        triggers: [],
+        triggers: preset.triggers,
         lastLoggedDate: undefined
       };
     });
