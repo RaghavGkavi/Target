@@ -221,62 +221,64 @@ export default function Index() {
   };
 
   const markGoalComplete = (goalId: string) => {
-    const goal = goals.find(g => g.id === goalId);
-    if (!goal) return;
+    setGoals(currentGoals => {
+      const goal = currentGoals.find(g => g.id === goalId);
+      if (!goal) return currentGoals;
 
-    const newProgress = Math.min(100, goal.progress + 100 / goal.targetDays);
+      const newProgress = Math.min(100, goal.progress + 100 / goal.targetDays);
 
-    if (newProgress >= 100) {
-      // Goal completed - move to completed goals and restart with higher target
-      const completedGoal: CompletedGoal = {
-        id: goal.id,
-        title: goal.title,
-        description: goal.description,
-        category: goal.category,
-        completedCount: 1,
-        totalDaysCompleted: goal.targetDays,
-        longestStreak: goal.streak + 1,
-        completionDates: [new Date()],
-        currentLevel: 1,
-        color: goal.color
-      };
+      if (newProgress >= 100) {
+        // Goal completed - move to completed goals and restart with higher target
+        const completedGoal: CompletedGoal = {
+          id: goal.id,
+          title: goal.title,
+          description: goal.description,
+          category: goal.category,
+          completedCount: 1,
+          totalDaysCompleted: goal.targetDays,
+          longestStreak: goal.streak + 1,
+          completionDates: [new Date()],
+          currentLevel: 1,
+          color: goal.color
+        };
 
-      // Check if goal already exists in completed goals
-      const existingCompleted = completedGoals.find(cg => cg.title === goal.title);
-      if (existingCompleted) {
-        setCompletedGoals(completedGoals.map(cg =>
-          cg.title === goal.title
+        // Update completed goals
+        setCompletedGoals(currentCompleted => {
+          const existingCompleted = currentCompleted.find(cg => cg.title === goal.title);
+          if (existingCompleted) {
+            return currentCompleted.map(cg =>
+              cg.title === goal.title
+                ? {
+                    ...cg,
+                    completedCount: cg.completedCount + 1,
+                    totalDaysCompleted: cg.totalDaysCompleted + goal.targetDays,
+                    longestStreak: Math.max(cg.longestStreak, goal.streak + 1),
+                    completionDates: [...cg.completionDates, new Date()],
+                    currentLevel: Math.floor(cg.completedCount / 5) + 1
+                  }
+                : cg
+            );
+          } else {
+            return [...currentCompleted, completedGoal];
+          }
+        });
+
+        // Restart goal with increased target (add 7 more days)
+        return currentGoals.map(g =>
+          g.id === goalId
             ? {
-                ...cg,
-                completedCount: cg.completedCount + 1,
-                totalDaysCompleted: cg.totalDaysCompleted + goal.targetDays,
-                longestStreak: Math.max(cg.longestStreak, goal.streak + 1),
-                completionDates: [...cg.completionDates, new Date()],
-                currentLevel: Math.floor(cg.completedCount / 5) + 1
+                ...g,
+                progress: 0,
+                daysCompleted: 0,
+                targetDays: g.targetDays + 7,
+                streak: 0,
+                lastUpdated: new Date()
               }
-            : cg
-        ));
+            : g
+        );
       } else {
-        setCompletedGoals([...completedGoals, completedGoal]);
-      }
-
-      // Restart goal with increased target (add 7 more days)
-      setGoals(goals.map(g =>
-        g.id === goalId
-          ? {
-              ...g,
-              progress: 0,
-              daysCompleted: 0,
-              targetDays: g.targetDays + 7,
-              streak: 0,
-              lastUpdated: new Date()
-            }
-          : g
-      ));
-    } else {
-      // Normal progress update
-      setGoals(
-        goals.map((g) =>
+        // Normal progress update
+        return currentGoals.map((g) =>
           g.id === goalId
             ? {
                 ...g,
@@ -286,9 +288,9 @@ export default function Index() {
                 lastUpdated: new Date(),
               }
             : g,
-        ),
-      );
-    }
+        );
+      }
+    });
   };
 
   const addCleanDay = (addictionId: string, forceAdd: boolean = false) => {
