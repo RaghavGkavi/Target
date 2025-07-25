@@ -542,7 +542,7 @@ export default function Index() {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-6 space-y-8">
+      <main className="container mx-auto px-4 py-6 space-y-8 overflow-x-hidden max-w-full">
         {/* Motivational Quote */}
         <Card className="border-0 bg-gradient-to-r from-primary to-accent text-white">
           <CardContent className="p-6">
