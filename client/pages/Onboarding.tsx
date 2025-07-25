@@ -136,7 +136,17 @@ export default function Onboarding() {
     });
   };
 
+  const handleDisciplineAnswer = (questionId: string, points: number) => {
+    setDisciplineAnswers(prev => ({
+      ...prev,
+      [questionId]: points
+    }));
+  };
+
   const completeOnboarding = async () => {
+    // Calculate discipline base score
+    const baseScore = Object.values(disciplineAnswers).reduce((sum, points) => sum + points, 0);
+
     // Create goals from selected presets
     const goals = selectedGoals.map(goalId => {
       const preset = presetGoals.find(g => g.id === goalId)!;
@@ -168,11 +178,21 @@ export default function Onboarding() {
       };
     });
 
+    // Calculate initial discipline rank
+    const initialRank = calculateDisciplineRank(baseScore, 0, 0, goals, []);
+
     // Update user data
     await updateUserData({
       goals,
       addictions,
       completedGoals: [],
+      disciplineData: {
+        baseScore,
+        currentRank: initialRank,
+        totalCompletions: 0,
+        consistencyScore: 0,
+        lastUpdated: new Date()
+      },
       preferences: {
         theme: 'system',
         notifications: true,
