@@ -378,7 +378,7 @@ export default function Index() {
       case "career":
         return "💼";
       case "addiction":
-        return "���";
+        return "�����";
       default:
         return "⭐";
     }
@@ -692,11 +692,24 @@ export default function Index() {
                 </Button>
               </Link>
 
-              {/* Developer Mode Indicator */}
+              {/* Developer Mode Toggle */}
               {user?.email === "raghav.gkavi@gmail.com" && (
-                <Badge variant="secondary" className="text-xs px-2 py-1">
-                  🔓 DEV MODE
-                </Badge>
+                <Button
+                  variant={developerModeEnabled ? "secondary" : "outline"}
+                  size="sm"
+                  className={`text-xs px-2 py-1 h-auto cursor-pointer transition-all ${
+                    developerModeEnabled
+                      ? "bg-green-500/20 text-green-700 dark:text-green-400 hover:bg-green-500/30"
+                      : "bg-red-500/20 text-red-700 dark:text-red-400 hover:bg-red-500/30"
+                  }`}
+                  onClick={() => {
+                    setDeveloperModeEnabled(!developerModeEnabled);
+                    console.log(`🔓 Developer mode ${!developerModeEnabled ? 'enabled' : 'disabled'}`);
+                  }}
+                  title={`Click to ${developerModeEnabled ? 'disable' : 'enable'} developer mode`}
+                >
+                  {developerModeEnabled ? "🔓 DEV MODE" : "🔒 DEV OFF"}
+                </Button>
               )}
 
               {/* Theme Toggle */}
