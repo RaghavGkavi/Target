@@ -394,7 +394,7 @@ export default function Index() {
           color: goal.color,
         };
 
-        // Update completed goals
+        // Compute new completedGoals here
         setCompletedGoals((currentCompleted) => {
           const existingCompleted = currentCompleted.find(
             (cg) => cg.title === goal.title,
@@ -725,7 +725,22 @@ export default function Index() {
           {userData?.disciplineData &&
             (() => {
               const rankInfo = getDisciplineRankInfo(
-                userData.disciplineData.currentRank,
+                userData.disciplineData.currentRank as
+                  | "F-"
+                  | "F"
+                  | "F+"
+                  | "D-"
+                  | "D"
+                  | "D+"
+                  | "C-"
+                  | "C"
+                  | "C+"
+                  | "B-"
+                  | "B"
+                  | "B+"
+                  | "A-"
+                  | "A"
+                  | "A+"
               );
               return (
                 <Card className="rounded-xl">
@@ -1108,8 +1123,8 @@ export default function Index() {
                           ? (addiction.cleanDays / addiction.longestStreak) *
                             100
                           : addiction.cleanDays > 0
-                            ? 100
-                            : 0
+                          ? 100
+                          : 0
                       }
                       className="h-2"
                     />
@@ -1307,18 +1322,18 @@ export default function Index() {
               {userData?.disciplineData &&
                 (() => {
                   const rankInfo = getDisciplineRankInfo(
-                    userData.disciplineData.currentRank,
+                    userData.disciplineData.currentRank as import("@/lib/disciplineRanking").DisciplineRank,
                   );
                   const nextRankIndex = Math.min(
                     14,
                     DISCIPLINE_RANKS.indexOf(
-                      userData.disciplineData.currentRank,
+                      userData.disciplineData.currentRank as import("@/lib/disciplineRanking").DisciplineRank,
                     ) + 1,
                   );
                   const nextRank = DISCIPLINE_RANKS[nextRankIndex];
                   const progress =
                     ((DISCIPLINE_RANKS.indexOf(
-                      userData.disciplineData.currentRank,
+                      userData.disciplineData.currentRank as import("@/lib/disciplineRanking").DisciplineRank,
                     ) +
                       1) /
                       DISCIPLINE_RANKS.length) *
