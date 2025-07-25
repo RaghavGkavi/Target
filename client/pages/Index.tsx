@@ -319,7 +319,7 @@ export default function Index() {
         completedGoals,
       };
 
-      console.log("💾 Data being saved:", currentData);
+      console.log("��� Data being saved:", currentData);
 
       // Check for new achievements
       const newAchievements = checkAchievements(currentData, userData);
@@ -388,6 +388,7 @@ export default function Index() {
       "forceAdd:",
       forceAdd,
     );
+    console.log("🎯 Current goals state:", goals);
 
     setGoals((currentGoals) => {
       console.log("🎯 Current goals before update:", currentGoals);
