@@ -243,14 +243,35 @@ export default function Index() {
   // Save user data whenever goals, addictions, or completed goals change (but not on initial load)
   useEffect(() => {
     if (!isInitialLoad && user && userData) {
-      updateUserData({
+      const currentData = {
+        ...userData,
         goals,
         addictions,
         completedGoals
+      };
+
+      // Check for new achievements
+      const newAchievements = checkAchievements(currentData, userData);
+      const updatedAchievements = [
+        ...(userData.achievements || []),
+        ...newAchievements.map(a => ({ id: a.id, earnedAt: a.earnedAt! }))
+      ];
+
+      updateUserData({
+        goals,
+        addictions,
+        completedGoals,
+        achievements: updatedAchievements
       });
 
       // Update discipline ranking
       updateDisciplineRanking();
+
+      // Show achievement notifications if any
+      if (newAchievements.length > 0) {
+        // You could add a toast notification here
+        console.log('New achievements earned:', newAchievements.map(a => a.title));
+      }
     }
   }, [goals, addictions, completedGoals, isInitialLoad, user]);
 
