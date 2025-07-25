@@ -340,7 +340,7 @@ export default function Onboarding() {
           <Card className="rounded-xl">
             <CardContent className="p-6">
               <div className="space-y-4">
-                <div className="text-6xl mb-4">🎯</div>
+                <div className="text-6xl mb-4">��</div>
                 <h3 className="text-lg font-semibold">Why do we assess discipline?</h3>
                 <p className="text-sm text-muted-foreground">
                   Your discipline ranking helps us understand your current habits and provides a baseline for tracking improvement.
@@ -524,10 +524,10 @@ export default function Onboarding() {
         {/* Progress Bar */}
         <div className="space-y-2">
           <div className="flex justify-between text-sm text-muted-foreground">
-            <span>Step {currentStep} of 4</span>
-            <span>{Math.round((currentStep / 4) * 100)}% complete</span>
+            <span>Step {currentStep} of {3 + DISCIPLINE_ASSESSMENT.length + 1}</span>
+            <span>{Math.round((currentStep / (3 + DISCIPLINE_ASSESSMENT.length + 1)) * 100)}% complete</span>
           </div>
-          <Progress value={(currentStep / 4) * 100} className="h-2" />
+          <Progress value={(currentStep / (3 + DISCIPLINE_ASSESSMENT.length + 1)) * 100} className="h-2" />
         </div>
 
         {/* Content Card */}
