@@ -11,6 +11,10 @@ import {
   Clock,
   Award,
   Zap,
+  Edit,
+  Trash2,
+  RotateCcw,
+  AlertTriangle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +27,11 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 interface Goal {
   id: string;
@@ -118,6 +127,12 @@ export default function Index() {
   const [goals, setGoals] = useState<Goal[]>(mockGoals);
   const [addictions, setAddictions] = useState<Addiction[]>(mockAddictions);
   const [currentQuote, setCurrentQuote] = useState("");
+  const [editingAddiction, setEditingAddiction] = useState<Addiction | null>(null);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [newAddiction, setNewAddiction] = useState({
+    name: "",
+    triggers: "",
+  });
 
   useEffect(() => {
     setCurrentQuote(
@@ -164,6 +179,67 @@ export default function Index() {
           : goal,
       ),
     );
+  };
+
+  const addCleanDay = (addictionId: string) => {
+    setAddictions(
+      addictions.map((addiction) =>
+        addiction.id === addictionId
+          ? {
+              ...addiction,
+              cleanDays: addiction.cleanDays + 1,
+              longestStreak: Math.max(addiction.longestStreak, addiction.cleanDays + 1),
+            }
+          : addiction,
+      ),
+    );
+  };
+
+  const reportRelapse = (addictionId: string) => {
+    setAddictions(
+      addictions.map((addiction) =>
+        addiction.id === addictionId
+          ? {
+              ...addiction,
+              cleanDays: 0,
+              lastRelapse: new Date(),
+            }
+          : addiction,
+      ),
+    );
+  };
+
+  const deleteAddiction = (addictionId: string) => {
+    setAddictions(addictions.filter((addiction) => addiction.id !== addictionId));
+  };
+
+  const saveEditedAddiction = () => {
+    if (!editingAddiction) return;
+
+    setAddictions(
+      addictions.map((addiction) =>
+        addiction.id === editingAddiction.id
+          ? editingAddiction
+          : addiction,
+      ),
+    );
+    setEditingAddiction(null);
+  };
+
+  const addNewAddiction = () => {
+    if (!newAddiction.name.trim()) return;
+
+    const addiction: Addiction = {
+      id: Date.now().toString(),
+      name: newAddiction.name,
+      cleanDays: 0,
+      longestStreak: 0,
+      triggers: newAddiction.triggers.split(",").map(t => t.trim()).filter(t => t),
+    };
+
+    setAddictions([...addictions, addiction]);
+    setNewAddiction({ name: "", triggers: "" });
+    setIsAddDialogOpen(false);
   };
 
   return (
@@ -348,7 +424,56 @@ export default function Index() {
           <TabsContent value="addictions" className="space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold">Recovery Tracker</h2>
-              <Badge variant="secondary">{addictions.length} tracked</Badge>
+              <div className="flex items-center space-x-2">
+                <Badge variant="secondary">{addictions.length} tracked</Badge>
+                <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button size="sm" className="rounded-lg">
+                      <Plus className="h-4 w-4 mr-1" />
+                      Add Tracker
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Add Recovery Tracker</DialogTitle>
+                      <DialogDescription>
+                        Track a new addiction or habit you want to overcome.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="name">Addiction/Habit Name</Label>
+                        <Input
+                          id="name"
+                          placeholder="e.g., Social Media, Smoking, Gaming"
+                          value={newAddiction.name}
+                          onChange={(e) => setNewAddiction({ ...newAddiction, name: e.target.value })}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="triggers">Common Triggers (optional)</Label>
+                        <Input
+                          id="triggers"
+                          placeholder="e.g., Stress, Boredom, Social situations"
+                          value={newAddiction.triggers}
+                          onChange={(e) => setNewAddiction({ ...newAddiction, triggers: e.target.value })}
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          Separate multiple triggers with commas
+                        </p>
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+                        Cancel
+                      </Button>
+                      <Button onClick={addNewAddiction} disabled={!newAddiction.name.trim()}>
+                        Add Tracker
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </div>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
