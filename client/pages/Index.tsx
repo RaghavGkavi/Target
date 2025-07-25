@@ -329,6 +329,7 @@ export default function Index() {
       ];
 
       updateUserData({
+        ...userData, // <-- Ensure all user fields are preserved!
         goals,
         addictions,
         completedGoals,
@@ -1783,4 +1784,4 @@ export default function Index() {
     </div>
   );
 }
-  
+
