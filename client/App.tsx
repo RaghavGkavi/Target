@@ -23,6 +23,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/create-goal" element={<CreateGoal />} />
+          <Route path="/completed-goals" element={<CompletedGoals />} />
           <Route
             path="/goals"
             element={
