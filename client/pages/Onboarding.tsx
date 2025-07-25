@@ -386,69 +386,100 @@ export default function Onboarding() {
     </div>
   );
 
-  const renderCompletionStep = () => (
-    <div className="space-y-6 text-center">
-      <div className="space-y-4">
-        <div className="h-20 w-20 mx-auto rounded-xl bg-gradient-to-r from-success to-primary flex items-center justify-center">
-          <Zap className="h-10 w-10 text-white" />
+  const renderCompletionStep = () => {
+    const baseScore = Object.values(disciplineAnswers).reduce((sum, points) => sum + points, 0);
+    const initialRank = calculateDisciplineRank(baseScore, 0, 0, [], []);
+    const rankInfo = getDisciplineRankInfo(initialRank);
+
+    return (
+      <div className="space-y-6 text-center">
+        <div className="space-y-4">
+          <div className="h-20 w-20 mx-auto rounded-xl bg-gradient-to-r from-success to-primary flex items-center justify-center">
+            <Zap className="h-10 w-10 text-white" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold">You're All Set!</h1>
+            <p className="text-muted-foreground">
+              Welcome to Target! Let's start building better habits together.
+            </p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-2xl font-bold">You're All Set!</h1>
-          <p className="text-muted-foreground">
-            Welcome to Target! Let's start building better habits together.
+
+        {/* Discipline Ranking Display */}
+        {Object.keys(disciplineAnswers).length > 0 && (
+          <Card className="rounded-xl">
+            <CardHeader>
+              <CardTitle className="text-lg">Your Discipline Ranking</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-center space-x-4 p-4">
+                <div className={`text-6xl font-bold ${rankInfo.color}`}>
+                  {rankInfo.rank}
+                </div>
+                <div className="text-left">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-2xl">{rankInfo.emoji}</span>
+                    <span className="font-semibold">{rankInfo.description}</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Your ranking will improve as you complete goals and build consistency!
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {selectedGoals.length > 0 && (
+          <Card className="rounded-xl">
+            <CardHeader>
+              <CardTitle className="text-lg">Your Goals</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {selectedGoals.map(goalId => {
+                  const goal = presetGoals.find(g => g.id === goalId)!;
+                  return (
+                    <div key={goalId} className="flex items-center space-x-3 p-2 bg-muted/50 rounded-lg">
+                      <span className="text-lg">{goal.icon}</span>
+                      <span className="font-medium">{goal.title}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {selectedAddictions.length > 0 && (
+          <Card className="rounded-xl">
+            <CardHeader>
+              <CardTitle className="text-lg">Recovery Tracking</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {selectedAddictions.map(addictionId => {
+                  const addiction = presetAddictions.find(a => a.id === addictionId)!;
+                  return (
+                    <div key={addictionId} className="flex items-center space-x-3 p-2 bg-muted/50 rounded-lg">
+                      <span className="text-lg">{addiction.icon}</span>
+                      <span className="font-medium">{addiction.name}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        <div className="bg-primary/10 rounded-lg p-4">
+          <p className="text-sm">
+            🎯 <strong>Pro Tip:</strong> Start small and build consistency. You can always add more goals and customize everything once you're in the app!
           </p>
         </div>
       </div>
-
-      {selectedGoals.length > 0 && (
-        <Card className="rounded-xl">
-          <CardHeader>
-            <CardTitle className="text-lg">Your Goals</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {selectedGoals.map(goalId => {
-                const goal = presetGoals.find(g => g.id === goalId)!;
-                return (
-                  <div key={goalId} className="flex items-center space-x-3 p-2 bg-muted/50 rounded-lg">
-                    <span className="text-lg">{goal.icon}</span>
-                    <span className="font-medium">{goal.title}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {selectedAddictions.length > 0 && (
-        <Card className="rounded-xl">
-          <CardHeader>
-            <CardTitle className="text-lg">Recovery Tracking</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {selectedAddictions.map(addictionId => {
-                const addiction = presetAddictions.find(a => a.id === addictionId)!;
-                return (
-                  <div key={addictionId} className="flex items-center space-x-3 p-2 bg-muted/50 rounded-lg">
-                    <span className="text-lg">{addiction.icon}</span>
-                    <span className="font-medium">{addiction.name}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      <div className="bg-primary/10 rounded-lg p-4">
-        <p className="text-sm">
-          🎯 <strong>Pro Tip:</strong> Start small and build consistency. You can always add more goals and customize everything once you're in the app!
-        </p>
-      </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 flex items-center justify-center p-4">
