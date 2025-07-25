@@ -239,8 +239,9 @@ export default function Index() {
   // Load user data when component mounts or userData changes
   useEffect(() => {
     if (userData) {
-      setGoals(userData.goals || mockGoals);
-      setAddictions(userData.addictions || mockAddictions);
+      // Use empty arrays instead of mock data if user has no data yet
+      setGoals(userData.goals && userData.goals.length > 0 ? userData.goals : mockGoals);
+      setAddictions(userData.addictions || []);
       setCompletedGoals(userData.completedGoals || []);
 
       // Check if user just completed onboarding (has no tutorial completion flag)
@@ -352,7 +353,7 @@ export default function Index() {
       case "career":
         return "💼";
       case "addiction":
-        return "🎯";
+        return "���";
       default:
         return "⭐";
     }
