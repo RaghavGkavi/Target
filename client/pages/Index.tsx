@@ -241,12 +241,8 @@ export default function Index() {
   useEffect(() => {
     if (userData && isInitialLoad) {
       console.log("📊 Loading initial data from userData:", userData);
-      // Use empty arrays instead of mock data if user has no data yet
-      setGoals(
-        userData.goals && userData.goals.length > 0
-          ? userData.goals
-          : mockGoals,
-      );
+      // Use actual user data or empty arrays (no mock data fallback)
+      setGoals(userData.goals || []);
       setAddictions(userData.addictions || []);
       setCompletedGoals(userData.completedGoals || []);
 
@@ -315,7 +311,7 @@ export default function Index() {
     });
 
     if (!isInitialLoad && user && userData) {
-      console.log("💾 Saving user data...");
+      console.log("���� Saving user data...");
       const currentData = {
         ...userData,
         goals,
@@ -378,7 +374,7 @@ export default function Index() {
       case "career":
         return "💼";
       case "addiction":
-        return "�����";
+        return "���";
       default:
         return "⭐";
     }
