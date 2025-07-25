@@ -469,12 +469,15 @@ export default function Index() {
         return currentAddictions;
       }
 
+      const newCleanDays = addiction.cleanDays + 1;
+      const newLongestStreak = Math.max(addiction.longestStreak, newCleanDays);
+
       return currentAddictions.map((a) =>
         a.id === addictionId
           ? {
               ...a,
-              cleanDays: a.cleanDays + 1,
-              longestStreak: Math.max(a.longestStreak, a.cleanDays + 1),
+              cleanDays: newCleanDays,
+              longestStreak: newLongestStreak,
               lastLoggedDate: today,
             }
           : a,
