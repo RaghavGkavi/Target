@@ -454,13 +454,21 @@ export default function Index() {
 
   const addCleanDay = (addictionId: string, forceAdd: boolean = false) => {
     const today = new Date().toDateString();
+    console.log("🔧 addCleanDay called for:", addictionId, "forceAdd:", forceAdd);
 
     setAddictions((currentAddictions) => {
+      console.log("🔧 Current addictions before update:", currentAddictions);
       const addiction = currentAddictions.find((a) => a.id === addictionId);
-      if (!addiction) return currentAddictions;
+      if (!addiction) {
+        console.log("🔧 Addiction not found!");
+        return currentAddictions;
+      }
+
+      console.log("🔧 Found addiction:", addiction);
 
       // Check if already logged today
       if (addiction.lastLoggedDate === today && !forceAdd) {
+        console.log("🔧 Already logged today, showing affirmation dialog");
         // Show affirmation dialog
         setAffirmationDialog({
           isOpen: true,
@@ -473,7 +481,14 @@ export default function Index() {
       const newCleanDays = addiction.cleanDays + 1;
       const newLongestStreak = Math.max(addiction.longestStreak, newCleanDays);
 
-      return currentAddictions.map((a) =>
+      console.log("🔧 Updating:", {
+        oldCleanDays: addiction.cleanDays,
+        newCleanDays,
+        oldLongestStreak: addiction.longestStreak,
+        newLongestStreak,
+      });
+
+      const updatedAddictions = currentAddictions.map((a) =>
         a.id === addictionId
           ? {
               ...a,
@@ -483,6 +498,9 @@ export default function Index() {
             }
           : a,
       );
+
+      console.log("🔧 Updated addictions:", updatedAddictions);
+      return updatedAddictions;
     });
   };
 
