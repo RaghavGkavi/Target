@@ -107,7 +107,7 @@ export default function Auth() {
           </div>
           <div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              LockIn
+              Target
             </h1>
             <p className="text-muted-foreground">
               Master your goals, break your chains
