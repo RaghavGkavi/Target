@@ -665,6 +665,12 @@ export default function Index() {
     }
   };
 
+  // Add this function to delete a goal by id
+  const deleteGoal = (goalId: string) => {
+    setGoals((currentGoals) => currentGoals.filter((g) => g.id !== goalId));
+    // Do NOT delete from completedGoals
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 overflow-x-hidden">
       {/* Header */}
@@ -951,10 +957,44 @@ export default function Index() {
                         </span>
                         <CardTitle className="text-lg">{goal.title}</CardTitle>
                       </div>
-                      <Badge variant="outline" className="text-xs">
-                        <Flame className="h-3 w-3 mr-1" />
-                        {goal.streak}
-                      </Badge>
+                      <div className="flex items-center space-x-2">
+                        <Badge variant="outline" className="text-xs">
+                          <Flame className="h-3 w-3 mr-1" />
+                          {goal.streak}
+                        </Badge>
+                        {/* Delete Goal Button */}
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                              aria-label="Delete goal"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                Delete Goal
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Are you sure you want to delete the goal "{goal.title}"? This action cannot be undone.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => deleteGoal(goal.id)}
+                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                              >
+                                Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
                     </div>
                     <CardDescription>{goal.description}</CardDescription>
                   </CardHeader>
@@ -1743,3 +1783,4 @@ export default function Index() {
     </div>
   );
 }
+  
