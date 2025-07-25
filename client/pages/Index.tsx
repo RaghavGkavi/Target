@@ -534,7 +534,7 @@ export default function Index() {
       console.log("🔧 Found addiction:", addiction);
 
       // Check if already logged today (bypass for developer account)
-      const isDeveloper = user?.email === "raghav.gkavi@gmail.com";
+      const isDeveloper = user?.email === "raghav.gkavi@gmail.com" && developerModeEnabled;
       if (addiction.lastLoggedDate === today && !forceAdd && !isDeveloper) {
         console.log("🔧 Already logged today, showing affirmation dialog");
         // Show affirmation dialog
