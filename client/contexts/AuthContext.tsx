@@ -103,7 +103,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             completedGoals: [],
             preferences: {
               theme: 'system',
-              notifications: true
+              notifications: true,
+              onboardingCompleted: false
             }
           };
           setUserData(defaultData);
