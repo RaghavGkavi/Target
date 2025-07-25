@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { ArrowLeft, Trophy, Target, Calendar, Flame, Medal, Crown, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -70,7 +71,17 @@ const mockCompletedGoals: CompletedGoal[] = [
 
 export default function CompletedGoals() {
   const navigate = useNavigate();
-  const [completedGoals] = useState<CompletedGoal[]>(mockCompletedGoals);
+  const { userData } = useAuth();
+  const [completedGoals, setCompletedGoals] = useState<CompletedGoal[]>([]);
+
+  useEffect(() => {
+    if (userData?.completedGoals) {
+      setCompletedGoals(userData.completedGoals);
+    } else {
+      // Use mock data for demo
+      setCompletedGoals(mockCompletedGoals);
+    }
+  }, [userData]);
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
