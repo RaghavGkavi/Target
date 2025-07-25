@@ -320,16 +320,18 @@ export default function Settings() {
         {/* Account Actions */}
         <Card className="rounded-xl border-destructive/20">
           <CardHeader>
-            <CardTitle className="text-destructive">Account Actions</CardTitle>
+            <CardTitle className="text-destructive">Dangerous Actions</CardTitle>
             <CardDescription>
-              Manage your account settings
+              These actions cannot be undone. Please proceed with caution.
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <Button 
-              variant="outline" 
+          <CardContent className="space-y-4">
+            <GoalResetDialog />
+            <DeleteAccountDialog />
+            <Button
+              variant="outline"
               onClick={signOut}
-              className="w-full rounded-lg border-destructive/20 text-destructive hover:bg-destructive/10"
+              className="w-full rounded-lg border-muted text-muted-foreground hover:bg-muted/10"
             >
               <LogOut className="h-4 w-4 mr-2" />
               Sign Out
