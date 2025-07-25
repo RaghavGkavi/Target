@@ -158,7 +158,7 @@ export const ACHIEVEMENTS: Achievement[] = [
 
   // Streak Achievements
   {
-    id: "first_week",
+    id: "streak_one_week",
     title: "Week Warrior",
     description: "Maintain a 7-day streak",
     icon: "🔥",
@@ -172,37 +172,79 @@ export const ACHIEVEMENTS: Achievement[] = [
     },
   },
   {
-    id: "habit_former",
-    title: "Habit Former",
-    description: "Maintain a 21-day streak",
+    id: "streak_two_weeks",
+    title: "Fortnight Fighter",
+    description: "Maintain a 14-day streak",
     icon: "⚡",
+    category: "streaks",
+    rarity: "common",
+    condition: (userData) => {
+      const maxStreak = Math.max(
+        ...(userData.goals?.map((g: any) => g.streak || 0) || [0]),
+      );
+      return maxStreak >= 14;
+    },
+  },
+  {
+    id: "streak_one_month",
+    title: "Monthly Master",
+    description: "Maintain a 30-day streak",
+    icon: "🌙",
     category: "streaks",
     rarity: "rare",
     condition: (userData) => {
       const maxStreak = Math.max(
         ...(userData.goals?.map((g: any) => g.streak || 0) || [0]),
       );
-      return maxStreak >= 21;
+      return maxStreak >= 30;
     },
   },
   {
-    id: "unstoppable",
-    title: "Unstoppable",
-    description: "Maintain a 50-day streak",
-    icon: "🚀",
+    id: "streak_three_months",
+    title: "Quarterly Champion",
+    description: "Maintain a 90-day streak",
+    icon: "🏆",
+    category: "streaks",
+    rarity: "rare",
+    condition: (userData) => {
+      const maxStreak = Math.max(
+        ...(userData.goals?.map((g: any) => g.streak || 0) || [0]),
+      );
+      return maxStreak >= 90;
+    },
+  },
+  {
+    id: "streak_six_months",
+    title: "Half-Year Hero",
+    description: "Maintain a 180-day streak",
+    icon: "💫",
     category: "streaks",
     rarity: "epic",
     condition: (userData) => {
       const maxStreak = Math.max(
         ...(userData.goals?.map((g: any) => g.streak || 0) || [0]),
       );
-      return maxStreak >= 50;
+      return maxStreak >= 180;
     },
   },
   {
-    id: "legend",
-    title: "Legend",
-    description: "Maintain a 100-day streak",
+    id: "streak_nine_months",
+    title: "Triple Quarter Titan",
+    description: "Maintain a 270-day streak",
+    icon: "🌟",
+    category: "streaks",
+    rarity: "epic",
+    condition: (userData) => {
+      const maxStreak = Math.max(
+        ...(userData.goals?.map((g: any) => g.streak || 0) || [0]),
+      );
+      return maxStreak >= 270;
+    },
+  },
+  {
+    id: "streak_one_year",
+    title: "Annual Legend",
+    description: "Maintain a 365-day streak",
     icon: "👑",
     category: "streaks",
     rarity: "legendary",
@@ -210,7 +252,7 @@ export const ACHIEVEMENTS: Achievement[] = [
       const maxStreak = Math.max(
         ...(userData.goals?.map((g: any) => g.streak || 0) || [0]),
       );
-      return maxStreak >= 100;
+      return maxStreak >= 365;
     },
   },
 
