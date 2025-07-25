@@ -259,10 +259,10 @@ export default function Index() {
       }
       setIsInitialLoad(false);
     } else if (user && isInitialLoad) {
-      console.log("📊 Loading mock data for new user");
-      // Use mock data for new users
-      setGoals(mockGoals);
-      setAddictions(mockAddictions);
+      console.log("📊 Loading empty data for new user");
+      // Start with empty arrays for new users
+      setGoals([]);
+      setAddictions([]);
       setCompletedGoals([]);
       setIsInitialLoad(false);
     }
@@ -311,7 +311,7 @@ export default function Index() {
     });
 
     if (!isInitialLoad && user && userData) {
-      console.log("���� Saving user data...");
+      console.log("💾 Saving user data...");
       const currentData = {
         ...userData,
         goals,
