@@ -773,6 +773,10 @@ export default function Index() {
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => navigate("/completed-goals")} className="sm:hidden">
+                    <Trophy className="mr-2 h-4 w-4" />
+                    <span>Completed Goals</span>
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate("/profile")}>
                     <User className="mr-2 h-4 w-4" />
                     <span>Profile</span>
