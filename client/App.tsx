@@ -70,6 +70,13 @@ function AppRoutes() {
         </PublicRoute>
       } />
 
+      {/* Onboarding Route - requires auth but not full onboarding */}
+      <Route path="/onboarding" element={
+        <OnboardingRoute>
+          <Onboarding />
+        </OnboardingRoute>
+      } />
+
       {/* Protected Routes */}
       <Route path="/" element={
         <ProtectedRoute>
