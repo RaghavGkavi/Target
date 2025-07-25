@@ -11,6 +11,7 @@ import Index from "./pages/Index";
 import CreateGoal from "./pages/CreateGoal";
 import CompletedGoals from "./pages/CompletedGoals";
 import Auth from "./pages/Auth";
+import Onboarding from "./pages/Onboarding";
 import Placeholder from "./pages/Placeholder";
 import NotFound from "./pages/NotFound";
 
