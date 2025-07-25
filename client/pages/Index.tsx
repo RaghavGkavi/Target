@@ -319,7 +319,7 @@ export default function Index() {
         completedGoals,
       };
 
-      console.log("��� Data being saved:", currentData);
+      console.log("💾 Data being saved:", currentData);
 
       // Check for new achievements
       const newAchievements = checkAchievements(currentData, userData);
@@ -497,6 +497,8 @@ export default function Index() {
         );
       }
     });
+
+    console.log("🎯 Goal update completed, new goals state should trigger save effect");
   };
 
   const addCleanDay = (addictionId: string, forceAdd: boolean = false) => {
@@ -551,7 +553,7 @@ export default function Index() {
           : a,
       );
 
-      console.log("🔧 Updated addictions:", updatedAddictions);
+      console.log("��� Updated addictions:", updatedAddictions);
       return updatedAddictions;
     });
   };
