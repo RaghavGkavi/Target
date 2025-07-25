@@ -25,6 +25,8 @@ export default function Settings() {
   const [profileVisibility, setProfileVisibility] = useState(userData?.privacy?.profileVisibility || "private");
   const [notifications, setNotifications] = useState(userData?.preferences?.notifications ?? true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
