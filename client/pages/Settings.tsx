@@ -43,6 +43,24 @@ export default function Settings() {
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&size=200`;
   };
 
+  // Handle scroll for header hiding
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY < lastScrollY || currentScrollY < 100) {
+        setIsHeaderVisible(true);
+      } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setIsHeaderVisible(false);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
+
   const handleSave = async () => {
     setIsSaving(true);
     try {
