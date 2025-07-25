@@ -344,3 +344,230 @@ export default function Settings() {
     </div>
   );
 }
+
+// Goal Reset Dialog Component
+function GoalResetDialog() {
+  const { updateUserData } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
+  const [password, setPassword] = useState("");
+  const [isResetting, setIsResetting] = useState(false);
+  const [showPasswordField, setShowPasswordField] = useState(false);
+
+  const handleConfirmReset = async () => {
+    if (!password.trim()) {
+      setShowPasswordField(true);
+      return;
+    }
+
+    setIsResetting(true);
+    try {
+      // Reset all user data except basic preferences and auth info
+      await updateUserData({
+        goals: [],
+        addictions: [],
+        completedGoals: [],
+        disciplineData: {
+          baseScore: 50, // Reset to middle baseline
+          currentRank: 'C',
+          totalCompletions: 0,
+          consistencyScore: 0,
+          lastUpdated: new Date()
+        },
+        preferences: {
+          theme: 'system',
+          notifications: true,
+          onboardingCompleted: true // Keep onboarding completed
+        },
+        privacy: {
+          showGoals: true,
+          showRecoveries: false,
+          profileVisibility: 'private'
+        }
+      });
+
+      setIsOpen(false);
+      setPassword("");
+      setShowPasswordField(false);
+      // Reload the page to reset the app state
+      window.location.reload();
+    } catch (error) {
+      console.error('Failed to reset goals:', error);
+    } finally {
+      setIsResetting(false);
+    }
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button
+          variant="outline"
+          className="w-full rounded-lg border-warning/20 text-warning hover:bg-warning/10"
+        >
+          <RotateCcw className="h-4 w-4 mr-2" />
+          Reset All Goals & Progress
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle className="flex items-center space-x-2">
+            <AlertTriangle className="h-5 w-5 text-warning" />
+            <span>Reset All Progress</span>
+          </DialogTitle>
+          <DialogDescription>
+            This will permanently delete all your goals, progress, streaks, and achievements.
+            Your discipline rank will be reset to baseline. This action cannot be undone.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-4 py-4">
+          <div className="bg-warning/10 p-4 rounded-lg">
+            <h4 className="font-semibold text-warning mb-2">What will be reset:</h4>
+            <ul className="text-sm space-y-1">
+              <li>• All active goals and progress</li>
+              <li>• All recovery tracking data</li>
+              <li>• All completed goals and achievements</li>
+              <li>• Discipline rank (reset to C rank)</li>
+              <li>• All streaks and statistics</li>
+            </ul>
+          </div>
+
+          {showPasswordField && (
+            <div className="space-y-2">
+              <Label htmlFor="reset-password">Enter your password to confirm:</Label>
+              <Input
+                id="reset-password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Your account password"
+                className="rounded-lg"
+              />
+            </div>
+          )}
+        </div>
+
+        <DialogFooter>
+          <Button variant="outline" onClick={() => {
+            setIsOpen(false);
+            setPassword("");
+            setShowPasswordField(false);
+          }}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleConfirmReset}
+            disabled={isResetting}
+            className="bg-warning text-warning-foreground hover:bg-warning/90"
+          >
+            {isResetting ? "Resetting..." : showPasswordField ? "Confirm Reset" : "I Understand, Reset Everything"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// Delete Account Dialog Component
+function DeleteAccountDialog() {
+  const { signOut } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
+  const [password, setPassword] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showPasswordField, setShowPasswordField] = useState(false);
+
+  const handleConfirmDelete = async () => {
+    if (!password.trim()) {
+      setShowPasswordField(true);
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      // In a real app, this would call an API to delete the account
+      // For now, we'll just clear all local data and sign out
+      localStorage.removeItem('target_current_user');
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('target_user_data_')) {
+          localStorage.removeItem(key);
+        }
+      });
+
+      await signOut();
+    } catch (error) {
+      console.error('Failed to delete account:', error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button
+          variant="outline"
+          className="w-full rounded-lg border-destructive/20 text-destructive hover:bg-destructive/10"
+        >
+          <Trash2 className="h-4 w-4 mr-2" />
+          Delete Account
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle className="flex items-center space-x-2">
+            <AlertTriangle className="h-5 w-5 text-destructive" />
+            <span>Delete Account</span>
+          </DialogTitle>
+          <DialogDescription>
+            This will permanently delete your account and all associated data.
+            This action cannot be undone and you will lose access to your profile forever.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-4 py-4">
+          <div className="bg-destructive/10 p-4 rounded-lg">
+            <h4 className="font-semibold text-destructive mb-2">What will be deleted:</h4>
+            <ul className="text-sm space-y-1">
+              <li>• Your entire account and profile</li>
+              <li>• All goals, progress, and achievements</li>
+              <li>• All recovery tracking data</li>
+              <li>• All personal settings and preferences</li>
+              <li>• Access to this account forever</li>
+            </ul>
+          </div>
+
+          {showPasswordField && (
+            <div className="space-y-2">
+              <Label htmlFor="delete-password">Enter your password to confirm:</Label>
+              <Input
+                id="delete-password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Your account password"
+                className="rounded-lg"
+              />
+            </div>
+          )}
+        </div>
+
+        <DialogFooter>
+          <Button variant="outline" onClick={() => {
+            setIsOpen(false);
+            setPassword("");
+            setShowPasswordField(false);
+          }}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleConfirmDelete}
+            disabled={isDeleting}
+            variant="destructive"
+          >
+            {isDeleting ? "Deleting..." : showPasswordField ? "Delete Forever" : "I Understand, Delete My Account"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
