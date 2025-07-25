@@ -18,6 +18,7 @@ export interface UserData {
     theme: 'light' | 'dark' | 'system';
     notifications: boolean;
     reminderTime?: string;
+    onboardingCompleted?: boolean;
   };
 }
 
