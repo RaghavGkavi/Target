@@ -113,6 +113,7 @@ export default function Onboarding() {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedGoals, setSelectedGoals] = useState<string[]>([]);
   const [selectedAddictions, setSelectedAddictions] = useState<string[]>([]);
+  const [disciplineAnswers, setDisciplineAnswers] = useState<Record<string, number>>({});
 
   const toggleGoalSelection = (goalId: string) => {
     setSelectedGoals(prev => {
