@@ -97,12 +97,16 @@ export default function Auth() {
     try {
       const result = await signInWithGoogle();
       if (result.success) {
-        navigate("/");
+        // Navigate after a brief delay to ensure state is set
+        setTimeout(() => {
+          navigate("/");
+        }, 100);
       } else {
         setError(result.error || "Google sign in failed");
       }
     } catch (err) {
-      setError("An unexpected error occurred");
+      console.error("Google sign-in error:", err);
+      setError("An unexpected error occurred during Google sign-in");
     } finally {
       setIsLoading(false);
     }
@@ -377,14 +381,19 @@ export default function Auth() {
                   fill="#EA4335"
                 />
               </svg>
-              {isLoading ? "Please wait..." : "Continue with Google"}
+              {isLoading ? "Connecting..." : "Continue with Google"}
             </Button>
 
-            {/* Demo Account */}
+            {/* Demo Account & Setup Info */}
             <div className="text-center space-y-2">
               <p className="text-xs text-muted-foreground">
                 Demo Account: demo@target.app / demo123
               </p>
+              {!import.meta.env.VITE_GOOGLE_CLIENT_ID && (
+                <p className="text-xs text-warning bg-warning/10 p-2 rounded">
+                  Google OAuth not configured - using demo mode
+                </p>
+              )}
             </div>
           </CardContent>
         </Card>

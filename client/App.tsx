@@ -40,202 +40,199 @@ import Onboarding from "./pages/Onboarding";
 import Placeholder from "./pages/Placeholder";
 import NotFound from "./pages/NotFound";
 
+// Extend HTMLElement type to include our custom property
+declare global {
+  interface HTMLElement {
+    _reactRoot?: ReturnType<typeof createRoot>;
+  }
+}
+
 const queryClient = new QueryClient();
 
-// Protected Route Component
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, userData, loading } = useAuth();
+function AppContent() {
+  // Protected Route Component
+  function ProtectedRoute({ children }: { children: React.ReactNode }) {
+    const { user, userData, loading } = useAuth();
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
+    if (loading) {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      );
+    }
+
+    if (!user) {
+      return <Navigate to="/auth" replace />;
+    }
+
+    // Check if user needs onboarding
+    if (userData && !userData.preferences?.onboardingCompleted) {
+      return <Navigate to="/onboarding" replace />;
+    }
+
+    return <>{children}</>;
   }
 
-  if (!user) {
-    return <Navigate to="/auth" replace />;
+  // Public Route Component (redirect to dashboard if authenticated)
+  function PublicRoute({ children }: { children: React.ReactNode }) {
+    const { user, loading } = useAuth();
+
+    if (loading) {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      );
+    }
+
+    if (user) {
+      return <Navigate to="/" replace />;
+    }
+
+    return <>{children}</>;
   }
 
-  // Check if user needs onboarding
-  if (userData && !userData.preferences?.onboardingCompleted) {
-    return <Navigate to="/onboarding" replace />;
+  // Onboarding Route Component (requires auth but redirects if already onboarded)
+  function OnboardingRoute({ children }: { children: React.ReactNode }) {
+    const { user, userData, loading } = useAuth();
+
+    if (loading) {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      );
+    }
+
+    if (!user) {
+      return <Navigate to="/auth" replace />;
+    }
+
+    if (userData?.preferences?.onboardingCompleted) {
+      return <Navigate to="/" replace />;
+    }
+
+    return <>{children}</>;
   }
 
-  return <>{children}</>;
-}
-
-// Public Route Component (redirect to dashboard if authenticated)
-function PublicRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
-  if (user) {
-    return <Navigate to="/" replace />;
-  }
-
-  return <>{children}</>;
-}
-
-// Onboarding Route Component (requires auth but redirects if already onboarded)
-function OnboardingRoute({ children }: { children: React.ReactNode }) {
-  const { user, userData, loading } = useAuth();
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return <Navigate to="/auth" replace />;
-  }
-
-  if (userData?.preferences?.onboardingCompleted) {
-    return <Navigate to="/" replace />;
-  }
-
-  return <>{children}</>;
-}
-
-function AppRoutes() {
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route
-        path="/auth"
-        element={
-          <PublicRoute>
-            <Auth />
-          </PublicRoute>
-        }
-      />
+    <BrowserRouter>
+      <Routes>
+        {/* Public Routes */}
+        <Route
+          path="/auth"
+          element={
+            <PublicRoute>
+              <Auth />
+            </PublicRoute>
+          }
+        />
 
-      {/* Onboarding Route - requires auth but not full onboarding */}
-      <Route
-        path="/onboarding"
-        element={
-          <OnboardingRoute>
-            <Onboarding />
-          </OnboardingRoute>
-        }
-      />
+        {/* Onboarding Route - requires auth but not full onboarding */}
+        <Route
+          path="/onboarding"
+          element={
+            <OnboardingRoute>
+              <Onboarding />
+            </OnboardingRoute>
+          }
+        />
 
-      {/* Protected Routes */}
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute>
-            <Index />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/create-goal"
-        element={
-          <ProtectedRoute>
-            <CreateGoal />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/completed-goals"
-        element={
-          <ProtectedRoute>
-            <CompletedGoals />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/profile"
-        element={
-          <ProtectedRoute>
-            <Profile />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/settings"
-        element={
-          <ProtectedRoute>
-            <Settings />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/goals"
-        element={
-          <ProtectedRoute>
-            <Placeholder
-              title="Goal Management"
-              description="Manage and edit your existing goals"
-              suggestion="I can add features like goal editing, deletion, and detailed progress tracking here!"
-            />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/habits"
-        element={
-          <ProtectedRoute>
-            <Placeholder
-              title="Habit Tracker"
-              description="Track your daily habits and routines"
-              suggestion="I can build a comprehensive habit tracking system with calendars and analytics!"
-            />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/recovery"
-        element={
-          <ProtectedRoute>
-            <Placeholder
-              title="Addiction Recovery"
-              description="Detailed addiction recovery tools and support"
-              suggestion="I can add features like trigger tracking, support groups, and recovery milestones!"
-            />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/analytics"
-        element={
-          <ProtectedRoute>
-            <Placeholder
-              title="Analytics & Insights"
-              description="Detailed progress analytics and insights"
-              suggestion="I can create charts, graphs, and detailed analytics to track your progress over time!"
-            />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/settings"
-        element={
-          <ProtectedRoute>
-            <Placeholder
-              title="Settings"
-              description="Customize your Target experience"
-              suggestion="I can add user preferences, notification settings, and theme customization!"
-            />
-          </ProtectedRoute>
-        }
-      />
+        {/* Protected Routes */}
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Index />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/create-goal"
+          element={
+            <ProtectedRoute>
+              <CreateGoal />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/completed-goals"
+          element={
+            <ProtectedRoute>
+              <CompletedGoals />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <Settings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/goals"
+          element={
+            <ProtectedRoute>
+              <Placeholder
+                title="Goal Management"
+                description="Manage and edit your existing goals"
+                suggestion="I can add features like goal editing, deletion, and detailed progress tracking here!"
+              />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/habits"
+          element={
+            <ProtectedRoute>
+              <Placeholder
+                title="Habit Tracker"
+                description="Track your daily habits and routines"
+                suggestion="I can build a comprehensive habit tracking system with calendars and analytics!"
+              />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/recovery"
+          element={
+            <ProtectedRoute>
+              <Placeholder
+                title="Addiction Recovery"
+                description="Detailed addiction recovery tools and support"
+                suggestion="I can add features like trigger tracking, support groups, and recovery milestones!"
+              />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/analytics"
+          element={
+            <ProtectedRoute>
+              <Placeholder
+                title="Analytics & Insights"
+                description="Detailed progress analytics and insights"
+                suggestion="I can create charts, graphs, and detailed analytics to track your progress over time!"
+              />
+            </ProtectedRoute>
+          }
+        />
 
-      {/* Catch-all route */}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        {/* Catch-all route */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
@@ -246,13 +243,22 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <BrowserRouter>
-            <AppRoutes />
-          </BrowserRouter>
+          <AppContent />
         </TooltipProvider>
       </AuthProvider>
     </ThemeProvider>
   </QueryClientProvider>
 );
 
-createRoot(document.getElementById("root")!).render(<App />);
+// Handle hot reloading properly
+const container = document.getElementById("root")!;
+let root: ReturnType<typeof createRoot>;
+
+if (!container._reactRoot) {
+  root = createRoot(container);
+  container._reactRoot = root;
+} else {
+  root = container._reactRoot;
+}
+
+root.render(<App />);

@@ -239,8 +239,13 @@ export default function Index() {
   // Load user data when component mounts or userData changes
   useEffect(() => {
     if (userData) {
-      setGoals(userData.goals || mockGoals);
-      setAddictions(userData.addictions || mockAddictions);
+      // Use empty arrays instead of mock data if user has no data yet
+      setGoals(
+        userData.goals && userData.goals.length > 0
+          ? userData.goals
+          : mockGoals,
+      );
+      setAddictions(userData.addictions || []);
       setCompletedGoals(userData.completedGoals || []);
 
       // Check if user just completed onboarding (has no tutorial completion flag)
@@ -297,13 +302,24 @@ export default function Index() {
 
   // Save user data whenever goals, addictions, or completed goals change (but not on initial load)
   useEffect(() => {
+    console.log("💾 Data save effect triggered:", {
+      isInitialLoad,
+      hasUser: !!user,
+      hasUserData: !!userData,
+      goalsLength: goals.length,
+      addictionsLength: addictions.length,
+    });
+
     if (!isInitialLoad && user && userData) {
+      console.log("💾 Saving user data...");
       const currentData = {
         ...userData,
         goals,
         addictions,
         completedGoals,
       };
+
+      console.log("💾 Data being saved:", currentData);
 
       // Check for new achievements
       const newAchievements = checkAchievements(currentData, userData);
@@ -330,6 +346,12 @@ export default function Index() {
           newAchievements.map((a) => a.title),
         );
       }
+    } else {
+      console.log("💾 Skipping save:", {
+        isInitialLoad,
+        hasUser: !!user,
+        hasUserData: !!userData,
+      });
     }
   }, [goals, addictions, completedGoals, isInitialLoad, user]);
 
@@ -352,7 +374,7 @@ export default function Index() {
       case "career":
         return "💼";
       case "addiction":
-        return "🎯";
+        return "���";
       default:
         return "⭐";
     }
@@ -360,13 +382,26 @@ export default function Index() {
 
   const markGoalComplete = (goalId: string, forceAdd: boolean = false) => {
     const today = new Date().toDateString();
+    console.log(
+      "🎯 markGoalComplete called for:",
+      goalId,
+      "forceAdd:",
+      forceAdd,
+    );
 
     setGoals((currentGoals) => {
+      console.log("🎯 Current goals before update:", currentGoals);
       const goal = currentGoals.find((g) => g.id === goalId);
-      if (!goal) return currentGoals;
+      if (!goal) {
+        console.log("🎯 Goal not found!");
+        return currentGoals;
+      }
+
+      console.log("🎯 Found goal:", goal);
 
       // Check if already logged today
       if (goal.lastLoggedDate === today && !forceAdd) {
+        console.log("🎯 Already logged today, showing affirmation dialog");
         // Show affirmation dialog
         setAffirmationDialog({
           isOpen: true,
@@ -376,11 +411,25 @@ export default function Index() {
         return currentGoals;
       }
 
-      const newProgress = Math.min(100, goal.progress + 100 / goal.targetDays);
+      // Calculate new values
+      const newDaysCompleted = goal.daysCompleted + 1;
+      const newProgress = Math.min(
+        100,
+        (newDaysCompleted / goal.targetDays) * 100,
+      );
+      const newStreak = goal.streak + 1;
+
+      console.log("🎯 Updating:", {
+        oldDaysCompleted: goal.daysCompleted,
+        newDaysCompleted,
+        oldProgress: goal.progress,
+        newProgress,
+        oldStreak: goal.streak,
+        newStreak,
+      });
 
       if (newProgress >= 100) {
         // Goal completed - move to completed goals and restart with higher target
-        const finalStreak = goal.streak + 1;
         const completedGoal: CompletedGoal = {
           id: goal.id,
           title: goal.title,
@@ -388,7 +437,7 @@ export default function Index() {
           category: goal.category,
           completedCount: 1,
           totalDaysCompleted: goal.targetDays,
-          longestStreak: finalStreak,
+          longestStreak: newStreak,
           completionDates: [new Date()],
           currentLevel: 1,
           color: goal.color,
@@ -406,7 +455,7 @@ export default function Index() {
                     ...cg,
                     completedCount: cg.completedCount + 1,
                     totalDaysCompleted: cg.totalDaysCompleted + goal.targetDays,
-                    longestStreak: Math.max(cg.longestStreak, finalStreak),
+                    longestStreak: Math.max(cg.longestStreak, newStreak),
                     completionDates: [...cg.completionDates, new Date()],
                     currentLevel: Math.floor((cg.completedCount + 1) / 5) + 1,
                   }
@@ -425,7 +474,7 @@ export default function Index() {
                 progress: 0,
                 daysCompleted: 0,
                 targetDays: g.targetDays + 7,
-                streak: finalStreak, // CARRY OVER THE STREAK!
+                streak: newStreak, // CARRY OVER THE STREAK!
                 lastUpdated: new Date(),
                 lastLoggedDate: today,
               }
@@ -437,9 +486,9 @@ export default function Index() {
           g.id === goalId
             ? {
                 ...g,
-                daysCompleted: g.daysCompleted + 1,
+                daysCompleted: newDaysCompleted,
                 progress: newProgress,
-                streak: g.streak + 1,
+                streak: newStreak,
                 lastUpdated: new Date(),
                 lastLoggedDate: today,
               }
@@ -451,13 +500,26 @@ export default function Index() {
 
   const addCleanDay = (addictionId: string, forceAdd: boolean = false) => {
     const today = new Date().toDateString();
+    console.log(
+      "🔧 addCleanDay called for:",
+      addictionId,
+      "forceAdd:",
+      forceAdd,
+    );
 
     setAddictions((currentAddictions) => {
+      console.log("🔧 Current addictions before update:", currentAddictions);
       const addiction = currentAddictions.find((a) => a.id === addictionId);
-      if (!addiction) return currentAddictions;
+      if (!addiction) {
+        console.log("🔧 Addiction not found!");
+        return currentAddictions;
+      }
+
+      console.log("🔧 Found addiction:", addiction);
 
       // Check if already logged today
       if (addiction.lastLoggedDate === today && !forceAdd) {
+        console.log("🔧 Already logged today, showing affirmation dialog");
         // Show affirmation dialog
         setAffirmationDialog({
           isOpen: true,
@@ -467,16 +529,29 @@ export default function Index() {
         return currentAddictions;
       }
 
-      return currentAddictions.map((a) =>
+      const newCleanDays = addiction.cleanDays + 1;
+      const newLongestStreak = Math.max(addiction.longestStreak, newCleanDays);
+
+      console.log("🔧 Updating:", {
+        oldCleanDays: addiction.cleanDays,
+        newCleanDays,
+        oldLongestStreak: addiction.longestStreak,
+        newLongestStreak,
+      });
+
+      const updatedAddictions = currentAddictions.map((a) =>
         a.id === addictionId
           ? {
               ...a,
-              cleanDays: a.cleanDays + 1,
-              longestStreak: Math.max(a.longestStreak, a.cleanDays + 1),
+              cleanDays: newCleanDays,
+              longestStreak: newLongestStreak,
               lastLoggedDate: today,
             }
           : a,
       );
+
+      console.log("🔧 Updated addictions:", updatedAddictions);
+      return updatedAddictions;
     });
   };
 
@@ -740,7 +815,7 @@ export default function Index() {
                   | "B+"
                   | "A-"
                   | "A"
-                  | "A+"
+                  | "A+",
               );
               return (
                 <Card className="rounded-xl">
@@ -1322,18 +1397,21 @@ export default function Index() {
               {userData?.disciplineData &&
                 (() => {
                   const rankInfo = getDisciplineRankInfo(
-                    userData.disciplineData.currentRank as import("@/lib/disciplineRanking").DisciplineRank,
+                    userData.disciplineData
+                      .currentRank as import("@/lib/disciplineRanking").DisciplineRank,
                   );
                   const nextRankIndex = Math.min(
                     14,
                     DISCIPLINE_RANKS.indexOf(
-                      userData.disciplineData.currentRank as import("@/lib/disciplineRanking").DisciplineRank,
+                      userData.disciplineData
+                        .currentRank as import("@/lib/disciplineRanking").DisciplineRank,
                     ) + 1,
                   );
                   const nextRank = DISCIPLINE_RANKS[nextRankIndex];
                   const progress =
                     ((DISCIPLINE_RANKS.indexOf(
-                      userData.disciplineData.currentRank as import("@/lib/disciplineRanking").DisciplineRank,
+                      userData.disciplineData
+                        .currentRank as import("@/lib/disciplineRanking").DisciplineRank,
                     ) +
                       1) /
                       DISCIPLINE_RANKS.length) *
