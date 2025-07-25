@@ -209,6 +209,7 @@ export default function Index() {
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [showTutorial, setShowTutorial] = useState(false);
+  const [developerModeEnabled, setDeveloperModeEnabled] = useState(true);
 
   useEffect(() => {
     setCurrentQuote(
