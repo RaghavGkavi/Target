@@ -27,6 +27,11 @@ export interface UserData {
     reminderTime?: string;
     onboardingCompleted?: boolean;
   };
+  privacy?: {
+    showGoals: boolean;
+    showRecoveries: boolean;
+    profileVisibility: 'public' | 'private';
+  };
 }
 
 interface AuthContextType {
