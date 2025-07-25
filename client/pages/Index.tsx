@@ -319,7 +319,7 @@ export default function Index() {
         completedGoals,
       };
 
-      console.log("���� Data being saved:", currentData);
+      console.log("💾 Data being saved:", currentData);
 
       // Check for new achievements
       const newAchievements = checkAchievements(currentData, userData);
@@ -679,7 +679,7 @@ export default function Index() {
               <div className="h-10 w-10 rounded-xl bg-gradient-to-r from-primary to-accent flex items-center justify-center">
                 <Target className="h-6 w-6 text-white" />
               </div>
-              <div>
+              <div className="hidden sm:block">
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                   Target
                 </h1>
@@ -687,18 +687,33 @@ export default function Index() {
                   Master your goals, break your chains
                 </p>
               </div>
+              <div className="sm:hidden">
+                <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                  Target
+                </h1>
+              </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <Link to="/completed-goals">
+            <div className="flex items-center space-x-1 sm:space-x-2">
+              <Link to="/completed-goals" className="hidden sm:block">
                 <Button variant="outline" className="rounded-xl">
                   <Trophy className="h-4 w-4 mr-2" />
                   Completed
                 </Button>
               </Link>
-              <Link to="/create-goal">
+              <Link to="/completed-goals" className="sm:hidden">
+                <Button variant="outline" size="sm" className="rounded-xl p-2">
+                  <Trophy className="h-4 w-4" />
+                </Button>
+              </Link>
+              <Link to="/create-goal" className="hidden sm:block">
                 <Button className="rounded-xl">
                   <Plus className="h-4 w-4 mr-2" />
                   New Goal
+                </Button>
+              </Link>
+              <Link to="/create-goal" className="sm:hidden">
+                <Button size="sm" className="rounded-xl p-2">
+                  <Plus className="h-4 w-4" />
                 </Button>
               </Link>
 
