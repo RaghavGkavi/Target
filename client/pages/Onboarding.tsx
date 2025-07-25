@@ -319,6 +319,73 @@ export default function Onboarding() {
     </div>
   );
 
+  const renderDisciplineStep = () => (
+    <div className="space-y-6">
+      <div className="text-center space-y-4">
+        <div className="h-16 w-16 mx-auto rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
+          <Zap className="h-8 w-8 text-white" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold">Discipline Assessment</h1>
+          <p className="text-muted-foreground">
+            Help us understand your current discipline level to provide personalized tracking.
+          </p>
+        </div>
+      </div>
+
+      <div className="space-y-6">
+        {DISCIPLINE_ASSESSMENT.map((question) => {
+          const selectedAnswer = disciplineAnswers[question.id];
+
+          return (
+            <Card key={question.id} className="rounded-xl">
+              <CardHeader>
+                <CardTitle className="text-lg">{question.question}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {question.options.map((option, index) => {
+                    const isSelected = selectedAnswer === option.points;
+
+                    return (
+                      <button
+                        key={index}
+                        onClick={() => handleDisciplineAnswer(question.id, option.points)}
+                        className={`w-full p-3 rounded-lg border-2 transition-all duration-200 text-left ${
+                          isSelected
+                            ? "border-primary bg-primary/10 scale-[1.01]"
+                            : "border-border hover:border-primary/50 hover:bg-muted/50"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span>{option.text}</span>
+                          {isSelected && (
+                            <CheckCircle2 className="h-4 w-4 text-primary" />
+                          )}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+
+      <div className="bg-muted/50 rounded-lg p-4">
+        <div className="flex items-center space-x-2 text-sm">
+          <Zap className="h-4 w-4 text-primary" />
+          <span>This assessment helps us calculate your discipline ranking from F- to A+. Your ranking will improve as you complete goals!</span>
+        </div>
+      </div>
+
+      <div className="text-center text-sm text-muted-foreground">
+        Answered: {Object.keys(disciplineAnswers).length}/{DISCIPLINE_ASSESSMENT.length} questions
+      </div>
+    </div>
+  );
+
   const renderCompletionStep = () => (
     <div className="space-y-6 text-center">
       <div className="space-y-4">
