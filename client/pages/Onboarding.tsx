@@ -340,7 +340,7 @@ export default function Onboarding() {
           <Card className="rounded-xl">
             <CardContent className="p-6">
               <div className="space-y-4">
-                <div className="text-6xl mb-4">��</div>
+                <div className="text-6xl mb-4">🎯</div>
                 <h3 className="text-lg font-semibold">Why do we assess discipline?</h3>
                 <p className="text-sm text-muted-foreground">
                   Your discipline ranking helps us understand your current habits and provides a baseline for tracking improvement.
@@ -535,8 +535,8 @@ export default function Onboarding() {
           <CardContent className="p-6">
             {currentStep === 1 && renderGoalsStep()}
             {currentStep === 2 && renderRecoveryStep()}
-            {currentStep === 3 && renderDisciplineStep()}
-            {currentStep === 4 && renderCompletionStep()}
+            {(currentStep >= 3 && currentStep <= 3 + DISCIPLINE_ASSESSMENT.length) && renderDisciplineQuestionStep()}
+            {currentStep === 3 + DISCIPLINE_ASSESSMENT.length + 1 && renderCompletionStep()}
           </CardContent>
         </Card>
 
