@@ -584,6 +584,26 @@ export default function Index() {
               </div>
             </CardContent>
           </Card>
+
+          {/* Discipline Ranking Card */}
+          {userData?.disciplineData && (() => {
+            const rankInfo = getDisciplineRankInfo(userData.disciplineData.currentRank);
+            return (
+              <Card className="rounded-xl">
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <div className="text-lg">{rankInfo.emoji}</div>
+                    <div>
+                      <p className={`text-2xl font-bold ${rankInfo.color}`}>
+                        {userData.disciplineData.currentRank}
+                      </p>
+                      <p className="text-xs text-muted-foreground">Discipline</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })()}
         </div>
 
         {/* Main Content Tabs */}
