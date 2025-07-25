@@ -30,7 +30,7 @@ const presetGoals: PresetGoal[] = [
   {
     id: "workout",
     title: "Work out more",
-    description: "Build a consistent exercise routine",
+    description: "Work out for an hour",
     category: "fitness",
     icon: "🏃‍♂️",
     color: "bg-green-500"
@@ -38,7 +38,7 @@ const presetGoals: PresetGoal[] = [
   {
     id: "read",
     title: "Read more",
-    description: "Develop a daily reading habit",
+    description: "Read for 30 minutes daily",
     category: "personal",
     icon: "📚",
     color: "bg-blue-500"
@@ -46,7 +46,7 @@ const presetGoals: PresetGoal[] = [
   {
     id: "study",
     title: "Study more",
-    description: "Enhance learning and skill development",
+    description: "Study for 45 minutes daily",
     category: "career",
     icon: "📖",
     color: "bg-purple-500"
@@ -54,7 +54,7 @@ const presetGoals: PresetGoal[] = [
   {
     id: "productive",
     title: "Be more productive",
-    description: "Improve focus and time management",
+    description: "Work towards a goal in your life",
     category: "career",
     icon: "⚡",
     color: "bg-orange-500"
@@ -62,7 +62,7 @@ const presetGoals: PresetGoal[] = [
   {
     id: "relationships",
     title: "Strengthen bonds",
-    description: "Build deeper connections with others",
+    description: "Spend an hour with a friend or loved one",
     category: "personal",
     icon: "❤️",
     color: "bg-pink-500"
