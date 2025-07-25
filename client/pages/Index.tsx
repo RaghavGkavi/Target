@@ -346,7 +346,15 @@ export default function Index() {
     const requiredAffirmation = "I pledge that I was clean for the extra day I am logging.";
 
     if (affirmationDialog.affirmationText.trim() === requiredAffirmation) {
-      addCleanDay(affirmationDialog.addictionId, true);
+      // Check if this is for a goal or addiction based on ID format
+      const isGoal = goals.some(g => g.id === affirmationDialog.addictionId);
+
+      if (isGoal) {
+        markGoalComplete(affirmationDialog.addictionId, true);
+      } else {
+        addCleanDay(affirmationDialog.addictionId, true);
+      }
+
       setAffirmationDialog({ isOpen: false, addictionId: "", affirmationText: "" });
     }
   };
