@@ -147,10 +147,12 @@ export default function Index() {
                 <p className="text-sm text-muted-foreground">Master your goals, break your chains</p>
               </div>
             </div>
-            <Button className="rounded-xl">
-              <Plus className="h-4 w-4 mr-2" />
-              New Goal
-            </Button>
+            <Link to="/create-goal">
+              <Button className="rounded-xl">
+                <Plus className="h-4 w-4 mr-2" />
+                New Goal
+              </Button>
+            </Link>
           </div>
         </div>
       </header>
