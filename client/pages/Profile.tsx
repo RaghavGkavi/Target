@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Share2, Copy, Check, Trophy, Target, Calendar, Flame } from "lucide-react";
 import { Button } from "@/components/ui/button";
