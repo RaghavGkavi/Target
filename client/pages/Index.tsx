@@ -405,7 +405,7 @@ export default function Index() {
       console.log("🎯 Found goal:", goal);
 
       // Check if already logged today (bypass for developer account)
-      const isDeveloper = user?.email === "raghav.gkavi@gmail.com";
+      const isDeveloper = user?.email === "raghav.gkavi@gmail.com" && developerModeEnabled;
       if (goal.lastLoggedDate === today && !forceAdd && !isDeveloper) {
         console.log("🎯 Already logged today, showing affirmation dialog");
         // Show affirmation dialog
