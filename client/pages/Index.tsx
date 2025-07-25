@@ -394,7 +394,7 @@ export default function Index() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                  LockIn
+                  Target
                 </h1>
                 <p className="text-sm text-muted-foreground">
                   Master your goals, break your chains
