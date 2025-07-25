@@ -174,7 +174,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       saveMockUsers(users);
       setUser(newUser);
-      localStorage.setItem('lockin_current_user', JSON.stringify(newUser));
+      localStorage.setItem('target_current_user', JSON.stringify(newUser));
       
       // Initialize user data
       const defaultData: UserData = {
@@ -211,7 +211,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       };
       
       setUser(mockGoogleUser);
-      localStorage.setItem('lockin_current_user', JSON.stringify(mockGoogleUser));
+      localStorage.setItem('target_current_user', JSON.stringify(mockGoogleUser));
       
       // Initialize user data
       const defaultData: UserData = {
@@ -237,7 +237,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOut = async (): Promise<void> => {
     setUser(null);
     setUserData(null);
-    localStorage.removeItem('lockin_current_user');
+    localStorage.removeItem('target_current_user');
   };
 
   const updateUserData = async (data: Partial<UserData>): Promise<void> => {
