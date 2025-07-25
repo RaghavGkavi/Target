@@ -23,6 +23,7 @@ interface PresetAddiction {
   name: string;
   icon: string;
   description: string;
+  triggers: string[];
 }
 
 const presetGoals: PresetGoal[] = [
