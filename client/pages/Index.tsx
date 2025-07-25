@@ -240,7 +240,11 @@ export default function Index() {
   useEffect(() => {
     if (userData) {
       // Use empty arrays instead of mock data if user has no data yet
-      setGoals(userData.goals && userData.goals.length > 0 ? userData.goals : mockGoals);
+      setGoals(
+        userData.goals && userData.goals.length > 0
+          ? userData.goals
+          : mockGoals,
+      );
       setAddictions(userData.addictions || []);
       setCompletedGoals(userData.completedGoals || []);
 
@@ -303,7 +307,7 @@ export default function Index() {
       hasUser: !!user,
       hasUserData: !!userData,
       goalsLength: goals.length,
-      addictionsLength: addictions.length
+      addictionsLength: addictions.length,
     });
 
     if (!isInitialLoad && user && userData) {
@@ -343,7 +347,11 @@ export default function Index() {
         );
       }
     } else {
-      console.log("💾 Skipping save:", { isInitialLoad, hasUser: !!user, hasUserData: !!userData });
+      console.log("💾 Skipping save:", {
+        isInitialLoad,
+        hasUser: !!user,
+        hasUserData: !!userData,
+      });
     }
   }, [goals, addictions, completedGoals, isInitialLoad, user]);
 
@@ -374,7 +382,12 @@ export default function Index() {
 
   const markGoalComplete = (goalId: string, forceAdd: boolean = false) => {
     const today = new Date().toDateString();
-    console.log("🎯 markGoalComplete called for:", goalId, "forceAdd:", forceAdd);
+    console.log(
+      "🎯 markGoalComplete called for:",
+      goalId,
+      "forceAdd:",
+      forceAdd,
+    );
 
     setGoals((currentGoals) => {
       console.log("🎯 Current goals before update:", currentGoals);
@@ -400,7 +413,10 @@ export default function Index() {
 
       // Calculate new values
       const newDaysCompleted = goal.daysCompleted + 1;
-      const newProgress = Math.min(100, (newDaysCompleted / goal.targetDays) * 100);
+      const newProgress = Math.min(
+        100,
+        (newDaysCompleted / goal.targetDays) * 100,
+      );
       const newStreak = goal.streak + 1;
 
       console.log("🎯 Updating:", {
@@ -484,7 +500,12 @@ export default function Index() {
 
   const addCleanDay = (addictionId: string, forceAdd: boolean = false) => {
     const today = new Date().toDateString();
-    console.log("🔧 addCleanDay called for:", addictionId, "forceAdd:", forceAdd);
+    console.log(
+      "🔧 addCleanDay called for:",
+      addictionId,
+      "forceAdd:",
+      forceAdd,
+    );
 
     setAddictions((currentAddictions) => {
       console.log("🔧 Current addictions before update:", currentAddictions);
@@ -794,7 +815,7 @@ export default function Index() {
                   | "B+"
                   | "A-"
                   | "A"
-                  | "A+"
+                  | "A+",
               );
               return (
                 <Card className="rounded-xl">
@@ -1376,18 +1397,21 @@ export default function Index() {
               {userData?.disciplineData &&
                 (() => {
                   const rankInfo = getDisciplineRankInfo(
-                    userData.disciplineData.currentRank as import("@/lib/disciplineRanking").DisciplineRank,
+                    userData.disciplineData
+                      .currentRank as import("@/lib/disciplineRanking").DisciplineRank,
                   );
                   const nextRankIndex = Math.min(
                     14,
                     DISCIPLINE_RANKS.indexOf(
-                      userData.disciplineData.currentRank as import("@/lib/disciplineRanking").DisciplineRank,
+                      userData.disciplineData
+                        .currentRank as import("@/lib/disciplineRanking").DisciplineRank,
                     ) + 1,
                   );
                   const nextRank = DISCIPLINE_RANKS[nextRankIndex];
                   const progress =
                     ((DISCIPLINE_RANKS.indexOf(
-                      userData.disciplineData.currentRank as import("@/lib/disciplineRanking").DisciplineRank,
+                      userData.disciplineData
+                        .currentRank as import("@/lib/disciplineRanking").DisciplineRank,
                     ) +
                       1) /
                       DISCIPLINE_RANKS.length) *

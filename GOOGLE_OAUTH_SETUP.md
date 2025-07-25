@@ -61,15 +61,18 @@
 ### Common Issues:
 
 1. **"This app isn't verified" warning**:
+
    - This is normal for development
    - Click "Advanced" > "Go to [app name] (unsafe)"
    - For production, you'll need to verify your app with Google
 
 2. **"Error 400: redirect_uri_mismatch"**:
+
    - Make sure your authorized origins include your current domain
    - For local development, use `http://localhost:8080`
 
 3. **Popup blocked**:
+
    - Ensure popups are allowed for your domain
    - Some browsers block popups by default
 

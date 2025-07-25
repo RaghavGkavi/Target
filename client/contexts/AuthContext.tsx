@@ -246,8 +246,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       return new Promise((resolve) => {
         // Initialize Google Identity Services
-        if (typeof window.google === 'undefined') {
-          resolve({ success: false, error: "Google services not available. Please ensure you have an internet connection." });
+        if (typeof window.google === "undefined") {
+          resolve({
+            success: false,
+            error:
+              "Google services not available. Please ensure you have an internet connection.",
+          });
           return;
         }
 
@@ -257,7 +261,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             try {
               // Decode JWT token to get user info
               const credential = response.credential;
-              const payload = JSON.parse(atob(credential.split('.')[1]));
+              const payload = JSON.parse(atob(credential.split(".")[1]));
 
               const googleUser: User = {
                 id: `google_${payload.sub}`,
@@ -270,7 +274,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               };
 
               setUser(googleUser);
-              localStorage.setItem("target_current_user", JSON.stringify(googleUser));
+              localStorage.setItem(
+                "target_current_user",
+                JSON.stringify(googleUser),
+              );
 
               // Check if user data exists
               const existingData = getUserData(googleUser.id);
@@ -302,7 +309,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               resolve({ success: true });
             } catch (error) {
               console.error("Error processing Google auth response:", error);
-              resolve({ success: false, error: "Failed to process Google authentication" });
+              resolve({
+                success: false,
+                error: "Failed to process Google authentication",
+              });
             }
           },
           auto_select: false,
@@ -324,7 +334,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           };
 
           setUser(mockGoogleUser);
-          localStorage.setItem("target_current_user", JSON.stringify(mockGoogleUser));
+          localStorage.setItem(
+            "target_current_user",
+            JSON.stringify(mockGoogleUser),
+          );
 
           const existingData = getUserData(mockGoogleUser.id);
           let userDataToSet: UserData;
@@ -360,21 +373,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
             // Fall back to manual sign-in
             window.google.accounts.id.renderButton(
-              document.createElement('div'),
-              { theme: "outline", size: "large" }
+              document.createElement("div"),
+              { theme: "outline", size: "large" },
             );
 
             // Since we can't directly trigger the popup, we'll show an error
             resolve({
               success: false,
-              error: "Please enable popups and try again, or contact support if you continue having issues."
+              error:
+                "Please enable popups and try again, or contact support if you continue having issues.",
             });
           }
         });
       });
     } catch (error) {
       console.error("Google sign-in error:", error);
-      return { success: false, error: "Google sign in failed. Please try again or contact support." };
+      return {
+        success: false,
+        error: "Google sign in failed. Please try again or contact support.",
+      };
     }
   };
 
