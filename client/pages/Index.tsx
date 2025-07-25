@@ -468,7 +468,7 @@ export default function Index() {
         });
 
         // Restart goal with increased target (add 7 more days) BUT KEEP THE STREAK
-        return currentGoals.map((g) =>
+        const updatedGoals = currentGoals.map((g) =>
           g.id === goalId
             ? {
                 ...g,
@@ -481,9 +481,11 @@ export default function Index() {
               }
             : g,
         );
+        console.log("🎯 Goal completed - returning updated goals:", updatedGoals);
+        return updatedGoals;
       } else {
         // Normal progress update
-        return currentGoals.map((g) =>
+        const updatedGoals = currentGoals.map((g) =>
           g.id === goalId
             ? {
                 ...g,
@@ -495,6 +497,8 @@ export default function Index() {
               }
             : g,
         );
+        console.log("🎯 Normal update - returning updated goals:", updatedGoals);
+        return updatedGoals;
       }
     });
 
