@@ -494,6 +494,13 @@ export default function Index() {
     setIsAddDialogOpen(false);
   };
 
+  const handleTutorialComplete = () => {
+    setShowTutorial(false);
+    if (user?.id) {
+      localStorage.setItem(`tutorial_completed_${user.id}`, 'true');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 overflow-x-hidden">
       {/* Header */}
