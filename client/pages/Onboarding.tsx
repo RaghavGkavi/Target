@@ -489,10 +489,13 @@ export default function Onboarding() {
             Back
           </Button>
 
-          {currentStep < 3 ? (
+          {currentStep < 4 ? (
             <Button
               onClick={() => setCurrentStep(currentStep + 1)}
-              disabled={currentStep === 1 && selectedGoals.length === 0}
+              disabled={
+                (currentStep === 1 && selectedGoals.length === 0) ||
+                (currentStep === 3 && Object.keys(disciplineAnswers).length < DISCIPLINE_ASSESSMENT.length)
+              }
               className="rounded-lg"
             >
               Continue
