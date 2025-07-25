@@ -416,6 +416,9 @@ export default function Index() {
                 </Button>
               </Link>
 
+              {/* Theme Toggle */}
+              <ThemeToggle />
+
               {/* User Menu */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
