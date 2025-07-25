@@ -239,6 +239,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           theme: 'system',
           notifications: true,
           onboardingCompleted: false
+        },
+        privacy: {
+          showGoals: true,
+          showRecoveries: false,
+          profileVisibility: 'private'
         }
       };
 
