@@ -895,6 +895,64 @@ export default function Index() {
           </TabsContent>
         </Tabs>
       </main>
+
+      {/* Affirmation Dialog */}
+      <Dialog open={affirmationDialog.isOpen} onOpenChange={(open) => !open && setAffirmationDialog({ isOpen: false, addictionId: "", affirmationText: "" })}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center space-x-2">
+              <AlertTriangle className="h-5 w-5 text-warning" />
+              <span>Confirm Extra Clean Day</span>
+            </DialogTitle>
+            <DialogDescription>
+              You've already logged a clean day today. To add another day (for missed logging),
+              please type the affirmation below exactly as shown.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="p-4 bg-muted/50 rounded-lg">
+              <p className="text-sm font-medium mb-2">Required Affirmation:</p>
+              <p className="text-sm italic">
+                "I pledge that I was clean for the extra day I am logging."
+              </p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="affirmation">Type the affirmation:</Label>
+              <Textarea
+                id="affirmation"
+                value={affirmationDialog.affirmationText}
+                onChange={(e) => setAffirmationDialog({
+                  ...affirmationDialog,
+                  affirmationText: e.target.value
+                })}
+                placeholder="Type the exact affirmation here..."
+                className="resize-none"
+                rows={3}
+              />
+            </div>
+            {affirmationDialog.affirmationText &&
+             affirmationDialog.affirmationText.trim() !== "I pledge that I was clean for the extra day I am logging." && (
+              <p className="text-sm text-destructive">
+                The affirmation must match exactly as written above.
+              </p>
+            )}
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setAffirmationDialog({ isOpen: false, addictionId: "", affirmationText: "" })}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={confirmAffirmation}
+              disabled={affirmationDialog.affirmationText.trim() !== "I pledge that I was clean for the extra day I am logging."}
+            >
+              Confirm & Add Day
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
