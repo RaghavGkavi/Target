@@ -14,6 +14,8 @@ export default function Profile() {
   const navigate = useNavigate();
   const { user, userData } = useAuth();
   const [copySuccess, setCopySuccess] = useState(false);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   const handleShare = async () => {
     const shareText = `Check out my progress on Target! I'm currently rank ${userData?.disciplineData?.currentRank} with ${userData?.goals?.filter(g => !g.isCompleted).length} active goals. Join me in building better habits!`;
