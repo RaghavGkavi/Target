@@ -148,6 +148,7 @@ const motivationalQuotes = [
 ];
 
 export default function Index() {
+  const navigate = useNavigate();
   const { user, userData, updateUserData, signOut } = useAuth();
   const [goals, setGoals] = useState<Goal[]>([]);
   const [addictions, setAddictions] = useState<Addiction[]>([]);
