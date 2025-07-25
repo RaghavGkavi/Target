@@ -485,12 +485,128 @@ export default function Index() {
                         <span>🎯</span>
                         <span>{addiction.name}</span>
                       </CardTitle>
-                      <Badge
-                        variant="outline"
-                        className="bg-success/10 text-success border-success/20"
-                      >
-                        {addiction.cleanDays} days clean
-                      </Badge>
+                      <div className="flex items-center space-x-2">
+                        <Badge
+                          variant="outline"
+                          className="bg-success/10 text-success border-success/20"
+                        >
+                          {addiction.cleanDays} days clean
+                        </Badge>
+                        <div className="flex space-x-1">
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="h-8 w-8 p-0"
+                                onClick={() => setEditingAddiction(addiction)}
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-[425px]">
+                              <DialogHeader>
+                                <DialogTitle>Edit Recovery Tracker</DialogTitle>
+                                <DialogDescription>
+                                  Update your addiction tracking details.
+                                </DialogDescription>
+                              </DialogHeader>
+                              {editingAddiction && (
+                                <div className="grid gap-4 py-4">
+                                  <div className="space-y-2">
+                                    <Label htmlFor="edit-name">Name</Label>
+                                    <Input
+                                      id="edit-name"
+                                      value={editingAddiction.name}
+                                      onChange={(e) => setEditingAddiction({
+                                        ...editingAddiction,
+                                        name: e.target.value
+                                      })}
+                                    />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label htmlFor="edit-triggers">Triggers</Label>
+                                    <Input
+                                      id="edit-triggers"
+                                      value={editingAddiction.triggers.join(", ")}
+                                      onChange={(e) => setEditingAddiction({
+                                        ...editingAddiction,
+                                        triggers: e.target.value.split(",").map(t => t.trim()).filter(t => t)
+                                      })}
+                                      placeholder="Separate with commas"
+                                    />
+                                  </div>
+                                  <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                      <Label htmlFor="edit-clean-days">Clean Days</Label>
+                                      <Input
+                                        id="edit-clean-days"
+                                        type="number"
+                                        min="0"
+                                        value={editingAddiction.cleanDays}
+                                        onChange={(e) => setEditingAddiction({
+                                          ...editingAddiction,
+                                          cleanDays: parseInt(e.target.value) || 0
+                                        })}
+                                      />
+                                    </div>
+                                    <div className="space-y-2">
+                                      <Label htmlFor="edit-longest-streak">Best Streak</Label>
+                                      <Input
+                                        id="edit-longest-streak"
+                                        type="number"
+                                        min="0"
+                                        value={editingAddiction.longestStreak}
+                                        onChange={(e) => setEditingAddiction({
+                                          ...editingAddiction,
+                                          longestStreak: parseInt(e.target.value) || 0
+                                        })}
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                              <DialogFooter>
+                                <Button variant="outline" onClick={() => setEditingAddiction(null)}>
+                                  Cancel
+                                </Button>
+                                <Button onClick={saveEditedAddiction}>
+                                  Save Changes
+                                </Button>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
+
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Delete Recovery Tracker</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Are you sure you want to delete the {addiction.name} tracker? This action cannot be undone and you'll lose all progress data.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => deleteAddiction(addiction.id)}
+                                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                >
+                                  Delete
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
+                      </div>
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -516,24 +632,70 @@ export default function Index() {
                     <div className="space-y-2">
                       <p className="text-sm font-medium">Common Triggers:</p>
                       <div className="flex flex-wrap gap-1">
-                        {addiction.triggers.map((trigger, index) => (
-                          <Badge
-                            key={index}
-                            variant="secondary"
-                            className="text-xs"
-                          >
-                            {trigger}
-                          </Badge>
-                        ))}
+                        {addiction.triggers.length > 0 ? (
+                          addiction.triggers.map((trigger, index) => (
+                            <Badge
+                              key={index}
+                              variant="secondary"
+                              className="text-xs"
+                            >
+                              {trigger}
+                            </Badge>
+                          ))
+                        ) : (
+                          <p className="text-xs text-muted-foreground">No triggers specified</p>
+                        )}
                       </div>
                     </div>
 
                     <Progress
                       value={
-                        (addiction.cleanDays / addiction.longestStreak) * 100
+                        addiction.longestStreak > 0
+                          ? (addiction.cleanDays / addiction.longestStreak) * 100
+                          : addiction.cleanDays > 0 ? 100 : 0
                       }
                       className="h-2"
                     />
+
+                    <div className="flex space-x-2">
+                      <Button
+                        size="sm"
+                        className="flex-1 rounded-lg"
+                        onClick={() => addCleanDay(addiction.id)}
+                      >
+                        <CheckCircle2 className="h-4 w-4 mr-1" />
+                        Add Clean Day
+                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="rounded-lg border-destructive/20 text-destructive hover:bg-destructive/10"
+                          >
+                            <AlertTriangle className="h-4 w-4 mr-1" />
+                            Relapse
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Report Relapse</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This will reset your clean days counter to 0. Remember, setbacks are part of recovery. You can start again immediately.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => reportRelapse(addiction.id)}
+                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            >
+                              Report Relapse
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
                   </CardContent>
                 </Card>
               ))}
