@@ -513,12 +513,12 @@ export default function Onboarding() {
         </div>
 
         {/* Skip Option */}
-        {currentStep < 3 && (
+        {currentStep < 4 && (
           <div className="text-center">
-            <Button 
-              variant="ghost" 
+            <Button
+              variant="ghost"
               size="sm"
-              onClick={() => setCurrentStep(3)}
+              onClick={() => setCurrentStep(4)}
               className="text-muted-foreground hover:text-foreground"
             >
               Skip for now
