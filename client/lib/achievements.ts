@@ -10,7 +10,7 @@ export interface Achievement {
 }
 
 export const ACHIEVEMENTS: Achievement[] = [
-  // Goal Achievements
+  // Goal Completion Achievements
   {
     id: "first_goal",
     title: "Goal Setter",
@@ -18,15 +18,38 @@ export const ACHIEVEMENTS: Achievement[] = [
     icon: "🎯",
     category: "goals",
     rarity: "common",
-    condition: (userData) => (userData.completedGoals?.length || 0) >= 1,
+    condition: (userData) => {
+      const totalCompletions =
+        userData.completedGoals?.reduce(
+          (sum: number, goal: any) => sum + (goal.completedCount || 0),
+          0,
+        ) || 0;
+      return totalCompletions >= 1;
+    },
   },
   {
-    id: "five_goals",
+    id: "three_completions",
+    title: "Building Momentum",
+    description: "Complete 3 goals",
+    icon: "🔥",
+    category: "goals",
+    rarity: "common",
+    condition: (userData) => {
+      const totalCompletions =
+        userData.completedGoals?.reduce(
+          (sum: number, goal: any) => sum + (goal.completedCount || 0),
+          0,
+        ) || 0;
+      return totalCompletions >= 3;
+    },
+  },
+  {
+    id: "five_completions",
     title: "Goal Crusher",
     description: "Complete 5 goals",
     icon: "💪",
     category: "goals",
-    rarity: "rare",
+    rarity: "common",
     condition: (userData) => {
       const totalCompletions =
         userData.completedGoals?.reduce(
@@ -37,10 +60,58 @@ export const ACHIEVEMENTS: Achievement[] = [
     },
   },
   {
-    id: "ten_goals",
+    id: "ten_completions",
     title: "Goal Master",
     description: "Complete 10 goals",
     icon: "🏆",
+    category: "goals",
+    rarity: "rare",
+    condition: (userData) => {
+      const totalCompletions =
+        userData.completedGoals?.reduce(
+          (sum: number, goal: any) => sum + (goal.completedCount || 0),
+          0,
+        ) || 0;
+      return totalCompletions >= 10;
+    },
+  },
+  {
+    id: "fifteen_completions",
+    title: "Dedicated Achiever",
+    description: "Complete 15 goals",
+    icon: "⭐",
+    category: "goals",
+    rarity: "rare",
+    condition: (userData) => {
+      const totalCompletions =
+        userData.completedGoals?.reduce(
+          (sum: number, goal: any) => sum + (goal.completedCount || 0),
+          0,
+        ) || 0;
+      return totalCompletions >= 15;
+    },
+  },
+  {
+    id: "twentyfive_completions",
+    title: "Goal Veteran",
+    description: "Complete 25 goals",
+    icon: "🌟",
+    category: "goals",
+    rarity: "rare",
+    condition: (userData) => {
+      const totalCompletions =
+        userData.completedGoals?.reduce(
+          (sum: number, goal: any) => sum + (goal.completedCount || 0),
+          0,
+        ) || 0;
+      return totalCompletions >= 25;
+    },
+  },
+  {
+    id: "fifty_completions",
+    title: "Goal Expert",
+    description: "Complete 50 goals",
+    icon: "💎",
     category: "goals",
     rarity: "epic",
     condition: (userData) => {
@@ -49,7 +120,39 @@ export const ACHIEVEMENTS: Achievement[] = [
           (sum: number, goal: any) => sum + (goal.completedCount || 0),
           0,
         ) || 0;
-      return totalCompletions >= 10;
+      return totalCompletions >= 50;
+    },
+  },
+  {
+    id: "seventyfive_completions",
+    title: "Goal Virtuoso",
+    description: "Complete 75 goals",
+    icon: "🏅",
+    category: "goals",
+    rarity: "epic",
+    condition: (userData) => {
+      const totalCompletions =
+        userData.completedGoals?.reduce(
+          (sum: number, goal: any) => sum + (goal.completedCount || 0),
+          0,
+        ) || 0;
+      return totalCompletions >= 75;
+    },
+  },
+  {
+    id: "hundred_completions",
+    title: "Goal Legend",
+    description: "Complete 100 goals",
+    icon: "👑",
+    category: "goals",
+    rarity: "legendary",
+    condition: (userData) => {
+      const totalCompletions =
+        userData.completedGoals?.reduce(
+          (sum: number, goal: any) => sum + (goal.completedCount || 0),
+          0,
+        ) || 0;
+      return totalCompletions >= 100;
     },
   },
 
