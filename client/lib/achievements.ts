@@ -10,7 +10,7 @@ export interface Achievement {
 }
 
 export const ACHIEVEMENTS: Achievement[] = [
-  // Goal Achievements
+  // Goal Completion Achievements
   {
     id: "first_goal",
     title: "Goal Setter",
@@ -18,15 +18,38 @@ export const ACHIEVEMENTS: Achievement[] = [
     icon: "🎯",
     category: "goals",
     rarity: "common",
-    condition: (userData) => (userData.completedGoals?.length || 0) >= 1,
+    condition: (userData) => {
+      const totalCompletions =
+        userData.completedGoals?.reduce(
+          (sum: number, goal: any) => sum + (goal.completedCount || 0),
+          0,
+        ) || 0;
+      return totalCompletions >= 1;
+    },
   },
   {
-    id: "five_goals",
+    id: "three_completions",
+    title: "Building Momentum",
+    description: "Complete 3 goals",
+    icon: "🔥",
+    category: "goals",
+    rarity: "common",
+    condition: (userData) => {
+      const totalCompletions =
+        userData.completedGoals?.reduce(
+          (sum: number, goal: any) => sum + (goal.completedCount || 0),
+          0,
+        ) || 0;
+      return totalCompletions >= 3;
+    },
+  },
+  {
+    id: "five_completions",
     title: "Goal Crusher",
     description: "Complete 5 goals",
     icon: "💪",
     category: "goals",
-    rarity: "rare",
+    rarity: "common",
     condition: (userData) => {
       const totalCompletions =
         userData.completedGoals?.reduce(
@@ -37,12 +60,12 @@ export const ACHIEVEMENTS: Achievement[] = [
     },
   },
   {
-    id: "ten_goals",
+    id: "ten_completions",
     title: "Goal Master",
     description: "Complete 10 goals",
     icon: "🏆",
     category: "goals",
-    rarity: "epic",
+    rarity: "rare",
     condition: (userData) => {
       const totalCompletions =
         userData.completedGoals?.reduce(
@@ -52,10 +75,90 @@ export const ACHIEVEMENTS: Achievement[] = [
       return totalCompletions >= 10;
     },
   },
+  {
+    id: "fifteen_completions",
+    title: "Dedicated Achiever",
+    description: "Complete 15 goals",
+    icon: "⭐",
+    category: "goals",
+    rarity: "rare",
+    condition: (userData) => {
+      const totalCompletions =
+        userData.completedGoals?.reduce(
+          (sum: number, goal: any) => sum + (goal.completedCount || 0),
+          0,
+        ) || 0;
+      return totalCompletions >= 15;
+    },
+  },
+  {
+    id: "twentyfive_completions",
+    title: "Goal Veteran",
+    description: "Complete 25 goals",
+    icon: "🌟",
+    category: "goals",
+    rarity: "rare",
+    condition: (userData) => {
+      const totalCompletions =
+        userData.completedGoals?.reduce(
+          (sum: number, goal: any) => sum + (goal.completedCount || 0),
+          0,
+        ) || 0;
+      return totalCompletions >= 25;
+    },
+  },
+  {
+    id: "fifty_completions",
+    title: "Goal Expert",
+    description: "Complete 50 goals",
+    icon: "💎",
+    category: "goals",
+    rarity: "epic",
+    condition: (userData) => {
+      const totalCompletions =
+        userData.completedGoals?.reduce(
+          (sum: number, goal: any) => sum + (goal.completedCount || 0),
+          0,
+        ) || 0;
+      return totalCompletions >= 50;
+    },
+  },
+  {
+    id: "seventyfive_completions",
+    title: "Goal Virtuoso",
+    description: "Complete 75 goals",
+    icon: "🏅",
+    category: "goals",
+    rarity: "epic",
+    condition: (userData) => {
+      const totalCompletions =
+        userData.completedGoals?.reduce(
+          (sum: number, goal: any) => sum + (goal.completedCount || 0),
+          0,
+        ) || 0;
+      return totalCompletions >= 75;
+    },
+  },
+  {
+    id: "hundred_completions",
+    title: "Goal Legend",
+    description: "Complete 100 goals",
+    icon: "👑",
+    category: "goals",
+    rarity: "legendary",
+    condition: (userData) => {
+      const totalCompletions =
+        userData.completedGoals?.reduce(
+          (sum: number, goal: any) => sum + (goal.completedCount || 0),
+          0,
+        ) || 0;
+      return totalCompletions >= 100;
+    },
+  },
 
   // Streak Achievements
   {
-    id: "first_week",
+    id: "streak_one_week",
     title: "Week Warrior",
     description: "Maintain a 7-day streak",
     icon: "🔥",
@@ -69,37 +172,79 @@ export const ACHIEVEMENTS: Achievement[] = [
     },
   },
   {
-    id: "habit_former",
-    title: "Habit Former",
-    description: "Maintain a 21-day streak",
+    id: "streak_two_weeks",
+    title: "Fortnight Fighter",
+    description: "Maintain a 14-day streak",
     icon: "⚡",
+    category: "streaks",
+    rarity: "common",
+    condition: (userData) => {
+      const maxStreak = Math.max(
+        ...(userData.goals?.map((g: any) => g.streak || 0) || [0]),
+      );
+      return maxStreak >= 14;
+    },
+  },
+  {
+    id: "streak_one_month",
+    title: "Monthly Master",
+    description: "Maintain a 30-day streak",
+    icon: "🌙",
     category: "streaks",
     rarity: "rare",
     condition: (userData) => {
       const maxStreak = Math.max(
         ...(userData.goals?.map((g: any) => g.streak || 0) || [0]),
       );
-      return maxStreak >= 21;
+      return maxStreak >= 30;
     },
   },
   {
-    id: "unstoppable",
-    title: "Unstoppable",
-    description: "Maintain a 50-day streak",
-    icon: "🚀",
+    id: "streak_three_months",
+    title: "Quarterly Champion",
+    description: "Maintain a 90-day streak",
+    icon: "🏆",
+    category: "streaks",
+    rarity: "rare",
+    condition: (userData) => {
+      const maxStreak = Math.max(
+        ...(userData.goals?.map((g: any) => g.streak || 0) || [0]),
+      );
+      return maxStreak >= 90;
+    },
+  },
+  {
+    id: "streak_six_months",
+    title: "Half-Year Hero",
+    description: "Maintain a 180-day streak",
+    icon: "💫",
     category: "streaks",
     rarity: "epic",
     condition: (userData) => {
       const maxStreak = Math.max(
         ...(userData.goals?.map((g: any) => g.streak || 0) || [0]),
       );
-      return maxStreak >= 50;
+      return maxStreak >= 180;
     },
   },
   {
-    id: "legend",
-    title: "Legend",
-    description: "Maintain a 100-day streak",
+    id: "streak_nine_months",
+    title: "Triple Quarter Titan",
+    description: "Maintain a 270-day streak",
+    icon: "🌟",
+    category: "streaks",
+    rarity: "epic",
+    condition: (userData) => {
+      const maxStreak = Math.max(
+        ...(userData.goals?.map((g: any) => g.streak || 0) || [0]),
+      );
+      return maxStreak >= 270;
+    },
+  },
+  {
+    id: "streak_one_year",
+    title: "Annual Legend",
+    description: "Maintain a 365-day streak",
     icon: "👑",
     category: "streaks",
     rarity: "legendary",
@@ -107,7 +252,7 @@ export const ACHIEVEMENTS: Achievement[] = [
       const maxStreak = Math.max(
         ...(userData.goals?.map((g: any) => g.streak || 0) || [0]),
       );
-      return maxStreak >= 100;
+      return maxStreak >= 365;
     },
   },
 
@@ -172,8 +317,8 @@ export const ACHIEVEMENTS: Achievement[] = [
 
   // Recovery Achievements
   {
-    id: "clean_week",
-    title: "Clean Week",
+    id: "clean_one_week",
+    title: "First Week Clean",
     description: "Stay clean for 7 days",
     icon: "🌟",
     category: "milestones",
@@ -186,7 +331,21 @@ export const ACHIEVEMENTS: Achievement[] = [
     },
   },
   {
-    id: "clean_month",
+    id: "clean_two_weeks",
+    title: "Two Weeks Strong",
+    description: "Stay clean for 14 days",
+    icon: "💪",
+    category: "milestones",
+    rarity: "common",
+    condition: (userData) => {
+      const maxCleanDays = Math.max(
+        ...(userData.addictions?.map((a: any) => a.cleanDays || 0) || [0]),
+      );
+      return maxCleanDays >= 14;
+    },
+  },
+  {
+    id: "clean_one_month",
     title: "Clean Month",
     description: "Stay clean for 30 days",
     icon: "🎊",
@@ -200,7 +359,49 @@ export const ACHIEVEMENTS: Achievement[] = [
     },
   },
   {
-    id: "clean_year",
+    id: "clean_three_months",
+    title: "Quarter Year Clean",
+    description: "Stay clean for 90 days",
+    icon: "🏆",
+    category: "milestones",
+    rarity: "rare",
+    condition: (userData) => {
+      const maxCleanDays = Math.max(
+        ...(userData.addictions?.map((a: any) => a.cleanDays || 0) || [0]),
+      );
+      return maxCleanDays >= 90;
+    },
+  },
+  {
+    id: "clean_six_months",
+    title: "Half Year Victory",
+    description: "Stay clean for 180 days",
+    icon: "🎖️",
+    category: "milestones",
+    rarity: "epic",
+    condition: (userData) => {
+      const maxCleanDays = Math.max(
+        ...(userData.addictions?.map((a: any) => a.cleanDays || 0) || [0]),
+      );
+      return maxCleanDays >= 180;
+    },
+  },
+  {
+    id: "clean_nine_months",
+    title: "Nine Month Warrior",
+    description: "Stay clean for 270 days",
+    icon: "⚔️",
+    category: "milestones",
+    rarity: "epic",
+    condition: (userData) => {
+      const maxCleanDays = Math.max(
+        ...(userData.addictions?.map((a: any) => a.cleanDays || 0) || [0]),
+      );
+      return maxCleanDays >= 270;
+    },
+  },
+  {
+    id: "clean_one_year",
     title: "Year of Freedom",
     description: "Stay clean for 365 days",
     icon: "🏅",
@@ -211,6 +412,48 @@ export const ACHIEVEMENTS: Achievement[] = [
         ...(userData.addictions?.map((a: any) => a.cleanDays || 0) || [0]),
       );
       return maxCleanDays >= 365;
+    },
+  },
+  {
+    id: "clean_two_years",
+    title: "Two Year Champion",
+    description: "Stay clean for 730 days",
+    icon: "🥇",
+    category: "milestones",
+    rarity: "legendary",
+    condition: (userData) => {
+      const maxCleanDays = Math.max(
+        ...(userData.addictions?.map((a: any) => a.cleanDays || 0) || [0]),
+      );
+      return maxCleanDays >= 730;
+    },
+  },
+  {
+    id: "clean_three_years",
+    title: "Three Year Master",
+    description: "Stay clean for 1095 days",
+    icon: "🏆",
+    category: "milestones",
+    rarity: "legendary",
+    condition: (userData) => {
+      const maxCleanDays = Math.max(
+        ...(userData.addictions?.map((a: any) => a.cleanDays || 0) || [0]),
+      );
+      return maxCleanDays >= 1095;
+    },
+  },
+  {
+    id: "clean_five_years",
+    title: "Five Year Legend",
+    description: "Stay clean for 1825 days",
+    icon: "👑",
+    category: "milestones",
+    rarity: "legendary",
+    condition: (userData) => {
+      const maxCleanDays = Math.max(
+        ...(userData.addictions?.map((a: any) => a.cleanDays || 0) || [0]),
+      );
+      return maxCleanDays >= 1825;
     },
   },
 

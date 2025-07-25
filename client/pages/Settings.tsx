@@ -434,6 +434,7 @@ function GoalResetDialog() {
         goals: [],
         addictions: [],
         completedGoals: [],
+        achievements: [], // Clear achievements
         disciplineData: {
           baseScore: 50, // Reset to middle baseline
           currentRank: "C",

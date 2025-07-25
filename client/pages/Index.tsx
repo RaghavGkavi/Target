@@ -673,13 +673,13 @@ export default function Index() {
           isHeaderVisible ? "translate-y-0" : "-translate-y-full"
         }`}
       >
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-2 sm:px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="h-10 w-10 rounded-xl bg-gradient-to-r from-primary to-accent flex items-center justify-center">
                 <Target className="h-6 w-6 text-white" />
               </div>
-              <div>
+              <div className="hidden sm:block">
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                   Target
                 </h1>
@@ -687,18 +687,33 @@ export default function Index() {
                   Master your goals, break your chains
                 </p>
               </div>
+              <div className="sm:hidden">
+                <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                  Target
+                </h1>
+              </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <Link to="/completed-goals">
+            <div className="flex items-center space-x-1 sm:space-x-2">
+              <Link to="/completed-goals" className="hidden sm:block">
                 <Button variant="outline" className="rounded-xl">
                   <Trophy className="h-4 w-4 mr-2" />
                   Completed
                 </Button>
               </Link>
-              <Link to="/create-goal">
+              <Link to="/completed-goals" className="sm:hidden">
+                <Button variant="outline" size="sm" className="rounded-xl p-2">
+                  <Trophy className="h-4 w-4" />
+                </Button>
+              </Link>
+              <Link to="/create-goal" className="hidden sm:block">
                 <Button className="rounded-xl">
                   <Plus className="h-4 w-4 mr-2" />
                   New Goal
+                </Button>
+              </Link>
+              <Link to="/create-goal" className="sm:hidden">
+                <Button size="sm" className="rounded-xl p-2">
+                  <Plus className="h-4 w-4" />
                 </Button>
               </Link>
 
@@ -758,6 +773,13 @@ export default function Index() {
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => navigate("/completed-goals")}
+                    className="sm:hidden"
+                  >
+                    <Trophy className="mr-2 h-4 w-4" />
+                    <span>Completed Goals</span>
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate("/profile")}>
                     <User className="mr-2 h-4 w-4" />
                     <span>Profile</span>
@@ -1533,28 +1555,96 @@ export default function Index() {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-sm">Goals completed this week</span>
-                      <span className="text-sm font-medium">85%</span>
+                      <span className="text-sm font-medium">
+                        {(() => {
+                          const oneWeekAgo = new Date();
+                          oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                          const weeklyCompletions = (
+                            userData?.completedGoals || []
+                          ).filter(
+                            (goal: any) =>
+                              new Date(goal.completedAt) >= oneWeekAgo,
+                          ).length;
+                          const totalActiveGoals =
+                            (userData?.goals || []).length + weeklyCompletions;
+                          const percentage =
+                            totalActiveGoals > 0
+                              ? Math.round(
+                                  (weeklyCompletions / totalActiveGoals) * 100,
+                                )
+                              : 0;
+                          return `${percentage}%`;
+                        })()}
+                      </span>
                     </div>
-                    <Progress value={85} className="h-2" />
+                    <Progress
+                      value={(() => {
+                        const oneWeekAgo = new Date();
+                        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                        const weeklyCompletions = (
+                          userData?.completedGoals || []
+                        ).filter(
+                          (goal: any) =>
+                            new Date(goal.completedAt) >= oneWeekAgo,
+                        ).length;
+                        const totalActiveGoals =
+                          (userData?.goals || []).length + weeklyCompletions;
+                        return totalActiveGoals > 0
+                          ? Math.round(
+                              (weeklyCompletions / totalActiveGoals) * 100,
+                            )
+                          : 0;
+                      })()}
+                      className="h-2"
+                    />
                   </div>
 
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-sm">Consistency score</span>
-                      <span className="text-sm font-medium">92%</span>
+                      <span className="text-sm font-medium">
+                        {userData?.disciplineData?.consistencyScore || 0}%
+                      </span>
                     </div>
-                    <Progress value={92} className="h-2" />
+                    <Progress
+                      value={userData?.disciplineData?.consistencyScore || 0}
+                      className="h-2"
+                    />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 pt-2">
                     <div className="text-center">
-                      <p className="text-lg font-bold text-success">12</p>
+                      <p className="text-lg font-bold text-success">
+                        {(() => {
+                          const oneWeekAgo = new Date();
+                          oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                          const activeDays = new Set();
+                          (userData?.completedGoals || []).forEach(
+                            (goal: any) => {
+                              const completedAt = new Date(goal.completedAt);
+                              if (completedAt >= oneWeekAgo) {
+                                activeDays.add(completedAt.toDateString());
+                              }
+                            },
+                          );
+                          return activeDays.size;
+                        })()}
+                      </p>
                       <p className="text-xs text-muted-foreground">
                         Days Active
                       </p>
                     </div>
                     <div className="text-center">
-                      <p className="text-lg font-bold text-primary">3</p>
+                      <p className="text-lg font-bold text-primary">
+                        {(() => {
+                          const oneWeekAgo = new Date();
+                          oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                          return (userData?.achievements || []).filter(
+                            (achievement: any) =>
+                              new Date(achievement.earnedAt) >= oneWeekAgo,
+                          ).length;
+                        })()}
+                      </p>
                       <p className="text-xs text-muted-foreground">
                         New Records
                       </p>
