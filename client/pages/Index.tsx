@@ -401,7 +401,8 @@ export default function Index() {
       console.log("🎯 Found goal:", goal);
 
       // Check if already logged today (bypass for developer account)
-      const isDeveloper = user?.email === "raghav.gkavi@gmail.com" && developerModeEnabled;
+      const isDeveloper =
+        user?.email === "raghav.gkavi@gmail.com" && developerModeEnabled;
       if (goal.lastLoggedDate === today && !forceAdd && !isDeveloper) {
         console.log("🎯 Already logged today, showing affirmation dialog");
         // Show affirmation dialog
@@ -414,7 +415,9 @@ export default function Index() {
       }
 
       if (isDeveloper && goal.lastLoggedDate === today && !forceAdd) {
-        console.log("🔓 Developer account detected - bypassing day restriction");
+        console.log(
+          "🔓 Developer account detected - bypassing day restriction",
+        );
       }
 
       // Calculate new values
@@ -486,7 +489,10 @@ export default function Index() {
               }
             : g,
         );
-        console.log("🎯 Goal completed - returning updated goals:", updatedGoals);
+        console.log(
+          "🎯 Goal completed - returning updated goals:",
+          updatedGoals,
+        );
         return updatedGoals;
       } else {
         // Normal progress update
@@ -502,12 +508,17 @@ export default function Index() {
               }
             : g,
         );
-        console.log("🎯 Normal update - returning updated goals:", updatedGoals);
+        console.log(
+          "🎯 Normal update - returning updated goals:",
+          updatedGoals,
+        );
         return updatedGoals;
       }
     });
 
-    console.log("🎯 Goal update completed, new goals state should trigger save effect");
+    console.log(
+      "🎯 Goal update completed, new goals state should trigger save effect",
+    );
   };
 
   const addCleanDay = (addictionId: string, forceAdd: boolean = false) => {
@@ -530,7 +541,8 @@ export default function Index() {
       console.log("🔧 Found addiction:", addiction);
 
       // Check if already logged today (bypass for developer account)
-      const isDeveloper = user?.email === "raghav.gkavi@gmail.com" && developerModeEnabled;
+      const isDeveloper =
+        user?.email === "raghav.gkavi@gmail.com" && developerModeEnabled;
       if (addiction.lastLoggedDate === today && !forceAdd && !isDeveloper) {
         console.log("🔧 Already logged today, showing affirmation dialog");
         // Show affirmation dialog
@@ -543,7 +555,9 @@ export default function Index() {
       }
 
       if (isDeveloper && addiction.lastLoggedDate === today && !forceAdd) {
-        console.log("🔓 Developer account detected - bypassing day restriction for addictions");
+        console.log(
+          "🔓 Developer account detected - bypassing day restriction for addictions",
+        );
       }
 
       const newCleanDays = addiction.cleanDays + 1;
@@ -700,9 +714,11 @@ export default function Index() {
                   }`}
                   onClick={() => {
                     setDeveloperModeEnabled(!developerModeEnabled);
-                    console.log(`🔓 Developer mode ${!developerModeEnabled ? 'enabled' : 'disabled'}`);
+                    console.log(
+                      `🔓 Developer mode ${!developerModeEnabled ? "enabled" : "disabled"}`,
+                    );
                   }}
-                  title={`Click to ${developerModeEnabled ? 'disable' : 'enable'} developer mode`}
+                  title={`Click to ${developerModeEnabled ? "disable" : "enable"} developer mode`}
                 >
                   {developerModeEnabled ? "🔓 DEV MODE" : "🔒 DEV OFF"}
                 </Button>

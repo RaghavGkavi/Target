@@ -9,7 +9,9 @@ This error occurs when the domain/origin where your app is running is not author
 ## Immediate Fix Required
 
 ### Step 1: Identify Current Origins
+
 Your app is currently running on these possible origins:
+
 - **Development**: `http://localhost:8080` (from vite config)
 - **Production**: Your deployed domain (if any)
 
@@ -26,9 +28,11 @@ Your app is currently running on these possible origins:
 ### Step 3: Verify Configuration
 
 **Current authorized origins likely missing:**
+
 - `http://localhost:8080`
 
 **What to add in Google Cloud Console:**
+
 ```
 Authorized JavaScript origins:
 - http://localhost:8080
@@ -36,6 +40,7 @@ Authorized JavaScript origins:
 ```
 
 **Important Notes:**
+
 - Do NOT add trailing slashes (/) to origins
 - Use `http://localhost:8080` for development (not `https`)
 - Use `https://` for production domains
@@ -63,10 +68,12 @@ This will make the app fall back to demo mode for Google authentication.
 ## Long-term Solutions
 
 ### For Development Team
+
 - Ensure all team members' localhost URLs are added to authorized origins
 - Consider using a development Google project separate from production
 
 ### For Production
+
 - Add your production domain to authorized origins
 - Set up proper environment variable management for different environments
 
@@ -82,6 +89,7 @@ This will make the app fall back to demo mode for Google authentication.
 ## Security Note
 
 The current client ID is visible in this documentation. For production apps, ensure:
+
 - Client ID is properly restricted to your domains only
 - OAuth consent screen is properly configured
 - App verification is completed for production use
