@@ -326,7 +326,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
     category: 'fitness',
     difficulty: 'hard',
     xpReward: QUEST_XP_VALUES.hard,
-    icon: '🏃‍��️',
+    icon: '🏃‍♂️',
     estimatedTime: '1-2 hours',
     requiresTracking: true,
   },
@@ -357,7 +357,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
   {
     id: 'very_hard_knowledge_master',
     title: 'Knowledge Master',
-    description: 'Master complex topic with 3+ hours of study',
+    description: 'Deeply study a complex topic for 3+ hours: research thoroughly, take detailed notes, and create a summary or teach it to someone',
     category: 'learning',
     difficulty: 'very_hard',
     xpReward: QUEST_XP_VALUES.very_hard,
