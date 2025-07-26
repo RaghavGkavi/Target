@@ -406,7 +406,7 @@ export default function Index() {
       case "career":
         return "💼";
       case "addiction":
-        return "�����";
+        return "���";
       default:
         return "⭐";
     }
@@ -746,7 +746,7 @@ export default function Index() {
               <Link to="/create-goal" className="hidden sm:block">
                 <Button className="rounded-xl">
                   <Plus className="h-4 w-4 mr-2" />
-                  New Goal
+                  New Quest
                 </Button>
               </Link>
               <Link to="/create-goal" className="sm:hidden">
