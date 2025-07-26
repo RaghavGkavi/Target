@@ -289,7 +289,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
   {
     id: 'hard_social_leadership',
     title: 'Event Organizer',
-    description: 'Organize or attend meaningful social event',
+    description: 'Plan and host a gathering (dinner party, game night, study group) or attend a networking/community event where you meet new people',
     category: 'social',
     difficulty: 'hard',
     xpReward: QUEST_XP_VALUES.hard,
