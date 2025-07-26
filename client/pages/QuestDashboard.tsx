@@ -476,6 +476,7 @@ export default function QuestDashboard() {
     // Replace all quests with the 3 newly generated active quests (completed count resets to 0)
     questSystemData.currentQuests = newQuests;
     questSystemData.lastQuestGeneration = new Date();
+    questSystemData.allQuestsCompleted = false; // Reset flag to allow future auto-generation
 
     // Update local state immediately
     setLocalQuestData({ ...questSystemData });
