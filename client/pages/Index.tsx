@@ -1057,7 +1057,7 @@ export default function Index() {
                     <div className="flex space-x-2">
                       <Button
                         size="sm"
-                        className="flex-1 rounded-lg"
+                        className="flex-1 rounded-lg mobile-button touch-target"
                         onClick={() => markGoalComplete(goal.id)}
                       >
                         <CheckCircle2 className="h-4 w-4 mr-1" />
@@ -1364,7 +1364,7 @@ export default function Index() {
                     <div className="flex space-x-2">
                       <Button
                         size="sm"
-                        className="flex-1 rounded-lg"
+                        className="flex-1 rounded-lg mobile-button touch-target"
                         onClick={() => addCleanDay(addiction.id)}
                       >
                         <CheckCircle2 className="h-4 w-4 mr-1" />
