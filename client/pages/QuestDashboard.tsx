@@ -197,44 +197,42 @@ export default function QuestDashboard() {
 
 
   const completeQuest = async (questId: string) => {
-    console.log('🎯 Complete quest button clicked for:', questId);
-    console.log('questSystemData exists:', !!questSystemData);
-    console.log('userData exists:', !!userData);
-    console.log('localQuestData exists:', !!localQuestData);
+    console.log('🎯 Complete quest function called for:', questId);
 
     if (!questSystemData || !userData) {
-      console.error('Missing questSystemData or userData', { questSystemData: !!questSystemData, userData: !!userData });
+      console.error('❌ Missing data:', { questSystemData: !!questSystemData, userData: !!userData });
+      alert('Missing quest data or user data');
       return;
     }
 
-    // Check if quest is already completed to prevent double completion
+    // Check if quest exists and is active
     const questToComplete = questSystemData.currentQuests.find(q => q.id === questId);
-    if (!questToComplete || questToComplete.status === 'completed') {
-      console.log('Quest already completed or not found');
+    if (!questToComplete) {
+      console.error('❌ Quest not found:', questId);
+      alert('Quest not found');
       return;
     }
 
-    console.log('Attempting to complete quest:', questId);
-    console.log('Current quests before completion:', questSystemData.currentQuests);
+    if (questToComplete.status !== 'active') {
+      console.log('❌ Quest not active:', questToComplete.status);
+      alert('Quest is not active');
+      return;
+    }
+
+    console.log('✅ Quest found and active, proceeding with completion');
 
     // Create a deep copy of questSystemData to avoid mutations
-    const questSystemDataCopy = JSON.parse(JSON.stringify({
-      ...questSystemData,
-      currentQuests: questSystemData.currentQuests.map(q => ({...q})),
-      questHistory: questSystemData.questHistory.map(q => ({...q})),
-      weeklyStats: {...questSystemData.weeklyStats},
-      userLevel: {...questSystemData.userLevel}
-    }));
+    const questSystemDataCopy = JSON.parse(JSON.stringify(questSystemData));
 
     const result = QuestEngine.completeQuest(questId, questSystemDataCopy);
     if (!result) {
-      console.error('Failed to complete quest - QuestEngine.completeQuest returned null');
+      console.error('❌ QuestEngine.completeQuest failed');
+      alert('Failed to complete quest');
       return;
     }
 
     const { updatedQuest, newLevel, xpGained } = result;
-    console.log('Quest completion result:', result);
-    console.log('Current quests after completion:', questSystemDataCopy.currentQuests);
+    console.log('✅ Quest completed successfully:', { xpGained, newLevel });
 
     // Check for new achievements
     const newAchievements = checkQuestAchievements(questSystemDataCopy, userData.achievements || []);
@@ -253,11 +251,12 @@ export default function QuestDashboard() {
         questSystemData: questSystemDataCopy,
         achievements: updatedAchievements,
       });
-      console.log('Quest completion successfully saved to storage');
+      console.log('✅ Quest completion saved to storage');
     } catch (error) {
-      console.error('Failed to save quest completion:', error);
+      console.error('❌ Failed to save quest completion:', error);
       // Revert local state if save failed
       setLocalQuestData(questSystemData);
+      alert('Failed to save quest completion');
       return;
     }
 
@@ -266,9 +265,9 @@ export default function QuestDashboard() {
       setLevelUpDialog({ isOpen: true, newLevel });
     }
 
-    console.log(`Quest completed! Gained ${xpGained} XP${newLevel ? `, leveled up to ${newLevel}!` : ''}`);
+    console.log(`🎉 Quest completed! Gained ${xpGained} XP${newLevel ? `, leveled up to ${newLevel}!` : ''}`);
     if (newAchievements.length > 0) {
-      console.log('New achievements earned:', newAchievements.map(a => a.title));
+      console.log('🏆 New achievements earned:', newAchievements.map(a => a.title));
     }
   };
 
