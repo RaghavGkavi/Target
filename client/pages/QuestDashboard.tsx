@@ -210,6 +210,8 @@ export default function QuestDashboard() {
           });
         }
       }
+      // REMOVED: Auto-generation when all quests are completed
+      // This allows users to choose when to regenerate completed quests
     }
   }, [questSystemData, userData, updateUserData]);
 
