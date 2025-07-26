@@ -386,8 +386,8 @@ export default function QuestDashboard() {
       }
     }
 
-    // Combine completed quests with newly generated active quests
-    questSystemData.currentQuests = [...completedQuests, ...newQuests];
+    // Replace all quests with the 3 newly generated active quests (completed count resets to 0)
+    questSystemData.currentQuests = newQuests;
     questSystemData.lastQuestGeneration = new Date();
 
     // Update local state immediately
@@ -398,7 +398,7 @@ export default function QuestDashboard() {
       questSystemData,
     });
 
-    console.log(`✅ ${numQuestsToGenerate} active quests regenerated successfully`);
+    console.log(`✅ 3 new quests generated successfully, completed count reset to 0`);
   };
 
   const skipQuest = async (questId: string) => {
