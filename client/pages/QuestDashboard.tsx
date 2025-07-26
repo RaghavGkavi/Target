@@ -4,6 +4,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { QuestEngine } from "@/lib/questEngine";
 import { checkQuestAchievements, getEarnedQuestAchievements, getRarityColor, getRarityBorder } from "@/lib/questAchievements";
 import { DailyQuest, QuestDifficulty } from '@shared/quest-types';
+import { getRandomQuest } from '@/lib/questLib';
+import { getRandomQuestTemplate } from '@shared/quest-templates';
 import {
   Plus,
   Target,
