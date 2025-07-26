@@ -268,6 +268,9 @@ export default function QuestDashboard() {
       questSystemData.currentQuests[questIndex] = newQuest;
     }
 
+    // Update local state immediately
+    setLocalQuestData({...questSystemData});
+
     // Update user data
     await updateUserData({
       ...userData,
