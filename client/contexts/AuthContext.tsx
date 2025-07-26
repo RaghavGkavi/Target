@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { QuestSystemData } from '@shared/quest-types';
-import { QuestEngine, DEFAULT_QUEST_PREFERENCES } from '@/lib/questEngine';
+import { QuestSystemData } from "@shared/quest-types";
+import { QuestEngine, DEFAULT_QUEST_PREFERENCES } from "@/lib/questEngine";
 
 export interface User {
   id: string;
@@ -98,6 +98,59 @@ const getUserData = (userId: string): UserData | null => {
     }));
   }
 
+  // Convert quest system data dates
+  if (data.questSystemData) {
+    const qsd = data.questSystemData;
+
+    // Convert lastQuestGeneration
+    if (qsd.lastQuestGeneration) {
+      qsd.lastQuestGeneration = new Date(qsd.lastQuestGeneration);
+    }
+
+    // Convert current quests dates
+    if (qsd.currentQuests) {
+      qsd.currentQuests = qsd.currentQuests.map((quest: any) => ({
+        ...quest,
+        dateAssigned: new Date(quest.dateAssigned),
+        dateCompleted: quest.dateCompleted
+          ? new Date(quest.dateCompleted)
+          : undefined,
+      }));
+    }
+
+    // Convert quest history dates
+    if (qsd.questHistory) {
+      qsd.questHistory = qsd.questHistory.map((quest: any) => ({
+        ...quest,
+        dateAssigned: new Date(quest.dateAssigned),
+        dateCompleted: quest.dateCompleted
+          ? new Date(quest.dateCompleted)
+          : undefined,
+      }));
+    }
+
+    // Convert weekly stats dates
+    if (qsd.weeklyStats && qsd.weeklyStats.lastStreakDate) {
+      qsd.weeklyStats.lastStreakDate = new Date(qsd.weeklyStats.lastStreakDate);
+    }
+
+    // Convert daily stats dates
+    if (qsd.dailyStats) {
+      qsd.dailyStats.date = new Date(qsd.dailyStats.date);
+      qsd.dailyStats.lastUpdated = new Date(qsd.dailyStats.lastUpdated);
+    }
+
+    data.questSystemData = qsd;
+  }
+
+  // Convert achievements dates
+  if (data.achievements) {
+    data.achievements = data.achievements.map((achievement: any) => ({
+      ...achievement,
+      earnedAt: new Date(achievement.earnedAt),
+    }));
+  }
+
   return data;
 };
 
@@ -126,14 +179,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const userProgressData = getUserData(userData.id);
         if (userProgressData) {
           // Initialize quest system if it doesn't exist and quest mode is enabled
-          if (userProgressData.preferences?.useQuestSystem && !userProgressData.questSystemData) {
-            userProgressData.questSystemData = QuestEngine.initializeQuestSystem(DEFAULT_QUEST_PREFERENCES);
+          if (
+            userProgressData.preferences?.useQuestSystem &&
+            !userProgressData.questSystemData
+          ) {
+            userProgressData.questSystemData =
+              QuestEngine.initializeQuestSystem(DEFAULT_QUEST_PREFERENCES);
             saveUserData(userData.id, userProgressData);
           }
 
           // Process quest rotation if quest system exists
           if (userProgressData.questSystemData) {
-            const processedQuestData = QuestEngine.processQuestRotation(userProgressData.questSystemData);
+            // Migration: Add dailyStats if it doesn't exist
+            if (!userProgressData.questSystemData.dailyStats) {
+              const today = new Date();
+              const completedTodayCount =
+                userProgressData.questSystemData.currentQuests.filter(
+                  (q) => q.status === "completed",
+                ).length;
+              userProgressData.questSystemData.dailyStats = {
+                date: today,
+                questsCompleted: completedTodayCount,
+                lastUpdated: today,
+              };
+            }
+
+            const processedQuestData = QuestEngine.processQuestRotation(
+              userProgressData.questSystemData,
+            );
             userProgressData.questSystemData = processedQuestData;
             saveUserData(userData.id, userProgressData);
           }
@@ -191,7 +264,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (userProgressData) {
         // Process quest rotation on login if quest system exists
         if (userProgressData.questSystemData) {
-          const processedQuestData = QuestEngine.processQuestRotation(userProgressData.questSystemData);
+          const processedQuestData = QuestEngine.processQuestRotation(
+            userProgressData.questSystemData,
+          );
           userProgressData.questSystemData = processedQuestData;
           saveUserData(updatedUser.id, userProgressData);
         }

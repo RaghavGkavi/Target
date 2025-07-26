@@ -1,4 +1,5 @@
 import "./global.css";
+import React from "react";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
@@ -15,7 +16,7 @@ const firebaseConfig = {
   storageBucket: "target-4c91b.firebasestorage.app",
   messagingSenderId: "966058326327",
   appId: "1:966058326327:web:5e27730503ce6b6e7042b2",
-  measurementId: "G-QLD5NNECH6"
+  measurementId: "G-QLD5NNECH6",
 };
 
 // Initialize Firebase
@@ -247,29 +248,68 @@ function AppContent() {
   );
 }
 
+// Error boundary component
+class ErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error("App Error Boundary caught an error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-4">Something went wrong</h1>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-primary text-white rounded"
+            >
+              Reload Page
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider defaultTheme="system">
-      <AuthProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <AppContent />
-        </TooltipProvider>
-      </AuthProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
+  <ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider defaultTheme="system">
+        <AuthProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <AppContent />
+          </TooltipProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  </ErrorBoundary>
 );
 
 // Handle hot reloading properly
 const container = document.getElementById("root")!;
-let root: ReturnType<typeof createRoot>;
 
+// Check if we already have a root attached to avoid multiple root creation
 if (!container._reactRoot) {
-  root = createRoot(container);
-  container._reactRoot = root;
-} else {
-  root = container._reactRoot;
+  container._reactRoot = createRoot(container);
 }
 
-root.render(<App />);
+// Always render the latest App version
+container._reactRoot.render(<App />);

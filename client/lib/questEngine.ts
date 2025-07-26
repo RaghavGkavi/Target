@@ -1,25 +1,25 @@
-import { 
-  DailyQuest, 
-  QuestDifficulty, 
-  QuestSystemData, 
-  QuestPreferences, 
+import {
+  DailyQuest,
+  QuestDifficulty,
+  QuestSystemData,
+  QuestPreferences,
   UserLevel,
   calculateLevelFromXP,
   calculateXPForLevel,
   DEFAULT_DIFFICULTY_DISTRIBUTION,
-  QUEST_XP_VALUES
-} from '@shared/quest-types';
+  QUEST_XP_VALUES,
+} from "@shared/quest-types";
 import {
   QUEST_TEMPLATES,
   getRandomQuestTemplate,
-  getQuestTemplateById
-} from '@shared/quest-templates';
+  getQuestTemplateById,
+} from "@shared/quest-templates";
 import {
   QUEST_LIBRARY,
   getRandomQuest,
   getQuestById,
-  getAllQuestIds
-} from './questLib';
+  getAllQuestIds,
+} from "./questLib";
 
 /**
  * Quest Engine - Manages daily quest generation, user progression, and quest lifecycle
@@ -31,19 +31,21 @@ export class QuestEngine {
    */
   static generateDailyQuests(
     questSystemData: QuestSystemData,
-    lastLoginDate?: Date
+    lastLoginDate?: Date,
   ): DailyQuest[] {
     const today = new Date();
     const preferences = questSystemData.questPreferences;
-    
+
     // Get previously assigned quest template IDs to avoid immediate repetition
     const recentTemplateIds = questSystemData.questHistory
-      .filter(quest => {
+      .filter((quest) => {
         const questDate = new Date(quest.dateAssigned);
-        const daysDiff = Math.floor((today.getTime() - questDate.getTime()) / (1000 * 60 * 60 * 24));
+        const daysDiff = Math.floor(
+          (today.getTime() - questDate.getTime()) / (1000 * 60 * 60 * 24),
+        );
         return daysDiff <= 7; // Don't repeat quests from last 7 days
       })
-      .map(quest => quest.templateId);
+      .map((quest) => quest.templateId);
 
     const dailyQuests: DailyQuest[] = [];
     const usedTemplateIds: string[] = [];
@@ -54,12 +56,12 @@ export class QuestEngine {
     for (let i = 0; i < 3; i++) {
       const difficulty = difficulties[i];
       const excludeIds = [...recentTemplateIds, ...usedTemplateIds];
-      
+
       // Try quest library first, fallback to templates
       let template = getRandomQuest(
         difficulty,
         excludeIds,
-        preferences.preferredCategories
+        preferences.preferredCategories,
       );
 
       // Fallback to original templates if quest library doesn't have options
@@ -67,7 +69,7 @@ export class QuestEngine {
         template = getRandomQuestTemplate(
           difficulty,
           excludeIds,
-          preferences.preferredCategories
+          preferences.preferredCategories,
         );
       }
 
@@ -82,7 +84,7 @@ export class QuestEngine {
           xpReward: template.xpReward,
           icon: template.icon,
           estimatedTime: template.estimatedTime,
-          status: 'active',
+          status: "active",
           dateAssigned: today,
           regenerationsUsed: 0,
           isRegenerated: false,
@@ -93,12 +95,19 @@ export class QuestEngine {
       }
     }
 
-    // If we couldn't generate 3 quests (shouldn't happen with our templates), 
+    // If we couldn't generate 3 quests (shouldn't happen with our templates),
     // fill remaining slots with any available templates
     while (dailyQuests.length < 3) {
-      const remainingDifficulties: QuestDifficulty[] = ['easy', 'moderate', 'hard'];
-      const difficulty = remainingDifficulties[Math.floor(Math.random() * remainingDifficulties.length)];
-      
+      const remainingDifficulties: QuestDifficulty[] = [
+        "easy",
+        "moderate",
+        "hard",
+      ];
+      const difficulty =
+        remainingDifficulties[
+          Math.floor(Math.random() * remainingDifficulties.length)
+        ];
+
       const template = getRandomQuestTemplate(difficulty, usedTemplateIds);
       if (template) {
         const quest: DailyQuest = {
@@ -111,7 +120,7 @@ export class QuestEngine {
           xpReward: template.xpReward,
           icon: template.icon,
           estimatedTime: template.estimatedTime,
-          status: 'active',
+          status: "active",
           dateAssigned: today,
           regenerationsUsed: 0,
           isRegenerated: false,
@@ -128,21 +137,24 @@ export class QuestEngine {
   /**
    * Select 3 difficulties for daily quests with guaranteed distribution
    */
-  private static selectQuestDifficulties(preferences: QuestPreferences): QuestDifficulty[] {
+  private static selectQuestDifficulties(
+    preferences: QuestPreferences,
+  ): QuestDifficulty[] {
     const difficulties: QuestDifficulty[] = [];
 
     // Ensure at least one hard/very hard quest
-    const hardQuests: QuestDifficulty[] = ['hard', 'very_hard'];
+    const hardQuests: QuestDifficulty[] = ["hard", "very_hard"];
     const hardQuest = hardQuests[Math.floor(Math.random() * hardQuests.length)];
     difficulties.push(hardQuest);
 
     // Ensure at least one easy/moderate quest
-    const easyQuests: QuestDifficulty[] = ['easy', 'moderate'];
+    const easyQuests: QuestDifficulty[] = ["easy", "moderate"];
     const easyQuest = easyQuests[Math.floor(Math.random() * easyQuests.length)];
     difficulties.push(easyQuest);
 
     // Third quest based on user preferences with some randomization
-    const distribution = preferences.difficultyBalance || DEFAULT_DIFFICULTY_DISTRIBUTION;
+    const distribution =
+      preferences.difficultyBalance || DEFAULT_DIFFICULTY_DISTRIBUTION;
     const weightedDifficulties: QuestDifficulty[] = [];
     Object.entries(distribution).forEach(([difficulty, weight]) => {
       const count = Math.round(weight * 100);
@@ -152,10 +164,12 @@ export class QuestEngine {
     });
 
     if (weightedDifficulties.length > 0) {
-      const randomIndex = Math.floor(Math.random() * weightedDifficulties.length);
+      const randomIndex = Math.floor(
+        Math.random() * weightedDifficulties.length,
+      );
       difficulties.push(weightedDifficulties[randomIndex]);
     } else {
-      difficulties.push('moderate'); // Fallback
+      difficulties.push("moderate"); // Fallback
     }
 
     return difficulties;
@@ -171,25 +185,38 @@ export class QuestEngine {
     const difficulties: QuestDifficulty[] = [];
 
     // Ensure at least one hard/very hard quest
-    const hardQuests: QuestDifficulty[] = ['hard', 'very_hard'];
-    difficulties.push(hardQuests[Math.floor(Math.random() * hardQuests.length)]);
+    const hardQuests: QuestDifficulty[] = ["hard", "very_hard"];
+    difficulties.push(
+      hardQuests[Math.floor(Math.random() * hardQuests.length)],
+    );
 
     // Ensure at least one easy/moderate quest
-    const easyQuests: QuestDifficulty[] = ['easy', 'moderate'];
-    difficulties.push(easyQuests[Math.floor(Math.random() * easyQuests.length)]);
+    const easyQuests: QuestDifficulty[] = ["easy", "moderate"];
+    difficulties.push(
+      easyQuests[Math.floor(Math.random() * easyQuests.length)],
+    );
 
     // Third quest is completely random
-    const allDifficulties: QuestDifficulty[] = ['easy', 'moderate', 'hard', 'very_hard'];
-    difficulties.push(allDifficulties[Math.floor(Math.random() * allDifficulties.length)]);
+    const allDifficulties: QuestDifficulty[] = [
+      "easy",
+      "moderate",
+      "hard",
+      "very_hard",
+    ];
+    difficulties.push(
+      allDifficulties[Math.floor(Math.random() * allDifficulties.length)],
+    );
 
     const preferences = questSystemData.questPreferences;
     const recentTemplateIds = questSystemData.questHistory
-      .filter(quest => {
+      .filter((quest) => {
         const questDate = new Date(quest.dateAssigned);
-        const daysDiff = Math.floor((today.getTime() - questDate.getTime()) / (1000 * 60 * 60 * 24));
+        const daysDiff = Math.floor(
+          (today.getTime() - questDate.getTime()) / (1000 * 60 * 60 * 24),
+        );
         return daysDiff <= 7;
       })
-      .map(quest => quest.templateId);
+      .map((quest) => quest.templateId);
 
     const dailyQuests: DailyQuest[] = [];
     const usedTemplateIds: string[] = [];
@@ -202,14 +229,14 @@ export class QuestEngine {
       let template = getRandomQuest(
         difficulty,
         excludeIds,
-        preferences.preferredCategories
+        preferences.preferredCategories,
       );
 
       if (!template) {
         template = getRandomQuestTemplate(
           difficulty,
           excludeIds,
-          preferences.preferredCategories
+          preferences.preferredCategories,
         );
       }
 
@@ -224,7 +251,7 @@ export class QuestEngine {
           xpReward: template.xpReward,
           icon: template.icon,
           estimatedTime: template.estimatedTime,
-          status: 'active',
+          status: "active",
           dateAssigned: today,
           regenerationsUsed: 0,
           isRegenerated: true,
@@ -242,10 +269,12 @@ export class QuestEngine {
    * Auto-generate quests if none are available
    */
   static autoGenerateQuestsIfNeeded(questSystemData: QuestSystemData): boolean {
-    const activeQuests = questSystemData.currentQuests.filter(q => q.status === 'active');
+    const activeQuests = questSystemData.currentQuests.filter(
+      (q) => q.status === "active",
+    );
 
     if (activeQuests.length === 0) {
-      console.log('🎯 No active quests found, auto-generating 3 new quests...');
+      console.log("🎯 No active quests found, auto-generating 3 new quests...");
       const newQuests = this.generateDailyQuests(questSystemData);
       questSystemData.currentQuests = newQuests;
       questSystemData.lastQuestGeneration = new Date();
@@ -261,7 +290,7 @@ export class QuestEngine {
   static regenerateQuest(
     currentQuest: DailyQuest,
     questSystemData: QuestSystemData,
-    isDevMode: boolean = false
+    isDevMode: boolean = false,
   ): DailyQuest | null {
     // Allow infinite regenerations in dev mode
     if (!isDevMode && currentQuest.regenerationsUsed >= 3) {
@@ -269,16 +298,18 @@ export class QuestEngine {
     }
 
     const preferences = questSystemData.questPreferences;
-    
+
     // Get template IDs to exclude (current quest + recent history)
     const today = new Date();
     const recentTemplateIds = questSystemData.questHistory
-      .filter(quest => {
+      .filter((quest) => {
         const questDate = new Date(quest.dateAssigned);
-        const daysDiff = Math.floor((today.getTime() - questDate.getTime()) / (1000 * 60 * 60 * 24));
+        const daysDiff = Math.floor(
+          (today.getTime() - questDate.getTime()) / (1000 * 60 * 60 * 24),
+        );
         return daysDiff <= 7;
       })
-      .map(quest => quest.templateId);
+      .map((quest) => quest.templateId);
 
     const excludeIds = [...recentTemplateIds, currentQuest.templateId];
 
@@ -286,7 +317,7 @@ export class QuestEngine {
     let newTemplate = getRandomQuest(
       currentQuest.difficulty,
       excludeIds,
-      preferences.preferredCategories
+      preferences.preferredCategories,
     );
 
     // Fallback to original templates if quest library doesn't have options
@@ -294,7 +325,7 @@ export class QuestEngine {
       newTemplate = getRandomQuestTemplate(
         currentQuest.difficulty,
         excludeIds,
-        preferences.preferredCategories
+        preferences.preferredCategories,
       );
     }
 
@@ -313,8 +344,9 @@ export class QuestEngine {
       estimatedTime: newTemplate.estimatedTime,
       regenerationsUsed: currentQuest.regenerationsUsed + 1,
       isRegenerated: true,
-      originalTemplateId: currentQuest.isRegenerated ? 
-        currentQuest.originalTemplateId : currentQuest.templateId,
+      originalTemplateId: currentQuest.isRegenerated
+        ? currentQuest.originalTemplateId
+        : currentQuest.templateId,
     };
 
     return regeneratedQuest;
@@ -325,22 +357,24 @@ export class QuestEngine {
    */
   static completeQuest(
     questId: string,
-    questSystemData: QuestSystemData
+    questSystemData: QuestSystemData,
   ): { updatedQuest: DailyQuest; newLevel?: number; xpGained: number } | null {
-    const questIndex = questSystemData.currentQuests.findIndex(q => q.id === questId);
+    const questIndex = questSystemData.currentQuests.findIndex(
+      (q) => q.id === questId,
+    );
     if (questIndex === -1) {
       return null;
     }
 
     const quest = questSystemData.currentQuests[questIndex];
-    if (quest.status !== 'active') {
+    if (quest.status !== "active") {
       return null; // Quest already completed or failed
     }
 
     // Update quest status
     const updatedQuest: DailyQuest = {
       ...quest,
-      status: 'completed',
+      status: "completed",
       dateCompleted: new Date(),
     };
 
@@ -348,18 +382,25 @@ export class QuestEngine {
     const xpGained = quest.xpReward;
     const newTotalXP = questSystemData.userLevel.totalXP + xpGained;
     const levelInfo = calculateLevelFromXP(newTotalXP);
-    
+
     const oldLevel = questSystemData.userLevel.currentLevel;
     const newLevel = levelInfo.level > oldLevel ? levelInfo.level : undefined;
 
     // Update weekly stats
     const today = new Date();
     const lastStreakDate = questSystemData.weeklyStats.lastStreakDate;
-    const isConsecutiveDay = lastStreakDate && 
-      Math.floor((today.getTime() - lastStreakDate.getTime()) / (1000 * 60 * 60 * 24)) === 1;
-    
-    const newStreak = !lastStreakDate || isConsecutiveDay ? 
-      questSystemData.weeklyStats.streak + 1 : 1;
+    // Ensure lastStreakDate is a Date object
+    const lastStreakDateObj = lastStreakDate ? new Date(lastStreakDate) : null;
+    const isConsecutiveDay =
+      lastStreakDateObj &&
+      Math.floor(
+        (today.getTime() - lastStreakDateObj.getTime()) / (1000 * 60 * 60 * 24),
+      ) === 1;
+
+    const newStreak =
+      !lastStreakDateObj || isConsecutiveDay
+        ? questSystemData.weeklyStats.streak + 1
+        : 1;
 
     // Update quest system data
     questSystemData.currentQuests[questIndex] = updatedQuest;
@@ -377,6 +418,25 @@ export class QuestEngine {
       lastStreakDate: today,
     };
 
+    // Update daily stats
+    const todayDateString = today.toDateString();
+    const dailyStatsDate = questSystemData.dailyStats?.date
+      ? new Date(questSystemData.dailyStats.date).toDateString()
+      : "";
+
+    if (dailyStatsDate === todayDateString) {
+      // Same day, increment count
+      questSystemData.dailyStats.questsCompleted += 1;
+      questSystemData.dailyStats.lastUpdated = today;
+    } else {
+      // New day, reset count
+      questSystemData.dailyStats = {
+        date: today,
+        questsCompleted: 1,
+        lastUpdated: today,
+      };
+    }
+
     return { updatedQuest, newLevel, xpGained };
   }
 
@@ -385,20 +445,21 @@ export class QuestEngine {
    */
   static shouldGenerateNewQuests(
     questSystemData: QuestSystemData,
-    lastLoginDate: Date
+    lastLoginDate: Date,
   ): boolean {
     const today = new Date();
     const lastGeneration = new Date(questSystemData.lastQuestGeneration);
-    
+
     // Generate new quests if:
     // 1. Different day than last generation
     // 2. No current quests exist
     // 3. All current quests are completed/failed
-    
-    const isDifferentDay = today.toDateString() !== lastGeneration.toDateString();
+
+    const isDifferentDay =
+      today.toDateString() !== lastGeneration.toDateString();
     const hasNoCurrentQuests = questSystemData.currentQuests.length === 0;
     const allQuestsCompleted = questSystemData.currentQuests.every(
-      quest => quest.status === 'completed' || quest.status === 'failed'
+      (quest) => quest.status === "completed" || quest.status === "failed",
     );
 
     return isDifferentDay || hasNoCurrentQuests || allQuestsCompleted;
@@ -408,7 +469,7 @@ export class QuestEngine {
    * Initialize quest system data for new users
    */
   static initializeQuestSystem(
-    questPreferences: QuestPreferences
+    questPreferences: QuestPreferences,
   ): QuestSystemData {
     const initialQuestSystemData: QuestSystemData = {
       currentQuests: [],
@@ -426,6 +487,12 @@ export class QuestEngine {
         totalXPEarned: 0,
         streak: 0,
       },
+      dailyStats: {
+        date: new Date(),
+        questsCompleted: 0,
+        lastUpdated: new Date(),
+      },
+      allQuestsCompleted: false,
     };
 
     // Generate initial quests
@@ -438,38 +505,60 @@ export class QuestEngine {
   /**
    * Archive completed/failed quests and generate new ones if needed
    */
-  static processQuestRotation(questSystemData: QuestSystemData): QuestSystemData {
+  static processQuestRotation(
+    questSystemData: QuestSystemData,
+  ): QuestSystemData {
     const today = new Date();
-    
-    // Move completed/failed quests to history
-    const questsToArchive = questSystemData.currentQuests.filter(
-      quest => quest.status === 'completed' || quest.status === 'failed'
-    );
-    
+    const todayDateString = today.toDateString();
+
+    // Separate quests by status and date
     const activeQuests = questSystemData.currentQuests.filter(
-      quest => quest.status === 'active'
+      (quest) => quest.status === "active",
+    );
+
+    // Keep completed quests from today, archive older ones
+    const completedQuestsToday = questSystemData.currentQuests.filter(
+      (quest) =>
+        quest.status === "completed" &&
+        new Date(quest.dateCompleted || quest.dateAssigned).toDateString() ===
+          todayDateString,
+    );
+
+    const questsToArchive = questSystemData.currentQuests.filter(
+      (quest) =>
+        (quest.status === "completed" || quest.status === "failed") &&
+        new Date(quest.dateCompleted || quest.dateAssigned).toDateString() !==
+          todayDateString,
     );
 
     // If we need to generate new quests for today
-    if (this.shouldGenerateNewQuests(questSystemData, new Date(questSystemData.lastQuestGeneration))) {
-      // Archive all current quests
+    if (
+      this.shouldGenerateNewQuests(
+        questSystemData,
+        new Date(questSystemData.lastQuestGeneration),
+      )
+    ) {
+      // Archive all current quests (they're from a previous day)
       questSystemData.questHistory.push(...questSystemData.currentQuests);
-      
+
       // Generate new quests
       const newQuests = this.generateDailyQuests(questSystemData);
       questSystemData.currentQuests = newQuests;
       questSystemData.lastQuestGeneration = today;
     } else {
-      // Just archive completed/failed quests, keep active ones
+      // Archive only old completed/failed quests, keep active quests and today's completed quests
       questSystemData.questHistory.push(...questsToArchive);
-      questSystemData.currentQuests = activeQuests;
+      questSystemData.currentQuests = [
+        ...activeQuests,
+        ...completedQuestsToday,
+      ];
     }
 
     // Keep only last 30 days of history to prevent bloat
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     questSystemData.questHistory = questSystemData.questHistory.filter(
-      quest => new Date(quest.dateAssigned) >= thirtyDaysAgo
+      (quest) => new Date(quest.dateAssigned) >= thirtyDaysAgo,
     );
 
     return questSystemData;
@@ -480,7 +569,7 @@ export class QuestEngine {
  * Default quest preferences for new users
  */
 export const DEFAULT_QUEST_PREFERENCES: QuestPreferences = {
-  preferredCategories: ['health', 'fitness', 'personal', 'productivity'],
+  preferredCategories: ["health", "fitness", "personal", "productivity"],
   difficultyBalance: DEFAULT_DIFFICULTY_DISTRIBUTION,
-  timePreference: 'mixed',
+  timePreference: "mixed",
 };
