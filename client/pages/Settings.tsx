@@ -78,6 +78,9 @@ export default function Settings() {
   const [notifications, setNotifications] = useState(
     userData?.preferences?.notifications ?? true,
   );
+  const [useQuestSystem, setUseQuestSystem] = useState(
+    userData?.preferences?.useQuestSystem ?? false,
+  );
   const [isSaving, setIsSaving] = useState(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
