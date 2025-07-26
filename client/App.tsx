@@ -1,27 +1,12 @@
 import "./global.css";
 import React from "react";
 
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+// Firebase is initialized in client/lib/firebase.ts
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyD8O4q7UTgepZinpcoJwP4IA-keyVxXPTY",
-  authDomain: "target-4c91b.firebaseapp.com",
-  projectId: "target-4c91b",
-  storageBucket: "target-4c91b.firebasestorage.app",
-  messagingSenderId: "966058326327",
-  appId: "1:966058326327:web:5e27730503ce6b6e7042b2",
-  measurementId: "G-QLD5NNECH6",
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// Import sync test helpers in development
+if (import.meta.env.DEV) {
+  import("@/lib/syncTestHelpers");
+}
 
 import { Toaster } from "@/components/ui/toaster";
 import { createRoot } from "react-dom/client";
@@ -31,6 +16,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { MainLayout } from "@/components/MainLayout";
 import Index from "./pages/Index";
 import CreateGoal from "./pages/CreateGoal";
 import CompletedGoals from "./pages/CompletedGoals";
@@ -156,7 +142,9 @@ function AppContent() {
           path="/"
           element={
             <ProtectedRoute>
-              <DashboardRouter />
+              <MainLayout>
+                <DashboardRouter />
+              </MainLayout>
             </ProtectedRoute>
           }
         />
@@ -164,7 +152,9 @@ function AppContent() {
           path="/create-goal"
           element={
             <ProtectedRoute>
-              <CreateGoal />
+              <MainLayout>
+                <CreateGoal />
+              </MainLayout>
             </ProtectedRoute>
           }
         />
@@ -172,7 +162,9 @@ function AppContent() {
           path="/completed-goals"
           element={
             <ProtectedRoute>
-              <CompletedGoals />
+              <MainLayout>
+                <CompletedGoals />
+              </MainLayout>
             </ProtectedRoute>
           }
         />
@@ -180,7 +172,9 @@ function AppContent() {
           path="/profile"
           element={
             <ProtectedRoute>
-              <Profile />
+              <MainLayout>
+                <Profile />
+              </MainLayout>
             </ProtectedRoute>
           }
         />
@@ -188,7 +182,9 @@ function AppContent() {
           path="/settings"
           element={
             <ProtectedRoute>
-              <Settings />
+              <MainLayout>
+                <Settings />
+              </MainLayout>
             </ProtectedRoute>
           }
         />

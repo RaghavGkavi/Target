@@ -10,3 +10,28 @@
 export interface DemoResponse {
   message: string;
 }
+
+/**
+ * User data sync API types
+ */
+export interface UserDataResponse {
+  success: boolean;
+  data?: any;
+  error?: string;
+  lastModified?: string;
+}
+
+export interface UserDataExistsResponse {
+  success: boolean;
+  exists: boolean;
+  lastModified?: string;
+  error?: string;
+}
+
+export interface UserDataSaveRequest {
+  userData: any;
+}
+
+export interface UserDataUpdateRequest {
+  updates: any;
+}
