@@ -47,6 +47,9 @@ export class QuestEngine {
       })
       .map((quest) => quest.templateId);
 
+    // Include flagged/disabled quests in exclusion list
+    const flaggedTemplateIds = questSystemData.flaggedQuests || [];
+
     const dailyQuests: DailyQuest[] = [];
     const usedTemplateIds: string[] = [];
 
