@@ -303,13 +303,22 @@ const App = () => (
   </ErrorBoundary>
 );
 
-// Handle hot reloading properly
+// Handle hot reloading properly for React 18
 const container = document.getElementById("root")!;
 
-// Check if we already have a root attached to avoid multiple root creation
-if (!container._reactRoot) {
-  container._reactRoot = createRoot(container);
+// Create root once and reuse it
+let root = container._reactRoot;
+if (!root) {
+  root = createRoot(container);
+  container._reactRoot = root;
 }
 
-// Always render the latest App version
-container._reactRoot.render(<App />);
+root.render(<App />);
+
+// Handle hot module replacement
+if (import.meta.hot) {
+  import.meta.hot.accept(() => {
+    // Force a full refresh on hot reload to ensure context providers reset properly
+    window.location.reload();
+  });
+}

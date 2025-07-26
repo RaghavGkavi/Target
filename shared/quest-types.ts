@@ -85,6 +85,7 @@ export interface QuestSystemData {
     lastUpdated: Date;
   };
   allQuestsCompleted: boolean; // Flag to prevent auto-regeneration when all quests are done
+  flaggedQuests: string[]; // Array of quest template IDs that user has flagged/disabled
 }
 
 // XP values for each difficulty

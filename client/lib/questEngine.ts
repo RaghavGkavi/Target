@@ -47,6 +47,9 @@ export class QuestEngine {
       })
       .map((quest) => quest.templateId);
 
+    // Include flagged/disabled quests in exclusion list
+    const flaggedTemplateIds = questSystemData.flaggedQuests || [];
+
     const dailyQuests: DailyQuest[] = [];
     const usedTemplateIds: string[] = [];
 
@@ -55,7 +58,11 @@ export class QuestEngine {
 
     for (let i = 0; i < 3; i++) {
       const difficulty = difficulties[i];
-      const excludeIds = [...recentTemplateIds, ...usedTemplateIds];
+      const excludeIds = [
+        ...recentTemplateIds,
+        ...flaggedTemplateIds,
+        ...usedTemplateIds,
+      ];
 
       // Try quest library first, fallback to templates
       let template = getRandomQuest(
@@ -218,12 +225,19 @@ export class QuestEngine {
       })
       .map((quest) => quest.templateId);
 
+    // Include flagged/disabled quests in exclusion list
+    const flaggedTemplateIds = questSystemData.flaggedQuests || [];
+
     const dailyQuests: DailyQuest[] = [];
     const usedTemplateIds: string[] = [];
 
     for (let i = 0; i < 3; i++) {
       const difficulty = difficulties[i];
-      const excludeIds = [...recentTemplateIds, ...usedTemplateIds];
+      const excludeIds = [
+        ...recentTemplateIds,
+        ...flaggedTemplateIds,
+        ...usedTemplateIds,
+      ];
 
       // Try quest library first, fallback to templates
       let template = getRandomQuest(
@@ -266,12 +280,17 @@ export class QuestEngine {
   }
 
   /**
-   * Auto-generate quests if none are available
+   * Auto-generate quests if none are available and auto-generation is allowed
    */
   static autoGenerateQuestsIfNeeded(questSystemData: QuestSystemData): boolean {
     const activeQuests = questSystemData.currentQuests.filter(
       (q) => q.status === "active",
     );
+
+    // Don't auto-generate if all quests were completed (wait for manual regeneration)
+    if (questSystemData.allQuestsCompleted) {
+      return false;
+    }
 
     if (activeQuests.length === 0) {
       console.log("🎯 No active quests found, auto-generating 3 new quests...");
@@ -299,7 +318,7 @@ export class QuestEngine {
 
     const preferences = questSystemData.questPreferences;
 
-    // Get template IDs to exclude (current quest + recent history)
+    // Get template IDs to exclude (current quest + recent history + flagged quests)
     const today = new Date();
     const recentTemplateIds = questSystemData.questHistory
       .filter((quest) => {
@@ -311,7 +330,14 @@ export class QuestEngine {
       })
       .map((quest) => quest.templateId);
 
-    const excludeIds = [...recentTemplateIds, currentQuest.templateId];
+    // Include flagged/disabled quests in exclusion list
+    const flaggedTemplateIds = questSystemData.flaggedQuests || [];
+
+    const excludeIds = [
+      ...recentTemplateIds,
+      ...flaggedTemplateIds,
+      currentQuest.templateId,
+    ];
 
     // Try quest library first, fallback to templates
     let newTemplate = getRandomQuest(
@@ -350,6 +376,44 @@ export class QuestEngine {
     };
 
     return regeneratedQuest;
+  }
+
+  /**
+   * Flag a quest and regenerate it immediately
+   */
+  static flagQuest(
+    questId: string,
+    questSystemData: QuestSystemData,
+    isDevMode: boolean = false,
+  ): DailyQuest | null {
+    const questIndex = questSystemData.currentQuests.findIndex(
+      (q) => q.id === questId,
+    );
+    if (questIndex === -1) {
+      return null;
+    }
+
+    const currentQuest = questSystemData.currentQuests[questIndex];
+
+    // Add quest template to flagged list if not already there
+    if (!questSystemData.flaggedQuests.includes(currentQuest.templateId)) {
+      questSystemData.flaggedQuests.push(currentQuest.templateId);
+    }
+
+    // Generate a replacement quest
+    const replacementQuest = this.regenerateQuest(
+      currentQuest,
+      questSystemData,
+      isDevMode,
+    );
+
+    if (replacementQuest) {
+      // Replace the quest in the current quests array
+      questSystemData.currentQuests[questIndex] = replacementQuest;
+      return replacementQuest;
+    }
+
+    return null;
   }
 
   /**
@@ -453,7 +517,7 @@ export class QuestEngine {
     // Generate new quests if:
     // 1. Different day than last generation
     // 2. No current quests exist
-    // 3. All current quests are completed/failed
+    // 3. All current quests are completed/failed AND allQuestsCompleted flag is false
 
     const isDifferentDay =
       today.toDateString() !== lastGeneration.toDateString();
@@ -461,6 +525,11 @@ export class QuestEngine {
     const allQuestsCompleted = questSystemData.currentQuests.every(
       (quest) => quest.status === "completed" || quest.status === "failed",
     );
+
+    // Don't auto-generate if user has completed all quests (wait for manual regeneration)
+    if (allQuestsCompleted && questSystemData.allQuestsCompleted) {
+      return false;
+    }
 
     return isDifferentDay || hasNoCurrentQuests || allQuestsCompleted;
   }
@@ -493,6 +562,7 @@ export class QuestEngine {
         lastUpdated: new Date(),
       },
       allQuestsCompleted: false,
+      flaggedQuests: [],
     };
 
     // Generate initial quests

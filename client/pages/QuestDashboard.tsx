@@ -30,6 +30,7 @@ import {
   Settings,
   Star,
   RefreshCw,
+  Flag,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -197,8 +198,12 @@ export default function QuestDashboard() {
   // Auto-generate quests only if there are NO quests at all (not when all are completed)
   useEffect(() => {
     if (questSystemData && userData) {
-      // Only auto-generate if there are literally no current quests (fresh user or new day)
-      if (questSystemData.currentQuests.length === 0) {
+      // Only auto-generate if there are literally no current quests AND allQuestsCompleted is false
+      // Do NOT auto-generate if all quests are completed - let user manually regenerate
+      if (
+        questSystemData.currentQuests.length === 0 &&
+        !questSystemData.allQuestsCompleted
+      ) {
         const wasGenerated =
           QuestEngine.autoGenerateQuestsIfNeeded(questSystemData);
         if (wasGenerated) {
@@ -208,6 +213,18 @@ export default function QuestDashboard() {
             questSystemData,
           });
         }
+      }
+      // When all quests are completed, set the flag to prevent auto-regeneration
+      if (
+        questSystemData.currentQuests.length > 0 &&
+        questSystemData.currentQuests.every((q) => q.status === "completed") &&
+        !questSystemData.allQuestsCompleted
+      ) {
+        questSystemData.allQuestsCompleted = true;
+        updateUserData({
+          ...userData,
+          questSystemData,
+        });
       }
     }
   }, [questSystemData, userData, updateUserData]);
@@ -465,6 +482,7 @@ export default function QuestDashboard() {
     // Replace all quests with the 3 newly generated active quests (completed count resets to 0)
     questSystemData.currentQuests = newQuests;
     questSystemData.lastQuestGeneration = new Date();
+    questSystemData.allQuestsCompleted = false; // Reset flag to allow future auto-generation
 
     // Update local state immediately
     setLocalQuestData({ ...questSystemData });
@@ -496,6 +514,39 @@ export default function QuestDashboard() {
       ...userData,
       questSystemData,
     });
+  };
+
+  const flagQuest = async (questId: string) => {
+    if (!questSystemData || !userData) return;
+
+    const questToFlag = currentQuests.find((q) => q.id === questId);
+    if (!questToFlag) return;
+
+    // Create a deep copy to avoid mutations
+    const questSystemDataCopy = JSON.parse(JSON.stringify(questSystemData));
+
+    const replacementQuest = QuestEngine.flagQuest(
+      questId,
+      questSystemDataCopy,
+      isDevMode,
+    );
+
+    if (replacementQuest) {
+      // Update local state immediately
+      setLocalQuestData(questSystemDataCopy);
+
+      // Update user data
+      await updateUserData({
+        ...userData,
+        questSystemData: questSystemDataCopy,
+      });
+
+      console.log(
+        `Quest "${questToFlag.title}" flagged and replaced with "${replacementQuest.title}"`,
+      );
+    } else {
+      console.log("Could not generate replacement quest");
+    }
   };
 
   return (
@@ -821,6 +872,15 @@ export default function QuestDashboard() {
                             {isDevMode && (
                               <span className="ml-1 text-xs">∞</span>
                             )}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => flagQuest(quest.id)}
+                            className="rounded-lg text-warning hover:text-warning"
+                            title="Flag quest - this will disable it and generate a replacement"
+                          >
+                            <Flag className="h-4 w-4" />
                           </Button>
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
