@@ -266,12 +266,17 @@ export class QuestEngine {
   }
 
   /**
-   * Auto-generate quests if none are available
+   * Auto-generate quests if none are available and auto-generation is allowed
    */
   static autoGenerateQuestsIfNeeded(questSystemData: QuestSystemData): boolean {
     const activeQuests = questSystemData.currentQuests.filter(
       (q) => q.status === "active",
     );
+
+    // Don't auto-generate if all quests were completed (wait for manual regeneration)
+    if (questSystemData.allQuestsCompleted) {
+      return false;
+    }
 
     if (activeQuests.length === 0) {
       console.log("🎯 No active quests found, auto-generating 3 new quests...");
