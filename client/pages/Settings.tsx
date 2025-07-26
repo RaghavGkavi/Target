@@ -367,6 +367,66 @@ export default function Settings() {
           </CardContent>
         </Card>
 
+        {/* System Mode Settings */}
+        <Card className="rounded-xl">
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <Zap className="h-5 w-5" />
+              <span>System Mode</span>
+            </CardTitle>
+            <CardDescription>
+              Choose between traditional goals or gamified quests
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="questMode">Quest Mode</Label>
+                <p className="text-xs text-muted-foreground">
+                  Use daily quests, XP, levels, and achievements for a gamified experience
+                </p>
+              </div>
+              <Switch
+                id="questMode"
+                checked={useQuestSystem}
+                onCheckedChange={setUseQuestSystem}
+              />
+            </div>
+
+            {useQuestSystem && (
+              <div className="bg-primary/10 rounded-lg p-4">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Zap className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-medium">Quest Mode Features:</span>
+                </div>
+                <ul className="text-xs space-y-1 text-muted-foreground">
+                  <li>• Daily generated quests based on your preferences</li>
+                  <li>• XP points and leveling system</li>
+                  <li>• Achievement unlocking</li>
+                  <li>• Difficulty progression</li>
+                  <li>• Quest regeneration options</li>
+                </ul>
+              </div>
+            )}
+
+            {!useQuestSystem && (
+              <div className="bg-muted/50 rounded-lg p-4">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Target className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm font-medium">Traditional Mode Features:</span>
+                </div>
+                <ul className="text-xs space-y-1 text-muted-foreground">
+                  <li>• Custom goal creation and tracking</li>
+                  <li>• Addiction recovery tracking</li>
+                  <li>• Discipline ranking system</li>
+                  <li>• Flexible goal durations</li>
+                  <li>• Manual progress updates</li>
+                </ul>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
         {/* Theme Settings */}
         <Card className="rounded-xl">
           <CardHeader>
