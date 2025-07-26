@@ -285,11 +285,28 @@ export default function QuestDashboard() {
               </div>
             </div>
             <div className="flex items-center space-x-1 sm:space-x-2">
+              {/* Countdown Timer */}
+              <div className="flex items-center space-x-2 bg-destructive/10 rounded-xl px-3 py-2">
+                <Clock className="h-4 w-4 text-destructive" />
+                <div className="text-center">
+                  <div className="text-sm font-mono font-bold text-destructive">{timeUntilMidnight}</div>
+                  <div className="text-xs text-muted-foreground">until new quests</div>
+                </div>
+              </div>
+
               {/* Level Display */}
               <div className="hidden sm:flex items-center space-x-2 bg-primary/10 rounded-xl px-3 py-2">
                 <Star className="h-4 w-4 text-primary" />
                 <span className="text-sm font-semibold">Level {userLevel.currentLevel}</span>
               </div>
+
+              {/* Dev Mode Indicator */}
+              {isDevMode && (
+                <div className="flex items-center space-x-2 bg-warning/10 rounded-xl px-3 py-2">
+                  <Zap className="h-4 w-4 text-warning" />
+                  <span className="text-sm font-semibold text-warning">DEV MODE</span>
+                </div>
+              )}
               
               {/* Theme Toggle */}
               <ThemeToggle />
