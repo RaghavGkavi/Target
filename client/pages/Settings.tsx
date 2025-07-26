@@ -79,7 +79,10 @@ export default function Settings() {
     userData?.preferences?.notifications ?? true,
   );
   const [useQuestSystem, setUseQuestSystem] = useState(
-    userData?.preferences?.useQuestSystem ?? false,
+    userData?.preferences?.useQuestSystem ?? true, // Default to quest system
+  );
+  const [devModeEnabled, setDevModeEnabled] = useState(
+    userData?.preferences?.devModeEnabled ?? false,
   );
   const [isSaving, setIsSaving] = useState(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
