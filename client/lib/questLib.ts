@@ -126,7 +126,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
     category: 'fitness',
     difficulty: 'moderate',
     xpReward: QUEST_XP_VALUES.moderate,
-    icon: '����',
+    icon: '💪',
     estimatedTime: '30 minutes',
     requiresTracking: true,
   },
@@ -434,7 +434,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
   {
     id: 'very_hard_health_transformation',
     title: 'Health Revolution',
-    description: 'Implement major health change for entire day',
+    description: 'Implement a complete healthy day: meal prep all meals, exercise twice, drink only water, get 8+ hours sleep, and avoid all processed foods',
     category: 'health',
     difficulty: 'very_hard',
     xpReward: QUEST_XP_VALUES.very_hard,
