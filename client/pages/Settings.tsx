@@ -473,6 +473,24 @@ export default function Settings() {
           </CardContent>
         </Card>
 
+        {/* Flagged Quests Management */}
+        {useQuestSystem && userData?.questSystemData && (
+          <Card className="rounded-xl">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Flag className="h-5 w-5" />
+                <span>Flagged Quests</span>
+              </CardTitle>
+              <CardDescription>
+                Manage quests you've flagged or disabled. Flagged quests won't appear in your daily quest rotation.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <FlaggedQuestsManager />
+            </CardContent>
+          </Card>
+        )}
+
         {/* Theme Settings */}
         <Card className="rounded-xl">
           <CardHeader>
