@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { QuestSystemData } from "@shared/quest-types";
 import { QuestEngine, DEFAULT_QUEST_PREFERENCES } from "@/lib/questEngine";
+import { SyncService, SyncState } from "@/lib/syncService";
 
 export interface User {
   id: string;
@@ -46,6 +47,7 @@ interface AuthContextType {
   user: User | null;
   userData: UserData | null;
   loading: boolean;
+  syncState: SyncState;
   signIn: (
     email: string,
     password: string,
@@ -58,6 +60,7 @@ interface AuthContextType {
   signInWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   signOut: () => Promise<void>;
   updateUserData: (data: Partial<UserData>) => Promise<void>;
+  forceSync: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -162,64 +165,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [syncState, setSyncState] = useState<SyncState>(SyncService.getCurrentState());
 
   // Check for existing session on mount
   useEffect(() => {
-    const checkAuth = () => {
+    const checkAuth = async () => {
       const currentUser = localStorage.getItem("target_current_user");
       if (currentUser) {
         const userData = JSON.parse(currentUser);
-        setUser({
+        const userObj = {
           ...userData,
           createdAt: new Date(userData.createdAt),
           lastLoginAt: new Date(userData.lastLoginAt),
-        });
+        };
+        setUser(userObj);
 
-        // Load user data
-        const userProgressData = getUserData(userData.id);
-        if (userProgressData) {
-          // Initialize quest system if it doesn't exist and quest mode is enabled
-          if (
-            userProgressData.preferences?.useQuestSystem &&
-            !userProgressData.questSystemData
-          ) {
-            userProgressData.questSystemData =
-              QuestEngine.initializeQuestSystem(DEFAULT_QUEST_PREFERENCES);
-            saveUserData(userData.id, userProgressData);
-          }
+        // Load local user data first
+        let userProgressData = getUserData(userData.id);
 
-          // Process quest rotation if quest system exists
-          if (userProgressData.questSystemData) {
-            // Migration: Add dailyStats if it doesn't exist
-            if (!userProgressData.questSystemData.dailyStats) {
-              const today = new Date();
-              const completedTodayCount =
-                userProgressData.questSystemData.currentQuests.filter(
-                  (q) => q.status === "completed",
-                ).length;
-              userProgressData.questSystemData.dailyStats = {
-                date: today,
-                questsCompleted: completedTodayCount,
-                lastUpdated: today,
-              };
-            }
-
-            // Migration: Add flaggedQuests if it doesn't exist
-            if (!userProgressData.questSystemData.flaggedQuests) {
-              userProgressData.questSystemData.flaggedQuests = [];
-            }
-
-            const processedQuestData = QuestEngine.processQuestRotation(
-              userProgressData.questSystemData,
-            );
-            userProgressData.questSystemData = processedQuestData;
-            saveUserData(userData.id, userProgressData);
-          }
-
-          setUserData(userProgressData);
-        } else {
+        if (!userProgressData) {
           // Initialize default user data
-          const defaultData: UserData = {
+          userProgressData = {
             goals: [],
             addictions: [],
             completedGoals: [],
@@ -227,17 +193,71 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               theme: "system",
               notifications: true,
               onboardingCompleted: false,
-              useQuestSystem: true, // Default to quest system
+              useQuestSystem: true,
             },
           };
-          setUserData(defaultData);
-          saveUserData(userData.id, defaultData);
+          saveUserData(userData.id, userProgressData);
+        }
+
+        // Initialize quest system if needed
+        if (
+          userProgressData.preferences?.useQuestSystem &&
+          !userProgressData.questSystemData
+        ) {
+          userProgressData.questSystemData =
+            QuestEngine.initializeQuestSystem(DEFAULT_QUEST_PREFERENCES);
+        }
+
+        // Process quest rotation if quest system exists
+        if (userProgressData.questSystemData) {
+          // Migration: Add dailyStats if it doesn't exist
+          if (!userProgressData.questSystemData.dailyStats) {
+            const today = new Date();
+            const completedTodayCount =
+              userProgressData.questSystemData.currentQuests.filter(
+                (q) => q.status === "completed",
+              ).length;
+            userProgressData.questSystemData.dailyStats = {
+              date: today,
+              questsCompleted: completedTodayCount,
+              lastUpdated: today,
+            };
+          }
+
+          // Migration: Add flaggedQuests if it doesn't exist
+          if (!userProgressData.questSystemData.flaggedQuests) {
+            userProgressData.questSystemData.flaggedQuests = [];
+          }
+
+          const processedQuestData = QuestEngine.processQuestRotation(
+            userProgressData.questSystemData,
+          );
+          userProgressData.questSystemData = processedQuestData;
+        }
+
+        // Set initial data
+        setUserData(userProgressData);
+
+        // Try to sync with cloud
+        try {
+          const syncedData = await SyncService.syncUserData(userData.id, userProgressData);
+          if (syncedData !== userProgressData) {
+            setUserData(syncedData);
+            saveUserData(userData.id, syncedData);
+          }
+        } catch (error) {
+          console.error("Failed to sync on startup:", error);
         }
       }
       setLoading(false);
     };
 
+    // Subscribe to sync state changes
+    const unsubscribe = SyncService.subscribe(setSyncState);
+
     checkAuth();
+
+    return unsubscribe;
   }, []);
 
   const signIn = async (
