@@ -84,6 +84,7 @@ export interface QuestSystemData {
     questsCompleted: number; // Total quests completed on this day
     lastUpdated: Date;
   };
+  allQuestsCompleted: boolean; // Flag to prevent auto-regeneration when all quests are done
 }
 
 // XP values for each difficulty
