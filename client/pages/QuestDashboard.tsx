@@ -569,7 +569,7 @@ export default function QuestDashboard() {
                     )}
                     {quest.regenerationsUsed > 0 && (
                       <div className="text-xs text-muted-foreground">
-                        Regenerated {quest.regenerationsUsed}/3 times
+                        Regenerated {quest.regenerationsUsed}{isDevMode ? '' : '/3'} times{isDevMode ? ' (∞ available)' : ''}
                       </div>
                     )}
                   </CardContent>
