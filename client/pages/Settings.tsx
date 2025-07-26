@@ -131,6 +131,7 @@ export default function Settings() {
         preferences: {
           ...userData?.preferences,
           notifications,
+          useQuestSystem,
         },
       });
 
