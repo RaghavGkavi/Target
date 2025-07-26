@@ -210,7 +210,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
   {
     id: 'moderate_planning_session',
     title: 'Life Organizer',
-    description: 'Plan your week and organize your schedule',
+    description: 'Create a detailed weekly schedule with specific time blocks for work, exercise, meals, and personal time',
     category: 'productivity',
     difficulty: 'moderate',
     xpReward: QUEST_XP_VALUES.moderate,
