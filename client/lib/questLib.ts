@@ -256,7 +256,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
   {
     id: 'hard_networking_mission',
     title: 'Connection Builder',
-    description: 'Reach out to 3 professional contacts',
+    description: 'Send personalized messages to 3 professional contacts: update them on your work, ask about theirs, or suggest meeting up',
     category: 'career',
     difficulty: 'hard',
     xpReward: QUEST_XP_VALUES.hard,
