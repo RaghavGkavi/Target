@@ -390,7 +390,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
   {
     id: 'very_hard_life_optimization',
     title: 'Life Architect',
-    description: 'Completely organize major life area',
+    description: 'Completely reorganize a major life area: create a budget and financial plan, deep clean and organize your home, or overhaul your productivity system',
     category: 'productivity',
     difficulty: 'very_hard',
     xpReward: QUEST_XP_VALUES.very_hard,
