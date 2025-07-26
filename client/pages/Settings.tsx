@@ -796,3 +796,141 @@ function DeleteAccountDialog() {
     </Dialog>
   );
 }
+
+// Flagged Quests Manager Component
+function FlaggedQuestsManager() {
+  const { userData, updateUserData } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const flaggedQuests = userData?.questSystemData?.flaggedQuests || [];
+
+  const removeFromFlagged = async (templateId: string) => {
+    if (!userData?.questSystemData) return;
+
+    setIsLoading(true);
+    try {
+      const updatedFlaggedQuests = flaggedQuests.filter(id => id !== templateId);
+
+      await updateUserData({
+        ...userData,
+        questSystemData: {
+          ...userData.questSystemData,
+          flaggedQuests: updatedFlaggedQuests,
+        },
+      });
+    } catch (error) {
+      console.error("Failed to remove quest from flagged:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const getQuestInfo = (templateId: string) => {
+    // Try quest library first
+    let quest = getQuestById(templateId);
+
+    // Fallback to original templates
+    if (!quest) {
+      quest = getQuestTemplateById(templateId);
+    }
+
+    return quest;
+  };
+
+  if (flaggedQuests.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <Flag className="h-12 w-12 mx-auto mb-4 text-muted-foreground/50" />
+        <h3 className="text-lg font-semibold mb-2">No Flagged Quests</h3>
+        <p className="text-muted-foreground text-sm">
+          When you flag quests using the flag button on the quest dashboard, they'll appear here.
+          Flagged quests are disabled and won't appear in your daily quest rotation.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-muted-foreground">
+          {flaggedQuests.length} quest{flaggedQuests.length === 1 ? '' : 's'} flagged
+        </p>
+      </div>
+
+      <div className="space-y-3">
+        {flaggedQuests.map((templateId) => {
+          const questInfo = getQuestInfo(templateId);
+
+          if (!questInfo) {
+            return (
+              <div key={templateId} className="flex items-center justify-between p-3 border rounded-lg bg-muted/20">
+                <div className="flex items-center space-x-3">
+                  <div className="text-lg">❓</div>
+                  <div>
+                    <p className="font-medium text-muted-foreground">Unknown Quest</p>
+                    <p className="text-sm text-muted-foreground">Template ID: {templateId}</p>
+                  </div>
+                </div>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => removeFromFlagged(templateId)}
+                  disabled={isLoading}
+                  className="rounded-lg"
+                >
+                  <EyeOff className="h-4 w-4 mr-1" />
+                  Remove
+                </Button>
+              </div>
+            );
+          }
+
+          return (
+            <div key={templateId} className="flex items-center justify-between p-3 border rounded-lg">
+              <div className="flex items-center space-x-3">
+                <div className="text-lg">{questInfo.icon}</div>
+                <div className="flex-1">
+                  <p className="font-medium">{questInfo.title}</p>
+                  <p className="text-sm text-muted-foreground">{questInfo.description}</p>
+                  <div className="flex items-center space-x-2 mt-1">
+                    <Badge variant="outline" className="text-xs">
+                      {questInfo.difficulty.replace("_", " ")} • {questInfo.xpReward} XP
+                    </Badge>
+                    <Badge variant="secondary" className="text-xs">
+                      {questInfo.category}
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => removeFromFlagged(templateId)}
+                disabled={isLoading}
+                className="rounded-lg"
+                title="Re-enable this quest"
+              >
+                <Eye className="h-4 w-4 mr-1" />
+                Re-enable
+              </Button>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="bg-info/10 rounded-lg p-4">
+        <div className="flex items-center space-x-2 mb-2">
+          <Flag className="h-4 w-4 text-info" />
+          <span className="text-sm font-medium text-info">About Flagged Quests:</span>
+        </div>
+        <ul className="text-xs space-y-1 text-muted-foreground">
+          <li>• Flagged quests are excluded from your daily quest generation</li>
+          <li>• Use the flag button on quests you don't want to see again</li>
+          <li>• You can re-enable any flagged quest from this settings page</li>
+          <li>• Flagging helps personalize your quest experience</li>
+        </ul>
+      </div>
+    </div>
+  );
+}
