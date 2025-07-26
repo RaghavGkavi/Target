@@ -1420,7 +1420,7 @@ export default function Index() {
                         No achievements yet
                       </h3>
                       <p className="text-muted-foreground mb-6">
-                        Complete goals, build streaks, and improve your
+                        Complete quests, build streaks, and improve your
                         discipline to earn achievements!
                       </p>
                       <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto text-sm">
