@@ -1,5 +1,6 @@
 import { UserData } from "@/contexts/AuthContext";
 import { UserDataResponse, UserDataExistsResponse } from "@shared/api";
+import { ConflictResolver } from "./conflictResolver";
 
 export type SyncStatus = "syncing" | "synced" | "error" | "offline";
 
@@ -79,11 +80,23 @@ export class SyncService {
       } else {
         // Cloud data exists, download and merge
         const cloudData = await this.downloadUserData(userId);
-        
+
         if (cloudData) {
           // Merge local and cloud data
-          finalData = await this.mergeUserData(localData, cloudData);
-          
+          const mergeResult = await this.mergeUserData(localData, cloudData);
+
+          if (mergeResult.hasConflicts) {
+            // Conflicts detected - will need manual resolution
+            this.updateState({
+              status: "error",
+              error: "Data conflicts detected. Manual resolution required.",
+              pendingChanges: true
+            });
+            return localData; // Return local data for now
+          }
+
+          finalData = mergeResult.data;
+
           // Upload merged data back to cloud
           await this.uploadUserData(userId, finalData);
         } else {
@@ -143,45 +156,36 @@ export class SyncService {
     return result.data;
   }
 
-  static async mergeUserData(localData: UserData, cloudData: UserData): Promise<UserData> {
-    // Simple merge strategy: prefer newer data based on lastUpdated fields
-    const merged: UserData = {
+  static async mergeUserData(localData: UserData, cloudData: UserData): Promise<{ data: UserData; hasConflicts: boolean }> {
+    const resolution = ConflictResolver.detectConflicts(localData, cloudData);
+
+    if (resolution.autoResolved && resolution.resolvedData) {
+      return { data: resolution.resolvedData, hasConflicts: false };
+    }
+
+    if (resolution.hasConflict) {
+      // Return indication that manual resolution is needed
+      return { data: localData, hasConflicts: true };
+    }
+
+    // Fallback to simple merge
+    return { data: this.performSimpleMerge(localData, cloudData), hasConflicts: false };
+  }
+
+  private static performSimpleMerge(localData: UserData, cloudData: UserData): UserData {
+    return {
       ...cloudData,
-      
-      // Merge goals by comparing lastUpdated dates
       goals: this.mergeArraysByLastUpdated(localData.goals || [], cloudData.goals || []),
-      
-      // Merge completed goals by ID
-      completedGoals: this.mergeArraysById(
-        localData.completedGoals || [], 
-        cloudData.completedGoals || []
-      ),
-      
-      // Merge addictions by ID
-      addictions: this.mergeArraysById(
-        localData.addictions || [], 
-        cloudData.addictions || []
-      ),
-      
-      // Merge achievements by ID
-      achievements: this.mergeArraysById(
-        localData.achievements || [], 
-        cloudData.achievements || []
-      ),
-      
-      // Merge preferences (prefer local for user preferences)
+      completedGoals: this.mergeArraysById(localData.completedGoals || [], cloudData.completedGoals || []),
+      addictions: this.mergeArraysById(localData.addictions || [], cloudData.addictions || []),
+      achievements: this.mergeArraysById(localData.achievements || [], cloudData.achievements || []),
       preferences: {
         ...cloudData.preferences,
         ...localData.preferences,
-        // But keep cloud data for onboarding status if it's completed
         onboardingCompleted: cloudData.preferences?.onboardingCompleted || localData.preferences?.onboardingCompleted || false
       },
-
-      // Use the most recent quest system data
       questSystemData: this.getMostRecentQuestData(localData.questSystemData, cloudData.questSystemData)
     };
-
-    return merged;
   }
 
   private static mergeArraysByLastUpdated(localArray: any[], cloudArray: any[]): any[] {
