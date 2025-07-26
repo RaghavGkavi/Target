@@ -110,6 +110,10 @@ export default function QuestDashboard() {
   const [levelUpDialog, setLevelUpDialog] = useState<{ isOpen: boolean; newLevel?: number }>({ isOpen: false });
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [timeUntilMidnight, setTimeUntilMidnight] = useState<string>("");
+
+  // Dev mode detection
+  const isDevMode = user?.email === "raghav.gkavi@gmail.com";
 
   useEffect(() => {
     setCurrentQuote(
