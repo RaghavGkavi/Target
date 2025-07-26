@@ -215,7 +215,7 @@ export default function CreateGoal() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="duration">Goal Duration</Label>
+                <Label htmlFor="duration">Quest Duration</Label>
                 <Select
                   value={formData.duration}
                   onValueChange={(value) =>
