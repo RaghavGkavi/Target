@@ -288,30 +288,25 @@ export default function QuestDashboard() {
   const regenerateAllQuests = async () => {
     if (!questSystemData || !userData) return;
 
-    console.log('🔄 Regenerating all active quests with randomized difficulty...');
+    console.log('🔄 Regenerating all quests with randomized difficulty...');
 
-    // Get active and completed quests separately
+    // Get all current quests (both active and completed)
     const activeQuests = questSystemData.currentQuests.filter(q => q.status === 'active');
     const completedQuests = questSystemData.currentQuests.filter(q => q.status === 'completed');
+    const allCurrentQuests = [...activeQuests, ...completedQuests];
 
-    if (activeQuests.length === 0) {
-      console.log('No active quests to regenerate');
-      return;
-    }
-
-    // Increment regeneration count for each active quest that's being replaced
-    // (this represents the cost of using "regenerate all")
-    activeQuests.forEach(quest => {
+    // Increment regeneration count for quests being replaced
+    allCurrentQuests.forEach(quest => {
       if (!isDevMode) {
         quest.regenerationsUsed = Math.min(quest.regenerationsUsed + 1, 3);
       }
     });
 
-    // Archive the active quests to history
-    questSystemData.questHistory.push(...activeQuests);
+    // Archive all current quests to history
+    questSystemData.questHistory.push(...allCurrentQuests);
 
-    // Generate new quests to replace only the active ones
-    const numQuestsToGenerate = activeQuests.length;
+    // Always generate 3 new quests (resetting the daily quest set)
+    const numQuestsToGenerate = 3;
     const preferences = questSystemData.questPreferences;
     const today = new Date();
 
