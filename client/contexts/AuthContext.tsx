@@ -204,6 +204,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               };
             }
 
+            // Migration: Add flaggedQuests if it doesn't exist
+            if (!userProgressData.questSystemData.flaggedQuests) {
+              userProgressData.questSystemData.flaggedQuests = [];
+            }
+
             const processedQuestData = QuestEngine.processQuestRotation(
               userProgressData.questSystemData,
             );
