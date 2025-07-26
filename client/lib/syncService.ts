@@ -302,14 +302,3 @@ if (typeof window !== "undefined") {
     SyncService.updateState({ status: "offline" });
   });
 }
-
-// Listen for online/offline events
-if (typeof window !== "undefined") {
-  window.addEventListener("online", () => {
-    SyncService.getCurrentState().status = "offline";
-  });
-  
-  window.addEventListener("offline", () => {
-    SyncService.updateState({ status: "offline" });
-  });
-}
