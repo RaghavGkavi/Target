@@ -176,7 +176,7 @@ export default function CreateGoal() {
                 <span>Category</span>
               </CardTitle>
               <CardDescription>
-                Choose the area of life this goal belongs to
+                Choose the area of life this quest belongs to
               </CardDescription>
             </CardHeader>
             <CardContent>
