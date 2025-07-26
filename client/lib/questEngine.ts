@@ -55,11 +55,21 @@ export class QuestEngine {
       const difficulty = difficulties[i];
       const excludeIds = [...recentTemplateIds, ...usedTemplateIds];
       
-      const template = getRandomQuestTemplate(
+      // Try quest library first, fallback to templates
+      let template = getRandomQuest(
         difficulty,
         excludeIds,
         preferences.preferredCategories
       );
+
+      // Fallback to original templates if quest library doesn't have options
+      if (!template) {
+        template = getRandomQuestTemplate(
+          difficulty,
+          excludeIds,
+          preferences.preferredCategories
+        );
+      }
 
       if (template) {
         const quest: DailyQuest = {
