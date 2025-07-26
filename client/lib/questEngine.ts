@@ -58,7 +58,7 @@ export class QuestEngine {
 
     for (let i = 0; i < 3; i++) {
       const difficulty = difficulties[i];
-      const excludeIds = [...recentTemplateIds, ...usedTemplateIds];
+      const excludeIds = [...recentTemplateIds, ...flaggedTemplateIds, ...usedTemplateIds];
 
       // Try quest library first, fallback to templates
       let template = getRandomQuest(
