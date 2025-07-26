@@ -1,6 +1,6 @@
 import { StatusBar, Style } from "@capacitor/status-bar";
 import { SplashScreen } from "@capacitor/splash-screen";
-import { Haptics, ImpactStyle } from "@capacitor/haptics";
+import { Haptics, ImpactStyle, NotificationType } from "@capacitor/haptics";
 import { Keyboard } from "@capacitor/keyboard";
 
 export class MobileUtils {
@@ -59,7 +59,7 @@ export class MobileUtils {
 
   static async triggerNotificationHaptic() {
     try {
-      await Haptics.notification({ type: "success" });
+      await Haptics.notification({ type: NotificationType.Success });
     } catch (error) {
       // Silently fail on web
     }
