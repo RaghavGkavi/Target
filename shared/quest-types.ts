@@ -79,6 +79,11 @@ export interface QuestSystemData {
     streak: number; // Consecutive days with at least 1 quest completed
     lastStreakDate?: Date;
   };
+  dailyStats: {
+    date: Date; // The date these stats are for
+    questsCompleted: number; // Total quests completed on this day
+    lastUpdated: Date;
+  };
 }
 
 // XP values for each difficulty
