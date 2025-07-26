@@ -464,29 +464,37 @@ export class QuestEngine {
    */
   static processQuestRotation(questSystemData: QuestSystemData): QuestSystemData {
     const today = new Date();
-    
-    // Move completed/failed quests to history
-    const questsToArchive = questSystemData.currentQuests.filter(
-      quest => quest.status === 'completed' || quest.status === 'failed'
-    );
-    
+    const todayDateString = today.toDateString();
+
+    // Separate quests by status and date
     const activeQuests = questSystemData.currentQuests.filter(
       quest => quest.status === 'active'
     );
 
+    // Keep completed quests from today, archive older ones
+    const completedQuestsToday = questSystemData.currentQuests.filter(
+      quest => quest.status === 'completed' &&
+      new Date(quest.dateCompleted || quest.dateAssigned).toDateString() === todayDateString
+    );
+
+    const questsToArchive = questSystemData.currentQuests.filter(
+      quest => (quest.status === 'completed' || quest.status === 'failed') &&
+      new Date(quest.dateCompleted || quest.dateAssigned).toDateString() !== todayDateString
+    );
+
     // If we need to generate new quests for today
     if (this.shouldGenerateNewQuests(questSystemData, new Date(questSystemData.lastQuestGeneration))) {
-      // Archive all current quests
+      // Archive all current quests (they're from a previous day)
       questSystemData.questHistory.push(...questSystemData.currentQuests);
-      
+
       // Generate new quests
       const newQuests = this.generateDailyQuests(questSystemData);
       questSystemData.currentQuests = newQuests;
       questSystemData.lastQuestGeneration = today;
     } else {
-      // Just archive completed/failed quests, keep active ones
+      // Archive only old completed/failed quests, keep active quests and today's completed quests
       questSystemData.questHistory.push(...questsToArchive);
-      questSystemData.currentQuests = activeQuests;
+      questSystemData.currentQuests = [...activeQuests, ...completedQuestsToday];
     }
 
     // Keep only last 30 days of history to prevent bloat
