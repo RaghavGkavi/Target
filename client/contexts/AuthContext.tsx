@@ -189,6 +189,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Load user data
       const userProgressData = getUserData(updatedUser.id);
       if (userProgressData) {
+        // Process quest rotation on login if quest system exists
+        if (userProgressData.questSystemData) {
+          const processedQuestData = QuestEngine.processQuestRotation(userProgressData.questSystemData);
+          userProgressData.questSystemData = processedQuestData;
+          saveUserData(updatedUser.id, userProgressData);
+        }
         setUserData(userProgressData);
       }
 
