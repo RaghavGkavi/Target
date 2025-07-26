@@ -3,6 +3,11 @@ import React from "react";
 
 // Firebase is initialized in client/lib/firebase.ts
 
+// Import sync test helpers in development
+if (import.meta.env.DEV) {
+  import("@/lib/syncTestHelpers");
+}
+
 import { Toaster } from "@/components/ui/toaster";
 import { createRoot } from "react-dom/client";
 import { Toaster as Sonner } from "@/components/ui/sonner";
