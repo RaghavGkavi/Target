@@ -144,7 +144,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
   {
     id: 'moderate_skill_learning',
     title: 'Knowledge Quest',
-    description: 'Spend 45 minutes learning a new skill',
+    description: 'Complete 45 minutes of focused learning using online tutorials, courses, or educational videos on a specific skill',
     category: 'learning',
     difficulty: 'moderate',
     xpReward: QUEST_XP_VALUES.moderate,
