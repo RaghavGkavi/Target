@@ -379,7 +379,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
   {
     id: 'very_hard_digital_fast',
     title: 'Digital Monk',
-    description: 'Complete digital detox for entire day',
+    description: 'Stay completely offline for an entire day: no social media, news websites, entertainment apps, or non-essential digital devices',
     category: 'recovery',
     difficulty: 'very_hard',
     xpReward: QUEST_XP_VALUES.very_hard,
