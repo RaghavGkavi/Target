@@ -9,11 +9,17 @@ import {
   DEFAULT_DIFFICULTY_DISTRIBUTION,
   QUEST_XP_VALUES
 } from '@shared/quest-types';
-import { 
-  QUEST_TEMPLATES, 
-  getRandomQuestTemplate, 
-  getQuestTemplateById 
+import {
+  QUEST_TEMPLATES,
+  getRandomQuestTemplate,
+  getQuestTemplateById
 } from '@shared/quest-templates';
+import {
+  QUEST_LIBRARY,
+  getRandomQuest,
+  getQuestById,
+  getAllQuestIds
+} from './questLib';
 
 /**
  * Quest Engine - Manages daily quest generation, user progression, and quest lifecycle
