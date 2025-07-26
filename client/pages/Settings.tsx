@@ -501,6 +501,7 @@ function GoalResetDialog() {
         addictions: [],
         completedGoals: [],
         achievements: [], // Clear achievements
+        questSystemData: undefined, // Clear quest system data
         disciplineData: {
           baseScore: 50, // Reset to middle baseline
           currentRank: "C",
@@ -511,7 +512,8 @@ function GoalResetDialog() {
         preferences: {
           theme: "system",
           notifications: true,
-          onboardingCompleted: true, // Keep onboarding completed
+          onboardingCompleted: false, // Reset to require onboarding again
+          useQuestSystem: false, // Reset to traditional system
         },
         privacy: {
           showGoals: true,
