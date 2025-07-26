@@ -229,6 +229,9 @@ export default function QuestDashboard() {
       ...newAchievements.map(a => ({ id: a.id, earnedAt: a.earnedAt! })),
     ];
 
+    // Update local state immediately for instant UI feedback
+    setLocalQuestData(questSystemDataCopy);
+
     // Update user data
     await updateUserData({
       ...userData,
