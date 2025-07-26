@@ -253,7 +253,7 @@ export default function Onboarding() {
         theme: "system",
         notifications: true,
         onboardingCompleted: true,
-        useQuestSystem: true, // Default to quest system now
+        useQuestSystem: selectedMode === "quest",
       },
     });
 
