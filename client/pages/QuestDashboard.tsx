@@ -200,6 +200,13 @@ export default function QuestDashboard() {
       return;
     }
 
+    // Check if quest is already completed to prevent double completion
+    const questToComplete = questSystemData.currentQuests.find(q => q.id === questId);
+    if (!questToComplete || questToComplete.status === 'completed') {
+      console.log('Quest already completed or not found');
+      return;
+    }
+
     console.log('Attempting to complete quest:', questId);
     console.log('Current quests before completion:', questSystemData.currentQuests);
 
@@ -232,12 +239,20 @@ export default function QuestDashboard() {
     // Update local state immediately for instant UI feedback
     setLocalQuestData(questSystemDataCopy);
 
-    // Update user data
-    await updateUserData({
-      ...userData,
-      questSystemData: questSystemDataCopy,
-      achievements: updatedAchievements,
-    });
+    try {
+      // Update user data with proper error handling
+      await updateUserData({
+        ...userData,
+        questSystemData: questSystemDataCopy,
+        achievements: updatedAchievements,
+      });
+      console.log('Quest completion successfully saved to storage');
+    } catch (error) {
+      console.error('Failed to save quest completion:', error);
+      // Revert local state if save failed
+      setLocalQuestData(questSystemData);
+      return;
+    }
 
     // Show level up dialog if applicable
     if (newLevel) {
