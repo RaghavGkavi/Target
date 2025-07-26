@@ -139,7 +139,7 @@ export default function CreateGoal() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="title">Goal Title</Label>
+                <Label htmlFor="title">Quest Title</Label>
                 <Input
                   id="title"
                   placeholder="e.g., Exercise for 30 minutes daily"
