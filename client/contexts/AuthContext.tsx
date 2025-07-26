@@ -149,7 +149,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               theme: "system",
               notifications: true,
               onboardingCompleted: false,
-              useQuestSystem: false, // Default to traditional goal system
+              useQuestSystem: true, // Default to quest system
             },
           };
           setUserData(defaultData);
