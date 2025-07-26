@@ -428,6 +428,11 @@ export class QuestEngine {
         totalXPEarned: 0,
         streak: 0,
       },
+      dailyStats: {
+        date: new Date(),
+        questsCompleted: 0,
+        lastUpdated: new Date(),
+      },
     };
 
     // Generate initial quests
