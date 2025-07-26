@@ -534,17 +534,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const updatedData = { ...userData, ...data };
     setUserData(updatedData);
     saveUserData(user.id, updatedData);
+
+    // Background sync to cloud
+    await SyncService.backgroundSync(user.id, updatedData);
+  };
+
+  const forceSync = async (): Promise<void> => {
+    if (!user || !userData) return;
+
+    try {
+      const syncedData = await SyncService.forceSync(user.id, userData);
+      if (syncedData !== userData) {
+        setUserData(syncedData);
+        saveUserData(user.id, syncedData);
+      }
+    } catch (error) {
+      console.error("Force sync failed:", error);
+    }
   };
 
   const value: AuthContextType = {
     user,
     userData,
     loading,
+    syncState,
     signIn,
     signUp,
     signInWithGoogle,
     signOut,
     updateUserData,
+    forceSync,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
