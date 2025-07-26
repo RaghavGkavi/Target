@@ -510,8 +510,9 @@ export default function QuestDashboard() {
               </div>
             </div>
 
+            {/* Active Quests */}
             <div className="grid gap-4">
-              {currentQuests.map((quest) => (
+              {currentQuests.filter(q => q.status === 'active').map((quest) => (
                 <Card
                   key={quest.id}
                   className={`rounded-xl border-l-4 transition-all duration-200 ${getDifficultyBorder(quest.difficulty)} ${
