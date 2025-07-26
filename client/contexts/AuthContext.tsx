@@ -16,6 +16,7 @@ export interface UserData {
   goals: any[];
   addictions: any[];
   completedGoals: any[];
+  questSystemData?: QuestSystemData; // New quest system integration
   disciplineData?: {
     baseScore: number; // 0-100, determined from onboarding assessment
     currentRank: string; // F-, F, F+, D-, D, D+, C-, C, C+, B-, B, B+, A-, A, A+
@@ -28,6 +29,7 @@ export interface UserData {
     notifications: boolean;
     reminderTime?: string;
     onboardingCompleted?: boolean;
+    useQuestSystem?: boolean; // Flag to enable quest mode
   };
   privacy?: {
     showGoals: boolean;
