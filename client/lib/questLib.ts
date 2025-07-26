@@ -333,7 +333,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
   {
     id: 'hard_habit_break',
     title: 'Habit Breaker',
-    description: 'Successfully avoid a bad habit for entire day',
+    description: 'Go the entire day without engaging in a specific bad habit (smoking, junk food, excessive social media, etc.)',
     category: 'recovery',
     difficulty: 'hard',
     xpReward: QUEST_XP_VALUES.hard,
