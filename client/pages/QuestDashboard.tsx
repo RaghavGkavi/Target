@@ -195,8 +195,13 @@ export default function QuestDashboard() {
 
 
   const completeQuest = async (questId: string) => {
+    console.log('🎯 Complete quest button clicked for:', questId);
+    console.log('questSystemData exists:', !!questSystemData);
+    console.log('userData exists:', !!userData);
+    console.log('localQuestData exists:', !!localQuestData);
+
     if (!questSystemData || !userData) {
-      console.error('Missing questSystemData or userData');
+      console.error('Missing questSystemData or userData', { questSystemData: !!questSystemData, userData: !!userData });
       return;
     }
 
