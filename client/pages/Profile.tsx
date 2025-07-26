@@ -23,6 +23,8 @@ import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/AuthContext";
 import { getDisciplineRankInfo } from "@/lib/disciplineRanking";
+import { getEarnedQuestAchievements, getRarityColor, getRarityBorder } from "@/lib/questAchievements";
+import { getEarnedAchievements } from "@/lib/achievements";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function Profile() {
