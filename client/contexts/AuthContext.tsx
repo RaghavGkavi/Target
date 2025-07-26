@@ -133,6 +133,14 @@ const getUserData = (userId: string): UserData | null => {
     data.questSystemData = qsd;
   }
 
+  // Convert achievements dates
+  if (data.achievements) {
+    data.achievements = data.achievements.map((achievement: any) => ({
+      ...achievement,
+      earnedAt: new Date(achievement.earnedAt),
+    }));
+  }
+
   return data;
 };
 
