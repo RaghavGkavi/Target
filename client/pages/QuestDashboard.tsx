@@ -126,7 +126,7 @@ export default function QuestDashboard() {
 
   useEffect(() => {
     setCurrentQuote(
-      motivationalQuotes[Math.floor(Math.random() * motivationalQuests.length)],
+      motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)],
     );
   }, []);
 
