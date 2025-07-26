@@ -311,7 +311,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
   {
     id: 'hard_mindful_retreat',
     title: 'Inner Journey',
-    description: 'Extended meditation or mindfulness practice (1 hour)',
+    description: 'Practice 1 hour of deep meditation, mindfulness, or contemplative practice in a quiet space without interruptions',
     category: 'mindfulness',
     difficulty: 'hard',
     xpReward: QUEST_XP_VALUES.hard,
