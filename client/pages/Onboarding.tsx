@@ -506,7 +506,7 @@ export default function Onboarding() {
   );
 
   const renderDisciplineQuestionStep = () => {
-    if (currentStep === 4) {
+    if (currentStep === 3) {
       // Intro step
       return (
         <div className="space-y-6 text-center">
@@ -550,8 +550,8 @@ export default function Onboarding() {
       );
     }
 
-    // Individual question steps (steps 5-9)
-    const questionIndex = currentStep - 5;
+    // Individual question steps (steps 4-8)
+    const questionIndex = currentStep - 4;
     const question = DISCIPLINE_ASSESSMENT[questionIndex];
 
     // Safety check for question existence
@@ -768,17 +768,17 @@ export default function Onboarding() {
         <div className="space-y-2">
           <div className="flex justify-between text-sm text-muted-foreground">
             <span>
-              Step {currentStep + 1} of {4 + DISCIPLINE_ASSESSMENT.length + 1}
+              Step {currentStep + 1} of {3 + DISCIPLINE_ASSESSMENT.length + 1}
             </span>
             <span>
               {Math.round(
-                ((currentStep + 1) / (4 + DISCIPLINE_ASSESSMENT.length + 1)) * 100,
+                ((currentStep + 1) / (3 + DISCIPLINE_ASSESSMENT.length + 1)) * 100,
               )}
               % complete
             </span>
           </div>
           <Progress
-            value={((currentStep + 1) / (4 + DISCIPLINE_ASSESSMENT.length + 1)) * 100}
+            value={((currentStep + 1) / (3 + DISCIPLINE_ASSESSMENT.length + 1)) * 100}
             className="h-2"
           />
         </div>
@@ -790,9 +790,9 @@ export default function Onboarding() {
             {currentStep === 1 && renderGoalsStep()}
             {currentStep === 2 && renderRecoveryStep()}
             {currentStep >= 3 &&
-              currentStep <= 4 + DISCIPLINE_ASSESSMENT.length &&
+              currentStep <= 3 + DISCIPLINE_ASSESSMENT.length &&
               renderDisciplineQuestionStep()}
-            {currentStep === 4 + DISCIPLINE_ASSESSMENT.length + 1 &&
+            {currentStep === 3 + DISCIPLINE_ASSESSMENT.length + 1 &&
               renderCompletionStep()}
           </CardContent>
         </Card>
@@ -809,17 +809,23 @@ export default function Onboarding() {
             Back
           </Button>
 
-          {currentStep < 4 + DISCIPLINE_ASSESSMENT.length + 1 ? (
+          {currentStep < 3 + DISCIPLINE_ASSESSMENT.length + 1 ? (
             <Button
-              onClick={() => setCurrentStep(currentStep + 1)}
+              onClick={() => {
+                if (currentStep === 0 && selectedMode === "quest") {
+                  navigate("/quest-onboarding");
+                } else {
+                  setCurrentStep(currentStep + 1);
+                }
+              }}
               disabled={
                 (currentStep === 0 && !selectedMode) ||
                 (currentStep === 1 && selectedGoals.length === 0) ||
-                (currentStep >= 5 &&
-                  currentStep <= 4 + DISCIPLINE_ASSESSMENT.length &&
-                  currentStep - 5 < DISCIPLINE_ASSESSMENT.length &&
+                (currentStep >= 4 &&
+                  currentStep <= 3 + DISCIPLINE_ASSESSMENT.length &&
+                  currentStep - 4 < DISCIPLINE_ASSESSMENT.length &&
                   !disciplineAnswers[
-                    DISCIPLINE_ASSESSMENT[currentStep - 5]?.id
+                    DISCIPLINE_ASSESSMENT[currentStep - 4]?.id
                   ])
               }
               className="rounded-lg"
@@ -836,13 +842,13 @@ export default function Onboarding() {
         </div>
 
         {/* Skip Option */}
-        {currentStep > 0 && currentStep < 4 + DISCIPLINE_ASSESSMENT.length + 1 && (
+        {currentStep > 0 && currentStep < 3 + DISCIPLINE_ASSESSMENT.length + 1 && (
           <div className="text-center">
             <Button
               variant="ghost"
               size="sm"
               onClick={() =>
-                setCurrentStep(4 + DISCIPLINE_ASSESSMENT.length + 1)
+                setCurrentStep(3 + DISCIPLINE_ASSESSMENT.length + 1)
               }
               className="text-muted-foreground hover:text-foreground"
             >
