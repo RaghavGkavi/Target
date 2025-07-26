@@ -576,7 +576,7 @@ export default function Index() {
       const isDeveloper =
         user?.email === "raghav.gkavi@gmail.com" && developerModeEnabled;
       if (addiction.lastLoggedDate === today && !forceAdd && !isDeveloper) {
-        console.log("��� Already logged today, showing affirmation dialog");
+        console.log("🔧 Already logged today, showing affirmation dialog");
         // Show affirmation dialog
         setAffirmationDialog({
           isOpen: true,
@@ -954,7 +954,7 @@ export default function Index() {
         <Tabs defaultValue="goals" className="space-y-6">
           <TabsList className="grid w-full grid-cols-4 rounded-xl">
             <TabsTrigger value="goals" className="rounded-lg">
-              Goals
+              Quests
             </TabsTrigger>
             <TabsTrigger value="addictions" className="rounded-lg">
               Recovery
