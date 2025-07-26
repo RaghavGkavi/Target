@@ -606,6 +606,28 @@ export default function Onboarding() {
             the app!
           </p>
         </div>
+
+        <Card className="rounded-xl border-2 border-accent/20">
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center space-x-2">
+              <Zap className="h-5 w-5 text-accent" />
+              <span>Try Our New Quest System!</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground mb-4">
+              Experience a gamified approach to personal growth with daily quests, XP, levels, and achievements.
+            </p>
+            <Button
+              variant="outline"
+              onClick={() => navigate("/quest-onboarding")}
+              className="w-full"
+            >
+              <Zap className="h-4 w-4 mr-2" />
+              Switch to Quest Mode
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     );
   };
