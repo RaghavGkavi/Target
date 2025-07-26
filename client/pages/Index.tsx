@@ -1426,7 +1426,7 @@ export default function Index() {
                       <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto text-sm">
                         <div className="p-3 bg-muted/50 rounded-lg">
                           <span className="text-lg">🎯</span>
-                          <p className="font-medium">Complete goals</p>
+                          <p className="font-medium">Complete quests</p>
                         </div>
                         <div className="p-3 bg-muted/50 rounded-lg">
                           <span className="text-lg">🔥</span>
