@@ -12,6 +12,8 @@ import {
   RotateCcw,
   Trash2,
   AlertTriangle,
+  Zap,
+  Target,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
