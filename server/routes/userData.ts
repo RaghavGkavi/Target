@@ -139,7 +139,8 @@ export const checkUserData: RequestHandler = async (req, res) => {
       console.error("Firebase Admin SDK not properly initialized");
       return res.status(500).json({
         success: false,
-        error: "Firebase service unavailable. Please check server configuration.",
+        error:
+          "Firebase service unavailable. Please check server configuration.",
       });
     }
 
@@ -180,11 +181,14 @@ export const checkUserData: RequestHandler = async (req, res) => {
     let errorMessage = "Failed to check user data";
     if (error instanceof Error) {
       if (error.message.includes("permission")) {
-        errorMessage = "Firebase permission denied. Check service account configuration.";
+        errorMessage =
+          "Firebase permission denied. Check service account configuration.";
       } else if (error.message.includes("not found")) {
-        errorMessage = "Firebase project not found. Check project configuration.";
+        errorMessage =
+          "Firebase project not found. Check project configuration.";
       } else if (error.message.includes("credential")) {
-        errorMessage = "Firebase authentication failed. Check service account credentials.";
+        errorMessage =
+          "Firebase authentication failed. Check service account credentials.";
       } else {
         errorMessage = `Firebase error: ${error.message}`;
       }

@@ -23,6 +23,7 @@ The 500 error you're experiencing is because the Firebase Admin SDK needs proper
 ### 3. Example Service Account JSON Structure
 
 The JSON should look like this:
+
 ```json
 {
   "type": "service_account",
@@ -50,7 +51,7 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if request.auth != null;
     }
-    
+
     // Or for more specific user data access:
     match /users/{userId} {
       allow read, write: if request.auth != null;
@@ -62,6 +63,7 @@ service cloud.firestore {
 ### 5. Testing Locally
 
 To test locally, you can set the environment variable:
+
 ```bash
 export FIREBASE_SERVICE_ACCOUNT_KEY='{"type":"service_account",...}'
 npm run dev

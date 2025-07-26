@@ -22,7 +22,9 @@ try {
         });
         console.log("Firebase Admin initialized with service account");
       } catch (parseError) {
-        console.warn("Failed to parse service account key, falling back to default auth");
+        console.warn(
+          "Failed to parse service account key, falling back to default auth",
+        );
         app = initializeApp({ projectId });
       }
     } else {
@@ -35,7 +37,9 @@ try {
   }
 } catch (error) {
   console.error("Firebase Admin initialization error:", error);
-  throw new Error(`Firebase initialization failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  throw new Error(
+    `Firebase initialization failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+  );
 }
 
 // Initialize Firestore with server-side SDK
