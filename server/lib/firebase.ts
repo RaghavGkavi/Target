@@ -1,21 +1,39 @@
-import { initializeApp, getApps } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { initializeApp, cert, getApps, App } from "firebase-admin/app";
+import { getFirestore } from "firebase-admin/firestore";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyD8O4q7UTgepZinpcoJwP4IA-keyVxXPTY",
-  authDomain: "target-4c91b.firebaseapp.com",
-  projectId: "target-4c91b",
-  storageBucket: "target-4c91b.firebasestorage.app",
-  messagingSenderId: "966058326327",
-  appId: "1:966058326327:web:72e6aeca3f11eefa7509f9",
-  measurementId: "G-07EP1L9Z8V",
-};
+// Server-side Firebase configuration using Admin SDK
+let app: App;
 
-// Initialize Firebase only if no apps exist
-const app =
-  getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+try {
+  if (getApps().length === 0) {
+    // Try to initialize with service account credentials if available
+    const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
+    
+    if (serviceAccountKey) {
+      // Use service account for authentication
+      const serviceAccount = JSON.parse(serviceAccountKey);
+      app = initializeApp({
+        credential: cert(serviceAccount),
+        projectId: "target-4c91b",
+      });
+    } else {
+      // Fallback to using project ID only (works in some environments)
+      app = initializeApp({
+        projectId: "target-4c91b",
+      });
+    }
+  } else {
+    app = getApps()[0];
+  }
+} catch (error) {
+  console.error("Failed to initialize Firebase Admin:", error);
+  // Initialize with minimal config as fallback
+  app = initializeApp({
+    projectId: "target-4c91b",
+  });
+}
 
-// Initialize Firestore
+// Initialize Firestore with server-side SDK
 export const db = getFirestore(app);
 
 export default app;
