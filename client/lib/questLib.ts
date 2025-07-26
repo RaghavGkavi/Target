@@ -166,7 +166,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
   {
     id: 'moderate_focused_work',
     title: 'Deep Focus',
-    description: 'Work on important task for 1 hour without distractions',
+    description: 'Work on a specific high-priority task for 1 hour with phone on silent and all notifications disabled',
     category: 'career',
     difficulty: 'moderate',
     xpReward: QUEST_XP_VALUES.moderate,
