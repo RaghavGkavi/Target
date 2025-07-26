@@ -195,7 +195,16 @@ export default function QuestDashboard() {
     console.log('Attempting to complete quest:', questId);
     console.log('Current quests before completion:', questSystemData.currentQuests);
 
-    const result = QuestEngine.completeQuest(questId, questSystemData);
+    // Create a deep copy of questSystemData to avoid mutations
+    const questSystemDataCopy = JSON.parse(JSON.stringify({
+      ...questSystemData,
+      currentQuests: questSystemData.currentQuests.map(q => ({...q})),
+      questHistory: questSystemData.questHistory.map(q => ({...q})),
+      weeklyStats: {...questSystemData.weeklyStats},
+      userLevel: {...questSystemData.userLevel}
+    }));
+
+    const result = QuestEngine.completeQuest(questId, questSystemDataCopy);
     if (!result) {
       console.error('Failed to complete quest - QuestEngine.completeQuest returned null');
       return;
@@ -203,10 +212,10 @@ export default function QuestDashboard() {
 
     const { updatedQuest, newLevel, xpGained } = result;
     console.log('Quest completion result:', result);
-    console.log('Current quests after completion:', questSystemData.currentQuests);
+    console.log('Current quests after completion:', questSystemDataCopy.currentQuests);
 
     // Check for new achievements
-    const newAchievements = checkQuestAchievements(questSystemData, userData.achievements || []);
+    const newAchievements = checkQuestAchievements(questSystemDataCopy, userData.achievements || []);
     const updatedAchievements = [
       ...(userData.achievements || []),
       ...newAchievements.map(a => ({ id: a.id, earnedAt: a.earnedAt! })),
@@ -215,7 +224,7 @@ export default function QuestDashboard() {
     // Update user data
     await updateUserData({
       ...userData,
-      questSystemData,
+      questSystemData: questSystemDataCopy,
       achievements: updatedAchievements,
     });
 
