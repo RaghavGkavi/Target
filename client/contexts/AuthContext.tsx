@@ -98,6 +98,41 @@ const getUserData = (userId: string): UserData | null => {
     }));
   }
 
+  // Convert quest system data dates
+  if (data.questSystemData) {
+    const qsd = data.questSystemData;
+
+    // Convert lastQuestGeneration
+    if (qsd.lastQuestGeneration) {
+      qsd.lastQuestGeneration = new Date(qsd.lastQuestGeneration);
+    }
+
+    // Convert current quests dates
+    if (qsd.currentQuests) {
+      qsd.currentQuests = qsd.currentQuests.map((quest: any) => ({
+        ...quest,
+        dateAssigned: new Date(quest.dateAssigned),
+        dateCompleted: quest.dateCompleted ? new Date(quest.dateCompleted) : undefined,
+      }));
+    }
+
+    // Convert quest history dates
+    if (qsd.questHistory) {
+      qsd.questHistory = qsd.questHistory.map((quest: any) => ({
+        ...quest,
+        dateAssigned: new Date(quest.dateAssigned),
+        dateCompleted: quest.dateCompleted ? new Date(quest.dateCompleted) : undefined,
+      }));
+    }
+
+    // Convert weekly stats dates
+    if (qsd.weeklyStats && qsd.weeklyStats.lastStreakDate) {
+      qsd.weeklyStats.lastStreakDate = new Date(qsd.weeklyStats.lastStreakDate);
+    }
+
+    data.questSystemData = qsd;
+  }
+
   return data;
 };
 
