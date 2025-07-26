@@ -450,6 +450,7 @@ export class QuestEngine {
         questsCompleted: 0,
         lastUpdated: new Date(),
       },
+      allQuestsCompleted: false,
     };
 
     // Generate initial quests
