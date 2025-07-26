@@ -520,6 +520,39 @@ export default function QuestDashboard() {
     });
   };
 
+  const flagQuest = async (questId: string) => {
+    if (!questSystemData || !userData) return;
+
+    const questToFlag = currentQuests.find((q) => q.id === questId);
+    if (!questToFlag) return;
+
+    // Create a deep copy to avoid mutations
+    const questSystemDataCopy = JSON.parse(JSON.stringify(questSystemData));
+
+    const replacementQuest = QuestEngine.flagQuest(
+      questId,
+      questSystemDataCopy,
+      isDevMode,
+    );
+
+    if (replacementQuest) {
+      // Update local state immediately
+      setLocalQuestData(questSystemDataCopy);
+
+      // Update user data
+      await updateUserData({
+        ...userData,
+        questSystemData: questSystemDataCopy,
+      });
+
+      console.log(
+        `Quest "${questToFlag.title}" flagged and replaced with "${replacementQuest.title}"`,
+      );
+    } else {
+      console.log("Could not generate replacement quest");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 overflow-x-hidden">
       {/* Header */}
