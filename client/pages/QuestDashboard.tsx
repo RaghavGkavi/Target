@@ -877,6 +877,15 @@ export default function QuestDashboard() {
                               <span className="ml-1 text-xs">∞</span>
                             )}
                           </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => flagQuest(quest.id)}
+                            className="rounded-lg text-warning hover:text-warning"
+                            title="Flag quest - this will disable it and generate a replacement"
+                          >
+                            <Flag className="h-4 w-4" />
+                          </Button>
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
                               <Button
