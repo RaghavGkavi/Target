@@ -182,6 +182,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
           // Process quest rotation if quest system exists
           if (userProgressData.questSystemData) {
+            // Migration: Add dailyStats if it doesn't exist
+            if (!userProgressData.questSystemData.dailyStats) {
+              const today = new Date();
+              const completedTodayCount = userProgressData.questSystemData.currentQuests.filter(q => q.status === 'completed').length;
+              userProgressData.questSystemData.dailyStats = {
+                date: today,
+                questsCompleted: completedTodayCount,
+                lastUpdated: today,
+              };
+            }
+
             const processedQuestData = QuestEngine.processQuestRotation(userProgressData.questSystemData);
             userProgressData.questSystemData = processedQuestData;
             saveUserData(userData.id, userProgressData);
