@@ -760,7 +760,7 @@ export default function QuestDashboard() {
             </div>
 
             {/* All Quests Completed Message */}
-            {activeQuests === 0 && completedToday === 3 && (
+            {activeQuests === 0 && currentQuests.filter(q => q.status === 'completed').length === 3 && (
               <Card className="rounded-xl border-2 border-success/20 bg-success/5">
                 <CardContent className="p-6 text-center">
                   <div className="space-y-4">
