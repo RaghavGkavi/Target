@@ -18,9 +18,24 @@
     "start": "node dist/server/node-build.mjs",
     "test": "vitest --run",
     "format.fix": "prettier --write .",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "mobile:build": "npm run build:client && npx cap sync",
+    "mobile:android": "npm run mobile:build && npx cap open android",
+    "mobile:ios": "npm run mobile:build && npx cap open ios",
+    "mobile:run:android": "npm run mobile:build && npx cap run android",
+    "mobile:run:ios": "npm run mobile:build && npx cap run ios"
   },
   "dependencies": {
+    "@capacitor/android": "^7.4.2",
+    "@capacitor/cli": "^7.4.2",
+    "@capacitor/core": "^7.4.2",
+    "@capacitor/device": "^7.0.1",
+    "@capacitor/haptics": "^7.0.1",
+    "@capacitor/ios": "^7.4.2",
+    "@capacitor/keyboard": "^7.0.1",
+    "@capacitor/splash-screen": "^7.0.1",
+    "@capacitor/status-bar": "^7.0.1",
+    "capacitor": "^0.5.6",
     "dotenv": "^17.2.0",
     "express": "^4.18.2",
     "firebase": "^12.0.0",
@@ -101,7 +116,7 @@
     "tsx": "^4.7.0",
     "typescript": "^5.5.3",
     "vaul": "^0.9.3",
-    "vite": "^6.2.2",
+    "vite": "^6.3.5",
     "vitest": "^3.1.4"
   }
 }

@@ -1,0 +1,221 @@
+name: Mobile App Build & Deploy
+
+on:
+  push:
+    branches: [mobile-app, main]
+  pull_request:
+    branches: [mobile-app, main]
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: "Build type"
+        required: true
+        default: "development"
+        type: choice
+        options:
+          - development
+          - production
+      platforms:
+        description: "Platforms to build"
+        required: true
+        default: "both"
+        type: choice
+        options:
+          - ios
+          - android
+          - both
+
+env:
+  NODE_VERSION: "20"
+  JAVA_VERSION: "17"
+
+jobs:
+  build-web:
+    name: Build Web Application
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build web application
+        run: npm run build:client
+
+      - name: Upload web build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: dist/spa/
+          retention-days: 7
+          if-no-files-found: warn
+          compression-level: 6
+          overwrite: false
+          include-hidden-files: false
+
+  build-android:
+    name: Build Android App
+    runs-on: ubuntu-latest
+    needs: build-web
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          java-package: jdk
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          cmdline-tools-version: 12266719
+          accept-android-sdk-licenses: true
+          log-accepted-android-sdk-licenses: true
+          packages: tools platform-tools
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download web build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: web-build
+          path: dist/spa/
+
+      - name: Sync Capacitor
+        run: npx cap sync android
+
+  build-ios:
+    name: Build iOS App
+    runs-on: macos-14
+    needs: build-web
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          java-package: jdk
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download web build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: web-build
+          path: dist/spa/
+
+      - name: Sync Capacitor
+        run: npx cap sync ios
+
+
+
+  deploy-testflight:
+    name: Deploy to TestFlight
+    runs-on: macos-latest
+    needs: build-ios
+    if: github.event.inputs.build_type == 'production' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download iOS build
+        uses: actions/download-artifact@v4
+        with:
+          name: ios-build
+          path: ios-build/
+
+      - name: Upload to TestFlight
+        env:
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID || '' }}
+          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID || '' }}
+          APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 || '' }}
+        run: |
+          # Create API key file
+          echo -n "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 --decode --output AuthKey.p8
+
+          # Upload to TestFlight
+          xcrun altool --upload-app \
+                       --type ios \
+                       --file ios-build/Export/*.ipa \
+                       --apiKey $APP_STORE_CONNECT_API_KEY_ID \
+                       --apiIssuer $APP_STORE_CONNECT_API_ISSUER_ID \
+                       --apiKeyFile AuthKey.p8
+
+  deploy-internal:
+    name: Deploy to Internal Testing
+    runs-on: ubuntu-latest
+    needs: [build-android, build-ios]
+    if: github.ref == 'refs/heads/mobile-app'
+
+    steps:
+      - name: Download Android APK
+        if: needs.build-android.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: android-apk
+          path: android-build/
+
+      - name: Download iOS build
+        if: needs.build-ios.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: ios-build
+          path: ios-build/
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: build-${{ github.run_number }}
+          release_name: Mobile Build ${{ github.run_number }}
+          body: |
+            Automated mobile app build from commit ${{ github.sha }}
+
+            ## Changes
+            ${{ github.event.head_commit.message }}
+
+            ## Downloads
+            - Android APK: Available in build artifacts
+            - iOS Build: Available in build artifacts (requires iOS device or simulator)
+
+            ## Testing
+            - Download the appropriate file for your platform
+            - For Android: Install the APK directly
+            - For iOS: Use Xcode or deploy to device
+          draft: false
+          prerelease: true

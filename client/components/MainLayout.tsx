@@ -10,13 +10,13 @@ export function MainLayout({
   showSyncStatus = true,
 }: MainLayoutProps) {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background mobile-app safe-area-top safe-area-bottom">
       {showSyncStatus && (
-        <div className="fixed top-4 right-4 z-50">
+        <div className="fixed top-4 right-4 z-50 safe-area-top safe-area-right">
           <SyncStatus />
         </div>
       )}
-      {children}
+      <div className="mobile-scroll h-full overflow-y-auto">{children}</div>
     </div>
   );
 }

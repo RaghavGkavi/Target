@@ -1,5 +1,5 @@
 import "./global.css";
-import React from "react";
+import React, { useEffect } from "react";
 
 // Firebase is initialized in client/lib/firebase.ts
 
@@ -7,6 +7,9 @@ import React from "react";
 if (import.meta.env.DEV) {
   import("@/lib/syncTestHelpers");
 }
+
+// Import mobile utilities
+import { MobileUtils } from "@/lib/mobile-utils";
 
 import { Toaster } from "@/components/ui/toaster";
 import { createRoot } from "react-dom/client";
@@ -283,21 +286,30 @@ class ErrorBoundary extends React.Component<
   }
 }
 
-const App = () => (
-  <ErrorBoundary>
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="system">
-        <AuthProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <AppContent />
-          </TooltipProvider>
-        </AuthProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
-  </ErrorBoundary>
-);
+const App = () => {
+  useEffect(() => {
+    // Initialize mobile app features
+    MobileUtils.initializeMobileApp();
+  }, []);
+
+  return (
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider defaultTheme="system">
+          <AuthProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <div className="mobile-app">
+                <AppContent />
+              </div>
+            </TooltipProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
+  );
+};
 
 // Handle hot reloading properly for React 18
 const container = document.getElementById("root")!;
