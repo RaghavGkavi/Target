@@ -5,7 +5,10 @@ interface MainLayoutProps {
   showSyncStatus?: boolean;
 }
 
-export function MainLayout({ children, showSyncStatus = true }: MainLayoutProps) {
+export function MainLayout({
+  children,
+  showSyncStatus = true,
+}: MainLayoutProps) {
   return (
     <div className="min-h-screen bg-background">
       {showSyncStatus && (

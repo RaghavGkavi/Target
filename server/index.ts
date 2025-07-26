@@ -2,7 +2,12 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
-import { getUserData, saveUserData, updateUserData, checkUserData } from "./routes/userData";
+import {
+  getUserData,
+  saveUserData,
+  updateUserData,
+  checkUserData,
+} from "./routes/userData";
 
 export function createServer() {
   const app = express();

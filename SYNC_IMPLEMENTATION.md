@@ -47,26 +47,31 @@ The application now supports automatic synchronization of user data across multi
 ## Features
 
 ### ✅ Automatic Background Sync
+
 - Changes are automatically synced to the cloud when online
 - Pending changes are queued when offline
 - Automatic retry when connection is restored
 
 ### ✅ Conflict Resolution
+
 - Smart automatic merging for non-conflicting changes
 - Manual resolution dialog for complex conflicts
 - Preserves user data integrity
 
 ### ✅ Online/Offline Support
+
 - Graceful degradation when offline
 - Local-first approach with cloud backup
 - Visual indicators for sync status
 
 ### ✅ Real-time Status
+
 - Sync status indicator in top-right corner
 - Color-coded states (syncing, synced, error, offline)
 - Manual retry options
 
 ### ✅ Data Integrity
+
 - Timestamp-based conflict resolution
 - Additive merging for collections (goals, achievements)
 - Preference preservation
@@ -88,12 +93,14 @@ The application now supports automatic synchronization of user data across multi
 ## Testing
 
 ### Development Testing
+
 ```javascript
 // Available in browser console (development only)
-syncTestHelpers.runFullSyncTest('user_id_here');
+syncTestHelpers.runFullSyncTest("user_id_here");
 ```
 
 ### Manual Testing Scenarios
+
 1. **Cross-device sync**: Sign in on multiple devices, make changes, verify sync
 2. **Offline behavior**: Disconnect internet, make changes, reconnect
 3. **Conflict resolution**: Make conflicting changes on different devices
@@ -102,10 +109,12 @@ syncTestHelpers.runFullSyncTest('user_id_here');
 ## Configuration
 
 ### Environment Variables
+
 - `VITE_GOOGLE_CLIENT_ID` - Google OAuth client ID
 - Firebase config is embedded in code (public keys)
 
 ### Firebase Rules (Recommended)
+
 ```javascript
 // Firestore Security Rules
 rules_version = '2';

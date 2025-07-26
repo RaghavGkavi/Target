@@ -165,7 +165,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [syncState, setSyncState] = useState<SyncState>(SyncService.getCurrentState());
+  const [syncState, setSyncState] = useState<SyncState>(
+    SyncService.getCurrentState(),
+  );
 
   // Check for existing session on mount
   useEffect(() => {
@@ -204,8 +206,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           userProgressData.preferences?.useQuestSystem &&
           !userProgressData.questSystemData
         ) {
-          userProgressData.questSystemData =
-            QuestEngine.initializeQuestSystem(DEFAULT_QUEST_PREFERENCES);
+          userProgressData.questSystemData = QuestEngine.initializeQuestSystem(
+            DEFAULT_QUEST_PREFERENCES,
+          );
         }
 
         // Process quest rotation if quest system exists
@@ -240,7 +243,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         // Try to sync with cloud
         try {
-          const syncedData = await SyncService.syncUserData(userData.id, userProgressData);
+          const syncedData = await SyncService.syncUserData(
+            userData.id,
+            userProgressData,
+          );
           if (syncedData !== userProgressData) {
             setUserData(syncedData);
             saveUserData(userData.id, syncedData);

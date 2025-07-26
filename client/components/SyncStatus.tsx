@@ -1,15 +1,20 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { 
-  Cloud, 
-  CloudOff, 
-  RotateCw, 
-  CheckCircle2, 
-  AlertCircle, 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  Cloud,
+  CloudOff,
+  RotateCw,
+  CheckCircle2,
+  AlertCircle,
   Wifi,
-  WifiOff
+  WifiOff,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -36,13 +41,15 @@ export function SyncStatus() {
       case "syncing":
         return "Syncing...";
       case "synced":
-        return syncState.lastSync 
+        return syncState.lastSync
           ? `Synced ${syncState.lastSync.toLocaleTimeString()}`
           : "Synced";
       case "error":
         return syncState.error || "Sync error";
       case "offline":
-        return syncState.pendingChanges ? "Offline - Changes pending" : "Offline";
+        return syncState.pendingChanges
+          ? "Offline - Changes pending"
+          : "Offline";
       default:
         return "Unknown status";
     }
@@ -68,11 +75,11 @@ export function SyncStatus() {
       <div className="flex items-center gap-2">
         <Tooltip>
           <TooltipTrigger asChild>
-            <Badge 
-              variant={getStatusVariant()} 
+            <Badge
+              variant={getStatusVariant()}
               className={cn(
                 "flex items-center gap-1 text-xs",
-                syncState.status === "syncing" && "animate-pulse"
+                syncState.status === "syncing" && "animate-pulse",
               )}
             >
               {getStatusIcon()}
@@ -102,10 +109,12 @@ export function SyncStatus() {
             disabled={syncState.status === "syncing"}
             className="h-6 px-2"
           >
-            <RotateCw className={cn(
-              "h-3 w-3", 
-              syncState.status === "syncing" && "animate-spin"
-            )} />
+            <RotateCw
+              className={cn(
+                "h-3 w-3",
+                syncState.status === "syncing" && "animate-spin",
+              )}
+            />
             <span className="sr-only">Retry sync</span>
           </Button>
         )}
