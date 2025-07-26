@@ -322,7 +322,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
   {
     id: 'hard_fitness_challenge',
     title: 'Endurance Test',
-    description: 'Complete challenging fitness milestone',
+    description: 'Achieve a personal fitness goal: run 5K without stopping, do 100 push-ups, hold plank for 5 minutes, or similar challenge',
     category: 'fitness',
     difficulty: 'hard',
     xpReward: QUEST_XP_VALUES.hard,
