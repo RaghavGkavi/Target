@@ -221,7 +221,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
   {
     id: 'moderate_social_activity',
     title: 'Social Butterfly',
-    description: 'Engage in meaningful conversation for 30 minutes',
+    description: 'Have an intentional 30-minute conversation with someone about their goals, feelings, or something meaningful to them',
     category: 'social',
     difficulty: 'moderate',
     xpReward: QUEST_XP_VALUES.moderate,
