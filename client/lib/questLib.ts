@@ -300,7 +300,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
   {
     id: 'hard_creative_masterpiece',
     title: 'Art Creator',
-    description: 'Complete significant creative piece',
+    description: 'Complete a substantial creative work: finish a short story/poem, create a detailed artwork, compose a song, or complete a craft project',
     category: 'creativity',
     difficulty: 'hard',
     xpReward: QUEST_XP_VALUES.hard,
