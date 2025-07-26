@@ -15,7 +15,7 @@ const firebaseConfig = {
   storageBucket: "target-4c91b.firebasestorage.app",
   messagingSenderId: "966058326327",
   appId: "1:966058326327:web:5e27730503ce6b6e7042b2",
-  measurementId: "G-QLD5NNECH6"
+  measurementId: "G-QLD5NNECH6",
 };
 
 // Initialize Firebase

@@ -161,7 +161,9 @@ export default function Onboarding() {
   const navigate = useNavigate();
   const { user, updateUserData } = useAuth();
   const [currentStep, setCurrentStep] = useState(0);
-  const [selectedMode, setSelectedMode] = useState<"quest" | "classic" | null>(null);
+  const [selectedMode, setSelectedMode] = useState<"quest" | "classic" | null>(
+    null,
+  );
   const [selectedGoals, setSelectedGoals] = useState<string[]>([]);
   const [selectedAddictions, setSelectedAddictions] = useState<string[]>([]);
   const [disciplineAnswers, setDisciplineAnswers] = useState<
@@ -231,8 +233,9 @@ export default function Onboarding() {
                 </Badge>
               </div>
               <p className="text-sm text-muted-foreground mb-3">
-                Gamified experience with daily quests, XP, levels, achievements, and character progression.
-                Turn your personal growth into an engaging adventure!
+                Gamified experience with daily quests, XP, levels, achievements,
+                and character progression. Turn your personal growth into an
+                engaging adventure!
               </p>
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <div className="flex items-center space-x-1">
@@ -271,10 +274,12 @@ export default function Onboarding() {
           <div className="flex items-start space-x-4">
             <div className="text-3xl text-muted-foreground">📊</div>
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-muted-foreground mb-2">Classic Mode</h3>
+              <h3 className="text-lg font-semibold text-muted-foreground mb-2">
+                Classic Mode
+              </h3>
               <p className="text-sm text-muted-foreground mb-3">
-                Simple, straightforward goal tracking with progress charts and habit streaks.
-                Focus on the essentials without game mechanics.
+                Simple, straightforward goal tracking with progress charts and
+                habit streaks. Focus on the essentials without game mechanics.
               </p>
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <div className="flex items-center space-x-1">
@@ -306,7 +311,8 @@ export default function Onboarding() {
         <div className="flex items-center space-x-2 text-sm">
           <span className="text-primary">⚙️</span>
           <span>
-            You can switch between modes anytime in your settings. Try Quest Mode - it makes building habits more fun!
+            You can switch between modes anytime in your settings. Try Quest
+            Mode - it makes building habits more fun!
           </span>
         </div>
       </div>
@@ -740,7 +746,8 @@ export default function Onboarding() {
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground mb-4">
-              Experience a gamified approach to personal growth with daily quests, XP, levels, and achievements.
+              Experience a gamified approach to personal growth with daily
+              quests, XP, levels, and achievements.
             </p>
             <Button
               variant="outline"
@@ -772,13 +779,16 @@ export default function Onboarding() {
             </span>
             <span>
               {Math.round(
-                ((currentStep + 1) / (3 + DISCIPLINE_ASSESSMENT.length + 1)) * 100,
+                ((currentStep + 1) / (3 + DISCIPLINE_ASSESSMENT.length + 1)) *
+                  100,
               )}
               % complete
             </span>
           </div>
           <Progress
-            value={((currentStep + 1) / (3 + DISCIPLINE_ASSESSMENT.length + 1)) * 100}
+            value={
+              ((currentStep + 1) / (3 + DISCIPLINE_ASSESSMENT.length + 1)) * 100
+            }
             className="h-2"
           />
         </div>
@@ -842,20 +852,21 @@ export default function Onboarding() {
         </div>
 
         {/* Skip Option */}
-        {currentStep > 0 && currentStep < 3 + DISCIPLINE_ASSESSMENT.length + 1 && (
-          <div className="text-center">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() =>
-                setCurrentStep(3 + DISCIPLINE_ASSESSMENT.length + 1)
-              }
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Skip for now
-            </Button>
-          </div>
-        )}
+        {currentStep > 0 &&
+          currentStep < 3 + DISCIPLINE_ASSESSMENT.length + 1 && (
+            <div className="text-center">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() =>
+                  setCurrentStep(3 + DISCIPLINE_ASSESSMENT.length + 1)
+                }
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Skip for now
+              </Button>
+            </div>
+          )}
       </div>
     </div>
   );

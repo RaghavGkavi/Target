@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { QuestSystemData } from '@shared/quest-types';
-import { QuestEngine, DEFAULT_QUEST_PREFERENCES } from '@/lib/questEngine';
+import { QuestSystemData } from "@shared/quest-types";
+import { QuestEngine, DEFAULT_QUEST_PREFERENCES } from "@/lib/questEngine";
 
 export interface User {
   id: string;
@@ -112,7 +112,9 @@ const getUserData = (userId: string): UserData | null => {
       qsd.currentQuests = qsd.currentQuests.map((quest: any) => ({
         ...quest,
         dateAssigned: new Date(quest.dateAssigned),
-        dateCompleted: quest.dateCompleted ? new Date(quest.dateCompleted) : undefined,
+        dateCompleted: quest.dateCompleted
+          ? new Date(quest.dateCompleted)
+          : undefined,
       }));
     }
 
@@ -121,7 +123,9 @@ const getUserData = (userId: string): UserData | null => {
       qsd.questHistory = qsd.questHistory.map((quest: any) => ({
         ...quest,
         dateAssigned: new Date(quest.dateAssigned),
-        dateCompleted: quest.dateCompleted ? new Date(quest.dateCompleted) : undefined,
+        dateCompleted: quest.dateCompleted
+          ? new Date(quest.dateCompleted)
+          : undefined,
       }));
     }
 
@@ -175,8 +179,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const userProgressData = getUserData(userData.id);
         if (userProgressData) {
           // Initialize quest system if it doesn't exist and quest mode is enabled
-          if (userProgressData.preferences?.useQuestSystem && !userProgressData.questSystemData) {
-            userProgressData.questSystemData = QuestEngine.initializeQuestSystem(DEFAULT_QUEST_PREFERENCES);
+          if (
+            userProgressData.preferences?.useQuestSystem &&
+            !userProgressData.questSystemData
+          ) {
+            userProgressData.questSystemData =
+              QuestEngine.initializeQuestSystem(DEFAULT_QUEST_PREFERENCES);
             saveUserData(userData.id, userProgressData);
           }
 
@@ -185,7 +193,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             // Migration: Add dailyStats if it doesn't exist
             if (!userProgressData.questSystemData.dailyStats) {
               const today = new Date();
-              const completedTodayCount = userProgressData.questSystemData.currentQuests.filter(q => q.status === 'completed').length;
+              const completedTodayCount =
+                userProgressData.questSystemData.currentQuests.filter(
+                  (q) => q.status === "completed",
+                ).length;
               userProgressData.questSystemData.dailyStats = {
                 date: today,
                 questsCompleted: completedTodayCount,
@@ -193,7 +204,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               };
             }
 
-            const processedQuestData = QuestEngine.processQuestRotation(userProgressData.questSystemData);
+            const processedQuestData = QuestEngine.processQuestRotation(
+              userProgressData.questSystemData,
+            );
             userProgressData.questSystemData = processedQuestData;
             saveUserData(userData.id, userProgressData);
           }
@@ -251,7 +264,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (userProgressData) {
         // Process quest rotation on login if quest system exists
         if (userProgressData.questSystemData) {
-          const processedQuestData = QuestEngine.processQuestRotation(userProgressData.questSystemData);
+          const processedQuestData = QuestEngine.processQuestRotation(
+            userProgressData.questSystemData,
+          );
           userProgressData.questSystemData = processedQuestData;
           saveUserData(updatedUser.id, userProgressData);
         }

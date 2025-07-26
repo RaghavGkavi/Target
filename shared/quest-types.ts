@@ -2,21 +2,21 @@
  * Quest system types shared between client and server
  */
 
-export type QuestDifficulty = 'easy' | 'moderate' | 'hard' | 'very_hard';
+export type QuestDifficulty = "easy" | "moderate" | "hard" | "very_hard";
 
-export type QuestCategory = 
-  | 'health' 
-  | 'fitness' 
-  | 'personal' 
-  | 'career' 
-  | 'creativity' 
-  | 'mindfulness' 
-  | 'productivity' 
-  | 'social' 
-  | 'learning' 
-  | 'recovery';
+export type QuestCategory =
+  | "health"
+  | "fitness"
+  | "personal"
+  | "career"
+  | "creativity"
+  | "mindfulness"
+  | "productivity"
+  | "social"
+  | "learning"
+  | "recovery";
 
-export type QuestStatus = 'active' | 'completed' | 'failed' | 'skipped';
+export type QuestStatus = "active" | "completed" | "failed" | "skipped";
 
 export interface QuestTemplate {
   id: string;
@@ -58,13 +58,13 @@ export interface UserLevel {
 export interface QuestPreferences {
   preferredCategories: QuestCategory[];
   difficultyBalance: {
-    easy: number;    // 0-1, percentage preference
+    easy: number; // 0-1, percentage preference
     moderate: number;
     hard: number;
     very_hard: number;
   };
   excludedCategories?: QuestCategory[];
-  timePreference?: 'short' | 'medium' | 'long' | 'mixed'; // Quest duration preference
+  timePreference?: "short" | "medium" | "long" | "mixed"; // Quest duration preference
 }
 
 export interface QuestSystemData {
@@ -102,37 +102,43 @@ export function calculateXPForLevel(level: number): number {
   // Formula: 45 + (level * 5) XP needed to reach that level from previous
   const baseXP = 45;
   const increment = 5;
-  
+
   let totalXP = 0;
   for (let i = 2; i <= level; i++) {
-    totalXP += baseXP + (i * increment);
+    totalXP += baseXP + i * increment;
   }
   return totalXP;
 }
 
-export function calculateLevelFromXP(totalXP: number): { level: number; currentXP: number; xpToNext: number } {
+export function calculateLevelFromXP(totalXP: number): {
+  level: number;
+  currentXP: number;
+  xpToNext: number;
+} {
   let level = 1;
   let xpUsed = 0;
-  
+
   while (true) {
-    const xpForNextLevel = calculateXPForLevel(level + 1) - calculateXPForLevel(level);
+    const xpForNextLevel =
+      calculateXPForLevel(level + 1) - calculateXPForLevel(level);
     if (totalXP < xpUsed + xpForNextLevel) {
       break;
     }
     xpUsed += xpForNextLevel;
     level++;
   }
-  
+
   const currentXP = totalXP - xpUsed;
-  const xpToNext = calculateXPForLevel(level + 1) - calculateXPForLevel(level) - currentXP;
-  
+  const xpToNext =
+    calculateXPForLevel(level + 1) - calculateXPForLevel(level) - currentXP;
+
   return { level, currentXP, xpToNext };
 }
 
 // Difficulty distribution for quest generation
 export const DEFAULT_DIFFICULTY_DISTRIBUTION = {
-  easy: 0.4,      // 40% easy quests
-  moderate: 0.35, // 35% moderate quests  
-  hard: 0.20,     // 20% hard quests
-  very_hard: 0.05 // 5% very hard quests
+  easy: 0.4, // 40% easy quests
+  moderate: 0.35, // 35% moderate quests
+  hard: 0.2, // 20% hard quests
+  very_hard: 0.05, // 5% very hard quests
 };

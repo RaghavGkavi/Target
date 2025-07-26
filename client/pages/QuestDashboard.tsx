@@ -2,10 +2,15 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { QuestEngine } from "@/lib/questEngine";
-import { checkQuestAchievements, getEarnedQuestAchievements, getRarityColor, getRarityBorder } from "@/lib/questAchievements";
-import { DailyQuest, QuestDifficulty } from '@shared/quest-types';
-import { getRandomQuest } from '@/lib/questLib';
-import { getRandomQuestTemplate } from '@shared/quest-templates';
+import {
+  checkQuestAchievements,
+  getEarnedQuestAchievements,
+  getRarityColor,
+  getRarityBorder,
+} from "@/lib/questAchievements";
+import { DailyQuest, QuestDifficulty } from "@shared/quest-types";
+import { getRandomQuest } from "@/lib/questLib";
+import { getRandomQuestTemplate } from "@shared/quest-templates";
 import {
   Plus,
   Target,
@@ -77,31 +82,31 @@ const motivationalQuotes = [
 
 const getDifficultyColor = (difficulty: QuestDifficulty): string => {
   switch (difficulty) {
-    case 'easy':
-      return 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/20';
-    case 'moderate':
-      return 'text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/20';
-    case 'hard':
-      return 'text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/20';
-    case 'very_hard':
-      return 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/20';
+    case "easy":
+      return "text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/20";
+    case "moderate":
+      return "text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/20";
+    case "hard":
+      return "text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/20";
+    case "very_hard":
+      return "text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/20";
     default:
-      return 'text-gray-600 dark:text-gray-400';
+      return "text-gray-600 dark:text-gray-400";
   }
 };
 
 const getDifficultyBorder = (difficulty: QuestDifficulty): string => {
   switch (difficulty) {
-    case 'easy':
-      return 'border-green-200 dark:border-green-700';
-    case 'moderate':
-      return 'border-blue-200 dark:border-blue-700';
-    case 'hard':
-      return 'border-orange-200 dark:border-orange-700';
-    case 'very_hard':
-      return 'border-red-200 dark:border-red-700';
+    case "easy":
+      return "border-green-200 dark:border-green-700";
+    case "moderate":
+      return "border-blue-200 dark:border-blue-700";
+    case "hard":
+      return "border-orange-200 dark:border-orange-700";
+    case "very_hard":
+      return "border-red-200 dark:border-red-700";
     default:
-      return 'border-gray-200 dark:border-gray-700';
+      return "border-gray-200 dark:border-gray-700";
   }
 };
 
@@ -109,14 +114,21 @@ export default function QuestDashboard() {
   const navigate = useNavigate();
   const { user, userData, updateUserData, signOut } = useAuth();
   const [currentQuote, setCurrentQuote] = useState("");
-  const [levelUpDialog, setLevelUpDialog] = useState<{ isOpen: boolean; newLevel?: number }>({ isOpen: false });
+  const [levelUpDialog, setLevelUpDialog] = useState<{
+    isOpen: boolean;
+    newLevel?: number;
+  }>({ isOpen: false });
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [timeUntilMidnight, setTimeUntilMidnight] = useState<string>("");
-  const [localQuestData, setLocalQuestData] = useState(userData?.questSystemData);
+  const [localQuestData, setLocalQuestData] = useState(
+    userData?.questSystemData,
+  );
 
   // Dev mode detection from settings
-  const isDevMode = user?.email === "raghav.gkavi@gmail.com" && userData?.preferences?.devModeEnabled === true;
+  const isDevMode =
+    user?.email === "raghav.gkavi@gmail.com" &&
+    userData?.preferences?.devModeEnabled === true;
 
   // Update local quest data when userData changes
   useEffect(() => {
@@ -128,17 +140,31 @@ export default function QuestDashboard() {
   // Get quest system data from local state
   const questSystemData = localQuestData;
   const currentQuests = questSystemData?.currentQuests || [];
-  const userLevel = questSystemData?.userLevel || { currentLevel: 1, currentXP: 0, xpToNextLevel: 50, totalXP: 0 };
-  const weeklyStats = questSystemData?.weeklyStats || { questsCompleted: 0, totalXPEarned: 0, streak: 0 };
-
-
+  const userLevel = questSystemData?.userLevel || {
+    currentLevel: 1,
+    currentXP: 0,
+    xpToNextLevel: 50,
+    totalXP: 0,
+  };
+  const weeklyStats = questSystemData?.weeklyStats || {
+    questsCompleted: 0,
+    totalXPEarned: 0,
+    streak: 0,
+  };
 
   // Get today's completion count from persistent daily stats
   const today = new Date();
   const todayDateString = today.toDateString();
-  const dailyStatsDate = questSystemData?.dailyStats?.date ? new Date(questSystemData.dailyStats.date).toDateString() : '';
-  const completedToday = (dailyStatsDate === todayDateString) ? (questSystemData?.dailyStats?.questsCompleted || 0) : 0;
-  const activeQuests = currentQuests.filter(q => q.status === 'active').length;
+  const dailyStatsDate = questSystemData?.dailyStats?.date
+    ? new Date(questSystemData.dailyStats.date).toDateString()
+    : "";
+  const completedToday =
+    dailyStatsDate === todayDateString
+      ? questSystemData?.dailyStats?.questsCompleted || 0
+      : 0;
+  const activeQuests = currentQuests.filter(
+    (q) => q.status === "active",
+  ).length;
 
   useEffect(() => {
     setCurrentQuote(
@@ -158,7 +184,9 @@ export default function QuestDashboard() {
       const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
 
-      setTimeUntilMidnight(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+      setTimeUntilMidnight(
+        `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`,
+      );
     };
 
     updateCountdown();
@@ -171,9 +199,10 @@ export default function QuestDashboard() {
     if (questSystemData && userData) {
       // Only auto-generate if there are literally no current quests (fresh user or new day)
       if (questSystemData.currentQuests.length === 0) {
-        const wasGenerated = QuestEngine.autoGenerateQuestsIfNeeded(questSystemData);
+        const wasGenerated =
+          QuestEngine.autoGenerateQuestsIfNeeded(questSystemData);
         if (wasGenerated) {
-          console.log('🎯 Auto-generated initial quests for new day');
+          console.log("🎯 Auto-generated initial quests for new day");
           updateUserData({
             ...userData,
             questSystemData,
@@ -201,18 +230,18 @@ export default function QuestDashboard() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
-
-
   const completeQuest = async (questId: string) => {
     if (!questSystemData || !userData) {
-      console.error('Missing questSystemData or userData');
+      console.error("Missing questSystemData or userData");
       return;
     }
 
     // Check if quest exists and is active
-    const questToComplete = questSystemData.currentQuests.find(q => q.id === questId);
-    if (!questToComplete || questToComplete.status !== 'active') {
-      console.log('Quest not found or not active');
+    const questToComplete = questSystemData.currentQuests.find(
+      (q) => q.id === questId,
+    );
+    if (!questToComplete || questToComplete.status !== "active") {
+      console.log("Quest not found or not active");
       return;
     }
 
@@ -221,17 +250,20 @@ export default function QuestDashboard() {
 
     const result = QuestEngine.completeQuest(questId, questSystemDataCopy);
     if (!result) {
-      console.error('Failed to complete quest');
+      console.error("Failed to complete quest");
       return;
     }
 
     const { updatedQuest, newLevel, xpGained } = result;
 
     // Check for new achievements
-    const newAchievements = checkQuestAchievements(questSystemDataCopy, userData.achievements || []);
+    const newAchievements = checkQuestAchievements(
+      questSystemDataCopy,
+      userData.achievements || [],
+    );
     const updatedAchievements = [
       ...(userData.achievements || []),
-      ...newAchievements.map(a => ({ id: a.id, earnedAt: a.earnedAt! })),
+      ...newAchievements.map((a) => ({ id: a.id, earnedAt: a.earnedAt! })),
     ];
 
     // Update local state immediately for instant UI feedback
@@ -245,7 +277,7 @@ export default function QuestDashboard() {
         achievements: updatedAchievements,
       });
     } catch (error) {
-      console.error('Failed to save quest completion:', error);
+      console.error("Failed to save quest completion:", error);
       // Revert local state if save failed
       setLocalQuestData(questSystemData);
       return;
@@ -256,32 +288,45 @@ export default function QuestDashboard() {
       setLevelUpDialog({ isOpen: true, newLevel });
     }
 
-    console.log(`Quest completed! Gained ${xpGained} XP${newLevel ? `, leveled up to ${newLevel}!` : ''}`);
+    console.log(
+      `Quest completed! Gained ${xpGained} XP${newLevel ? `, leveled up to ${newLevel}!` : ""}`,
+    );
     if (newAchievements.length > 0) {
-      console.log('New achievements earned:', newAchievements.map(a => a.title));
+      console.log(
+        "New achievements earned:",
+        newAchievements.map((a) => a.title),
+      );
     }
   };
 
   const regenerateQuest = async (questId: string) => {
     if (!questSystemData || !userData) return;
 
-    const questToRegenerate = currentQuests.find(q => q.id === questId);
+    const questToRegenerate = currentQuests.find((q) => q.id === questId);
     if (!questToRegenerate) return;
 
-    const newQuest = QuestEngine.regenerateQuest(questToRegenerate, questSystemData, isDevMode);
+    const newQuest = QuestEngine.regenerateQuest(
+      questToRegenerate,
+      questSystemData,
+      isDevMode,
+    );
     if (!newQuest) {
-      console.log('Cannot regenerate quest - maximum regenerations reached or no alternatives available');
+      console.log(
+        "Cannot regenerate quest - maximum regenerations reached or no alternatives available",
+      );
       return;
     }
 
     // Replace the quest in the current quests array
-    const questIndex = questSystemData.currentQuests.findIndex(q => q.id === questId);
+    const questIndex = questSystemData.currentQuests.findIndex(
+      (q) => q.id === questId,
+    );
     if (questIndex !== -1) {
       questSystemData.currentQuests[questIndex] = newQuest;
     }
 
     // Update local state immediately
-    setLocalQuestData({...questSystemData});
+    setLocalQuestData({ ...questSystemData });
 
     // Update user data
     await updateUserData({
@@ -289,21 +334,25 @@ export default function QuestDashboard() {
       questSystemData,
     });
 
-    console.log('Quest regenerated successfully');
+    console.log("Quest regenerated successfully");
   };
 
   const regenerateAllQuests = async () => {
     if (!questSystemData || !userData) return;
 
-    console.log('🔄 Regenerating all quests with randomized difficulty...');
+    console.log("🔄 Regenerating all quests with randomized difficulty...");
 
     // Get all current quests (both active and completed)
-    const activeQuests = questSystemData.currentQuests.filter(q => q.status === 'active');
-    const completedQuests = questSystemData.currentQuests.filter(q => q.status === 'completed');
+    const activeQuests = questSystemData.currentQuests.filter(
+      (q) => q.status === "active",
+    );
+    const completedQuests = questSystemData.currentQuests.filter(
+      (q) => q.status === "completed",
+    );
     const allCurrentQuests = [...activeQuests, ...completedQuests];
 
     // Increment regeneration count for quests being replaced
-    allCurrentQuests.forEach(quest => {
+    allCurrentQuests.forEach((quest) => {
       if (!isDevMode) {
         quest.regenerationsUsed = Math.min(quest.regenerationsUsed + 1, 3);
       }
@@ -319,33 +368,53 @@ export default function QuestDashboard() {
 
     // Get recent template IDs to avoid repetition
     const recentTemplateIds = questSystemData.questHistory
-      .filter(quest => {
+      .filter((quest) => {
         const questDate = new Date(quest.dateAssigned);
-        const daysDiff = Math.floor((today.getTime() - questDate.getTime()) / (1000 * 60 * 60 * 24));
+        const daysDiff = Math.floor(
+          (today.getTime() - questDate.getTime()) / (1000 * 60 * 60 * 24),
+        );
         return daysDiff <= 7;
       })
-      .map(quest => quest.templateId);
+      .map((quest) => quest.templateId);
 
     // Generate difficulties with constraints
     const difficulties: QuestDifficulty[] = [];
     if (numQuestsToGenerate >= 2) {
       // Ensure at least one hard/very hard quest
-      const hardQuests: QuestDifficulty[] = ['hard', 'very_hard'];
-      difficulties.push(hardQuests[Math.floor(Math.random() * hardQuests.length)]);
+      const hardQuests: QuestDifficulty[] = ["hard", "very_hard"];
+      difficulties.push(
+        hardQuests[Math.floor(Math.random() * hardQuests.length)],
+      );
 
       // Ensure at least one easy/moderate quest
-      const easyQuests: QuestDifficulty[] = ['easy', 'moderate'];
-      difficulties.push(easyQuests[Math.floor(Math.random() * easyQuests.length)]);
+      const easyQuests: QuestDifficulty[] = ["easy", "moderate"];
+      difficulties.push(
+        easyQuests[Math.floor(Math.random() * easyQuests.length)],
+      );
 
       // Fill remaining with random difficulties
-      const allDifficulties: QuestDifficulty[] = ['easy', 'moderate', 'hard', 'very_hard'];
+      const allDifficulties: QuestDifficulty[] = [
+        "easy",
+        "moderate",
+        "hard",
+        "very_hard",
+      ];
       for (let i = 2; i < numQuestsToGenerate; i++) {
-        difficulties.push(allDifficulties[Math.floor(Math.random() * allDifficulties.length)]);
+        difficulties.push(
+          allDifficulties[Math.floor(Math.random() * allDifficulties.length)],
+        );
       }
     } else {
       // If only one quest, make it random
-      const allDifficulties: QuestDifficulty[] = ['easy', 'moderate', 'hard', 'very_hard'];
-      difficulties.push(allDifficulties[Math.floor(Math.random() * allDifficulties.length)]);
+      const allDifficulties: QuestDifficulty[] = [
+        "easy",
+        "moderate",
+        "hard",
+        "very_hard",
+      ];
+      difficulties.push(
+        allDifficulties[Math.floor(Math.random() * allDifficulties.length)],
+      );
     }
 
     const newQuests: DailyQuest[] = [];
@@ -359,7 +428,7 @@ export default function QuestDashboard() {
       let template = getRandomQuest(
         difficulty,
         excludeIds,
-        preferences.preferredCategories
+        preferences.preferredCategories,
       );
 
       // Fallback to original templates if needed
@@ -367,7 +436,7 @@ export default function QuestDashboard() {
         template = getRandomQuestTemplate(
           difficulty,
           excludeIds,
-          preferences.preferredCategories
+          preferences.preferredCategories,
         );
       }
 
@@ -382,7 +451,7 @@ export default function QuestDashboard() {
           xpReward: template.xpReward,
           icon: template.icon,
           estimatedTime: template.estimatedTime,
-          status: 'active',
+          status: "active",
           dateAssigned: today,
           regenerationsUsed: 0,
           isRegenerated: true,
@@ -398,26 +467,30 @@ export default function QuestDashboard() {
     questSystemData.lastQuestGeneration = new Date();
 
     // Update local state immediately
-    setLocalQuestData({...questSystemData});
+    setLocalQuestData({ ...questSystemData });
 
     await updateUserData({
       ...userData,
       questSystemData,
     });
 
-    console.log(`✅ 3 new quests generated successfully, completed count reset to 0`);
+    console.log(
+      `✅ 3 new quests generated successfully, completed count reset to 0`,
+    );
   };
 
   const skipQuest = async (questId: string) => {
     if (!questSystemData || !userData) return;
 
-    const questIndex = questSystemData.currentQuests.findIndex(q => q.id === questId);
+    const questIndex = questSystemData.currentQuests.findIndex(
+      (q) => q.id === questId,
+    );
     if (questIndex === -1) return;
 
-    questSystemData.currentQuests[questIndex].status = 'skipped';
+    questSystemData.currentQuests[questIndex].status = "skipped";
 
     // Update local state immediately
-    setLocalQuestData({...questSystemData});
+    setLocalQuestData({ ...questSystemData });
 
     await updateUserData({
       ...userData,
@@ -458,19 +531,23 @@ export default function QuestDashboard() {
               <div className="flex items-center space-x-2 bg-destructive/10 rounded-xl px-3 py-2">
                 <Clock className="h-4 w-4 text-destructive" />
                 <div className="text-center">
-                  <div className="text-sm font-mono font-bold text-destructive">{timeUntilMidnight}</div>
-                  <div className="text-xs text-muted-foreground">until new quests</div>
+                  <div className="text-sm font-mono font-bold text-destructive">
+                    {timeUntilMidnight}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    until new quests
+                  </div>
                 </div>
               </div>
 
               {/* Level Display */}
               <div className="hidden sm:flex items-center space-x-2 bg-primary/10 rounded-xl px-3 py-2">
                 <Star className="h-4 w-4 text-primary" />
-                <span className="text-sm font-semibold">Level {userLevel.currentLevel}</span>
+                <span className="text-sm font-semibold">
+                  Level {userLevel.currentLevel}
+                </span>
               </div>
 
-
-              
               {/* Theme Toggle */}
               <ThemeToggle />
 
@@ -551,9 +628,12 @@ export default function QuestDashboard() {
               <div className="flex items-center space-x-3">
                 <Star className="h-6 w-6 text-primary" />
                 <div>
-                  <h3 className="text-lg font-semibold">Level {userLevel.currentLevel}</h3>
+                  <h3 className="text-lg font-semibold">
+                    Level {userLevel.currentLevel}
+                  </h3>
                   <p className="text-sm text-muted-foreground">
-                    {userLevel.currentXP} / {userLevel.currentXP + userLevel.xpToNextLevel} XP
+                    {userLevel.currentXP} /{" "}
+                    {userLevel.currentXP + userLevel.xpToNextLevel} XP
                   </p>
                 </div>
               </div>
@@ -561,9 +641,13 @@ export default function QuestDashboard() {
                 {userLevel.totalXP} Total XP
               </Badge>
             </div>
-            <Progress 
-              value={(userLevel.currentXP / (userLevel.currentXP + userLevel.xpToNextLevel)) * 100} 
-              className="h-3" 
+            <Progress
+              value={
+                (userLevel.currentXP /
+                  (userLevel.currentXP + userLevel.xpToNextLevel)) *
+                100
+              }
+              className="h-3"
             />
             <p className="text-xs text-muted-foreground mt-2">
               {userLevel.xpToNextLevel} XP to next level
@@ -614,7 +698,9 @@ export default function QuestDashboard() {
               <div className="flex items-center space-x-2">
                 <Trophy className="h-5 w-5 text-warning" />
                 <div>
-                  <p className="text-2xl font-bold">{weeklyStats.questsCompleted}</p>
+                  <p className="text-2xl font-bold">
+                    {weeklyStats.questsCompleted}
+                  </p>
                   <p className="text-xs text-muted-foreground">This Week</p>
                 </div>
               </div>
@@ -642,7 +728,8 @@ export default function QuestDashboard() {
               <h2 className="text-xl font-semibold">Today's Quests</h2>
               <div className="flex items-center space-x-2">
                 <Badge variant="secondary">{completedToday}/3 completed</Badge>
-                {(isDevMode || currentQuests.every(q => q.status !== 'active')) && (
+                {(isDevMode ||
+                  currentQuests.every((q) => q.status !== "active")) && (
                   <Button
                     size="sm"
                     variant="outline"
@@ -658,183 +745,241 @@ export default function QuestDashboard() {
 
             {/* Active Quests */}
             <div className="grid gap-4">
-              {currentQuests.filter(q => q.status === 'active').map((quest) => (
-                <Card
-                  key={quest.id}
-                  className={`rounded-xl border-l-4 transition-all duration-200 ${getDifficultyBorder(quest.difficulty)} ${
-                    quest.status === 'completed' ? 'opacity-75 bg-muted/50' : 'hover:shadow-md'
-                  }`}
-                >
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <span className="text-lg">{quest.icon}</span>
-                        <div>
-                          <CardTitle className="text-lg">{quest.title}</CardTitle>
-                          <div className="flex items-center space-x-2 mt-1">
-                            <Badge variant="outline" className={getDifficultyColor(quest.difficulty)}>
-                              {quest.difficulty.replace('_', ' ')} • {quest.xpReward} XP
-                            </Badge>
-                            <Badge variant="secondary" className="text-xs">
-                              {quest.estimatedTime}
-                            </Badge>
+              {currentQuests
+                .filter((q) => q.status === "active")
+                .map((quest) => (
+                  <Card
+                    key={quest.id}
+                    className={`rounded-xl border-l-4 transition-all duration-200 ${getDifficultyBorder(quest.difficulty)} ${
+                      quest.status === "completed"
+                        ? "opacity-75 bg-muted/50"
+                        : "hover:shadow-md"
+                    }`}
+                  >
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <span className="text-lg">{quest.icon}</span>
+                          <div>
+                            <CardTitle className="text-lg">
+                              {quest.title}
+                            </CardTitle>
+                            <div className="flex items-center space-x-2 mt-1">
+                              <Badge
+                                variant="outline"
+                                className={getDifficultyColor(quest.difficulty)}
+                              >
+                                {quest.difficulty.replace("_", " ")} •{" "}
+                                {quest.xpReward} XP
+                              </Badge>
+                              <Badge variant="secondary" className="text-xs">
+                                {quest.estimatedTime}
+                              </Badge>
+                            </div>
                           </div>
                         </div>
+                        {quest.status === "completed" && (
+                          <CheckCircle2 className="h-6 w-6 text-success" />
+                        )}
                       </div>
-                      {quest.status === 'completed' && (
-                        <CheckCircle2 className="h-6 w-6 text-success" />
-                      )}
-                    </div>
-                    <CardDescription>{quest.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {quest.status === 'active' && (
-                      <div className="flex space-x-2">
-                        <Button
-                          size="sm"
-                          className="flex-1 rounded-lg"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            console.log('🎯 Button clicked for quest:', quest.id);
-                            completeQuest(quest.id);
-                          }}
-                        >
-                          <CheckCircle2 className="h-4 w-4 mr-1" />
-                          Complete Quest
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => regenerateQuest(quest.id)}
-                          disabled={!isDevMode && quest.regenerationsUsed >= 3}
-                          className="rounded-lg"
-                          title={isDevMode ? "Infinite regenerations (Dev Mode)" : `${3 - quest.regenerationsUsed} regenerations left`}
-                        >
-                          <RefreshCw className="h-4 w-4" />
-                          {isDevMode && <span className="ml-1 text-xs">∞</span>}
-                        </Button>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              className="rounded-lg text-muted-foreground hover:text-destructive"
-                            >
-                              <XCircle className="h-4 w-4" />
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>Skip Quest</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Are you sure you want to skip "{quest.title}"? You won't earn any XP for skipped quests.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() => skipQuest(quest.id)}
-                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      <CardDescription>{quest.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {quest.status === "active" && (
+                        <div className="flex space-x-2">
+                          <Button
+                            size="sm"
+                            className="flex-1 rounded-lg"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              console.log(
+                                "🎯 Button clicked for quest:",
+                                quest.id,
+                              );
+                              completeQuest(quest.id);
+                            }}
+                          >
+                            <CheckCircle2 className="h-4 w-4 mr-1" />
+                            Complete Quest
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => regenerateQuest(quest.id)}
+                            disabled={
+                              !isDevMode && quest.regenerationsUsed >= 3
+                            }
+                            className="rounded-lg"
+                            title={
+                              isDevMode
+                                ? "Infinite regenerations (Dev Mode)"
+                                : `${3 - quest.regenerationsUsed} regenerations left`
+                            }
+                          >
+                            <RefreshCw className="h-4 w-4" />
+                            {isDevMode && (
+                              <span className="ml-1 text-xs">∞</span>
+                            )}
+                          </Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="rounded-lg text-muted-foreground hover:text-destructive"
                               >
-                                Skip Quest
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </div>
-                    )}
-                    {quest.status === 'completed' && quest.dateCompleted && (
-                      <div className="text-sm text-muted-foreground">
-                        Completed at {new Date(quest.dateCompleted).toLocaleTimeString()}
-                      </div>
-                    )}
-                    {quest.regenerationsUsed > 0 && (
-                      <div className="text-xs text-muted-foreground">
-                        Regenerated {quest.regenerationsUsed}{isDevMode ? '' : '/3'} times{isDevMode ? ' (∞ available)' : ''}
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              ))}
+                                <XCircle className="h-4 w-4" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Skip Quest</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Are you sure you want to skip "{quest.title}"?
+                                  You won't earn any XP for skipped quests.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => skipQuest(quest.id)}
+                                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                >
+                                  Skip Quest
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
+                      )}
+                      {quest.status === "completed" && quest.dateCompleted && (
+                        <div className="text-sm text-muted-foreground">
+                          Completed at{" "}
+                          {new Date(quest.dateCompleted).toLocaleTimeString()}
+                        </div>
+                      )}
+                      {quest.regenerationsUsed > 0 && (
+                        <div className="text-xs text-muted-foreground">
+                          Regenerated {quest.regenerationsUsed}
+                          {isDevMode ? "" : "/3"} times
+                          {isDevMode ? " (∞ available)" : ""}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
             </div>
 
             {/* All Quests Completed Message */}
-            {activeQuests === 0 && currentQuests.length > 0 && currentQuests.every(q => q.status === 'completed') && (
-              <Card className="rounded-xl border-2 border-success/20 bg-success/5">
-                <CardContent className="p-6 text-center">
-                  <div className="space-y-4">
-                    <div className="h-16 w-16 mx-auto rounded-full bg-success/20 flex items-center justify-center">
-                      <Trophy className="h-8 w-8 text-success" />
+            {activeQuests === 0 &&
+              currentQuests.length > 0 &&
+              currentQuests.every((q) => q.status === "completed") && (
+                <Card className="rounded-xl border-2 border-success/20 bg-success/5">
+                  <CardContent className="p-6 text-center">
+                    <div className="space-y-4">
+                      <div className="h-16 w-16 mx-auto rounded-full bg-success/20 flex items-center justify-center">
+                        <Trophy className="h-8 w-8 text-success" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-success">
+                          🎉 All Quests Completed!
+                        </h3>
+                        <p className="text-muted-foreground mt-2">
+                          Congratulations! You've finished all 3 quests for
+                          today. Great work on building consistent habits!
+                        </p>
+                      </div>
+                      <div className="bg-success/10 rounded-lg p-4">
+                        <p className="text-sm text-success font-medium">
+                          ✨ You can regenerate new quests if you want to
+                          continue your journey today
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-success">
-                        🎉 All Quests Completed!
-                      </h3>
-                      <p className="text-muted-foreground mt-2">
-                        Congratulations! You've finished all 3 quests for today.
-                        Great work on building consistent habits!
-                      </p>
-                    </div>
-                    <div className="bg-success/10 rounded-lg p-4">
-                      <p className="text-sm text-success font-medium">
-                        ✨ You can regenerate new quests if you want to continue your journey today
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+                  </CardContent>
+                </Card>
+              )}
 
             {/* Completed Quests (shown below active ones) */}
-            {currentQuests.filter(q => q.status === 'completed').length > 0 && (
+            {currentQuests.filter((q) => q.status === "completed").length >
+              0 && (
               <div className="space-y-4">
                 <div className="flex items-center space-x-2">
-                  <h3 className="text-lg font-semibold text-muted-foreground">Completed Today</h3>
-                  <Badge variant="outline" className="bg-success/10 text-success border-success/20">
-                    {currentQuests.filter(q => q.status === 'completed').length} completed
+                  <h3 className="text-lg font-semibold text-muted-foreground">
+                    Completed Today
+                  </h3>
+                  <Badge
+                    variant="outline"
+                    className="bg-success/10 text-success border-success/20"
+                  >
+                    {
+                      currentQuests.filter((q) => q.status === "completed")
+                        .length
+                    }{" "}
+                    completed
                   </Badge>
                 </div>
                 <div className="grid gap-4">
-                  {currentQuests.filter(q => q.status === 'completed').map((quest) => (
-                    <Card
-                      key={quest.id}
-                      className={`rounded-xl border-l-4 transition-all duration-200 ${getDifficultyBorder(quest.difficulty)} opacity-75 bg-success/5`}
-                    >
-                      <CardHeader className="pb-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-2">
-                            <span className="text-lg">{quest.icon}</span>
-                            <div>
-                              <CardTitle className="text-lg line-through text-muted-foreground">{quest.title}</CardTitle>
-                              <div className="flex items-center space-x-2 mt-1">
-                                <Badge variant="outline" className={getDifficultyColor(quest.difficulty)}>
-                                  {quest.difficulty.replace('_', ' ')} • {quest.xpReward} XP
-                                </Badge>
-                                <Badge variant="secondary" className="text-xs">
-                                  {quest.estimatedTime}
-                                </Badge>
+                  {currentQuests
+                    .filter((q) => q.status === "completed")
+                    .map((quest) => (
+                      <Card
+                        key={quest.id}
+                        className={`rounded-xl border-l-4 transition-all duration-200 ${getDifficultyBorder(quest.difficulty)} opacity-75 bg-success/5`}
+                      >
+                        <CardHeader className="pb-3">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-2">
+                              <span className="text-lg">{quest.icon}</span>
+                              <div>
+                                <CardTitle className="text-lg line-through text-muted-foreground">
+                                  {quest.title}
+                                </CardTitle>
+                                <div className="flex items-center space-x-2 mt-1">
+                                  <Badge
+                                    variant="outline"
+                                    className={getDifficultyColor(
+                                      quest.difficulty,
+                                    )}
+                                  >
+                                    {quest.difficulty.replace("_", " ")} •{" "}
+                                    {quest.xpReward} XP
+                                  </Badge>
+                                  <Badge
+                                    variant="secondary"
+                                    className="text-xs"
+                                  >
+                                    {quest.estimatedTime}
+                                  </Badge>
+                                </div>
                               </div>
                             </div>
+                            <CheckCircle2 className="h-6 w-6 text-success" />
                           </div>
-                          <CheckCircle2 className="h-6 w-6 text-success" />
-                        </div>
-                        <CardDescription className="text-muted-foreground">{quest.description}</CardDescription>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        {quest.dateCompleted && (
-                          <div className="text-sm text-success font-medium">
-                            ✅ Completed at {new Date(quest.dateCompleted).toLocaleTimeString()}
-                          </div>
-                        )}
-                        {quest.regenerationsUsed > 0 && (
-                          <div className="text-xs text-muted-foreground">
-                            Regenerated {quest.regenerationsUsed}{isDevMode ? '' : '/3'} times{isDevMode ? ' (∞ available)' : ''}
-                          </div>
-                        )}
-                      </CardContent>
-                    </Card>
-                  ))}
+                          <CardDescription className="text-muted-foreground">
+                            {quest.description}
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                          {quest.dateCompleted && (
+                            <div className="text-sm text-success font-medium">
+                              ✅ Completed at{" "}
+                              {new Date(
+                                quest.dateCompleted,
+                              ).toLocaleTimeString()}
+                            </div>
+                          )}
+                          {quest.regenerationsUsed > 0 && (
+                            <div className="text-xs text-muted-foreground">
+                              Regenerated {quest.regenerationsUsed}
+                              {isDevMode ? "" : "/3"} times
+                              {isDevMode ? " (∞ available)" : ""}
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+                    ))}
                 </div>
               </div>
             )}
@@ -859,12 +1004,18 @@ export default function QuestDashboard() {
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold">Your Achievements</h2>
               <Badge variant="secondary">
-                {getEarnedQuestAchievements(userData?.achievements || []).length} earned
+                {
+                  getEarnedQuestAchievements(userData?.achievements || [])
+                    .length
+                }{" "}
+                earned
               </Badge>
             </div>
 
             {(() => {
-              const earnedAchievements = getEarnedQuestAchievements(userData?.achievements || []);
+              const earnedAchievements = getEarnedQuestAchievements(
+                userData?.achievements || [],
+              );
 
               if (earnedAchievements.length === 0) {
                 return (
@@ -875,7 +1026,8 @@ export default function QuestDashboard() {
                         No achievements yet
                       </h3>
                       <p className="text-muted-foreground mb-6">
-                        Complete quests, level up, and build streaks to earn achievements!
+                        Complete quests, level up, and build streaks to earn
+                        achievements!
                       </p>
                     </CardContent>
                   </Card>
@@ -912,7 +1064,9 @@ export default function QuestDashboard() {
                           </Badge>
                           <span>
                             {achievement.earnedAt
-                              ? new Date(achievement.earnedAt).toLocaleDateString()
+                              ? new Date(
+                                  achievement.earnedAt,
+                                ).toLocaleDateString()
                               : "Recently earned"}
                           </span>
                         </div>
@@ -941,15 +1095,21 @@ export default function QuestDashboard() {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-sm">Quests completed</span>
-                      <span className="text-sm font-medium">{weeklyStats.questsCompleted}</span>
+                      <span className="text-sm font-medium">
+                        {weeklyStats.questsCompleted}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">XP earned</span>
-                      <span className="text-sm font-medium">{weeklyStats.totalXPEarned}</span>
+                      <span className="text-sm font-medium">
+                        {weeklyStats.totalXPEarned}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">Current streak</span>
-                      <span className="text-sm font-medium">{weeklyStats.streak} days</span>
+                      <span className="text-sm font-medium">
+                        {weeklyStats.streak} days
+                      </span>
                     </div>
                   </div>
                 </CardContent>
@@ -974,12 +1134,21 @@ export default function QuestDashboard() {
                   </div>
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span>Progress to Level {userLevel.currentLevel + 1}</span>
-                      <span>{userLevel.currentXP} / {userLevel.currentXP + userLevel.xpToNextLevel}</span>
+                      <span>
+                        Progress to Level {userLevel.currentLevel + 1}
+                      </span>
+                      <span>
+                        {userLevel.currentXP} /{" "}
+                        {userLevel.currentXP + userLevel.xpToNextLevel}
+                      </span>
                     </div>
-                    <Progress 
-                      value={(userLevel.currentXP / (userLevel.currentXP + userLevel.xpToNextLevel)) * 100} 
-                      className="h-2" 
+                    <Progress
+                      value={
+                        (userLevel.currentXP /
+                          (userLevel.currentXP + userLevel.xpToNextLevel)) *
+                        100
+                      }
+                      className="h-2"
                     />
                   </div>
                 </CardContent>
@@ -996,7 +1165,9 @@ export default function QuestDashboard() {
       >
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle className="text-center text-2xl">🎉 Level Up!</DialogTitle>
+            <DialogTitle className="text-center text-2xl">
+              🎉 Level Up!
+            </DialogTitle>
             <DialogDescription className="text-center">
               Congratulations! You've reached level {levelUpDialog.newLevel}!
             </DialogDescription>
@@ -1009,7 +1180,8 @@ export default function QuestDashboard() {
               You're getting stronger!
             </p>
             <p className="text-sm text-muted-foreground">
-              Keep completing quests to unlock more achievements and reach even higher levels.
+              Keep completing quests to unlock more achievements and reach even
+              higher levels.
             </p>
           </div>
           <DialogFooter>
