@@ -39,6 +39,7 @@ import Auth from "./pages/Auth";
 import Onboarding from "./pages/Onboarding";
 import QuestOnboarding from "./pages/QuestOnboarding";
 import QuestDashboard from "./pages/QuestDashboard";
+import DashboardRouter from "./pages/DashboardRouter";
 import Placeholder from "./pages/Placeholder";
 import NotFound from "./pages/NotFound";
 
