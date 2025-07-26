@@ -503,6 +503,7 @@ export class QuestEngine {
         lastUpdated: new Date(),
       },
       allQuestsCompleted: false,
+      flaggedQuests: [],
     };
 
     // Generate initial quests
