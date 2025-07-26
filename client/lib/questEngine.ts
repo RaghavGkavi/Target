@@ -360,7 +360,7 @@ export class QuestEngine {
     const isConsecutiveDay = lastStreakDateObj &&
       Math.floor((today.getTime() - lastStreakDateObj.getTime()) / (1000 * 60 * 60 * 24)) === 1;
     
-    const newStreak = !lastStreakDate || isConsecutiveDay ? 
+    const newStreak = !lastStreakDateObj || isConsecutiveDay ?
       questSystemData.weeklyStats.streak + 1 : 1;
 
     // Update quest system data
