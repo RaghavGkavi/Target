@@ -245,7 +245,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
   {
     id: 'hard_course_completion',
     title: 'Learning Marathon',
-    description: 'Complete entire course chapter or module',
+    description: 'Complete a full chapter/module of an online course, including all videos, readings, and exercises/quizzes',
     category: 'learning',
     difficulty: 'hard',
     xpReward: QUEST_XP_VALUES.hard,
