@@ -117,7 +117,7 @@ export default function CreateGoal() {
               Back
             </Button>
             <div>
-              <h1 className="text-xl font-bold">Create New Goal</h1>
+              <h1 className="text-xl font-bold">Create New Quest</h1>
               <p className="text-sm text-muted-foreground">
                 Build a new habit or break an old one
               </p>
