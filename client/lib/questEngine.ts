@@ -310,7 +310,7 @@ export class QuestEngine {
 
     const preferences = questSystemData.questPreferences;
 
-    // Get template IDs to exclude (current quest + recent history)
+    // Get template IDs to exclude (current quest + recent history + flagged quests)
     const today = new Date();
     const recentTemplateIds = questSystemData.questHistory
       .filter((quest) => {
@@ -322,7 +322,10 @@ export class QuestEngine {
       })
       .map((quest) => quest.templateId);
 
-    const excludeIds = [...recentTemplateIds, currentQuest.templateId];
+    // Include flagged/disabled quests in exclusion list
+    const flaggedTemplateIds = questSystemData.flaggedQuests || [];
+
+    const excludeIds = [...recentTemplateIds, ...flaggedTemplateIds, currentQuest.templateId];
 
     // Try quest library first, fallback to templates
     let newTemplate = getRandomQuest(
