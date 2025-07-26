@@ -716,7 +716,12 @@ export default function QuestDashboard() {
                         <Button
                           size="sm"
                           className="flex-1 rounded-lg"
-                          onClick={() => completeQuest(quest.id)}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            console.log('🎯 Button clicked for quest:', quest.id);
+                            completeQuest(quest.id);
+                          }}
                         >
                           <CheckCircle2 className="h-4 w-4 mr-1" />
                           Complete Quest
