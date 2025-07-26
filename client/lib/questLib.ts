@@ -368,7 +368,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
   {
     id: 'very_hard_project_milestone',
     title: 'Project Hero',
-    description: 'Complete major project milestone or deliverable',
+    description: 'Complete a major project deliverable: finish a presentation, submit a proposal, deploy code, or complete a significant work milestone',
     category: 'career',
     difficulty: 'very_hard',
     xpReward: QUEST_XP_VALUES.very_hard,
