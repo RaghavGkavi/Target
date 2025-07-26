@@ -26,10 +26,10 @@ export const getUserData: RequestHandler = async (req, res) => {
       });
     }
 
-    const userDocRef = doc(db, "users", userId);
-    const docSnap = await getDoc(userDocRef);
+    const userDocRef = db.collection("users").doc(userId);
+    const docSnap = await userDocRef.get();
 
-    if (!docSnap.exists()) {
+    if (!docSnap.exists) {
       return res.status(404).json({
         success: false,
         error: "User data not found",
