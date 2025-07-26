@@ -576,7 +576,7 @@ export default function Index() {
       const isDeveloper =
         user?.email === "raghav.gkavi@gmail.com" && developerModeEnabled;
       if (addiction.lastLoggedDate === today && !forceAdd && !isDeveloper) {
-        console.log("🔧 Already logged today, showing affirmation dialog");
+        console.log("��� Already logged today, showing affirmation dialog");
         // Show affirmation dialog
         setAffirmationDialog({
           isOpen: true,
@@ -865,7 +865,7 @@ export default function Index() {
                 <Target className="h-5 w-5 text-primary" />
                 <div>
                   <p className="text-2xl font-bold">{totalActiveGoals}</p>
-                  <p className="text-xs text-muted-foreground">Active Goals</p>
+                  <p className="text-xs text-muted-foreground">Active Quests</p>
                 </div>
               </div>
             </CardContent>
