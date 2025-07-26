@@ -247,14 +247,111 @@ export default function QuestDashboard() {
   const regenerateAllQuests = async () => {
     if (!questSystemData || !userData) return;
 
-    console.log('🔄 Regenerating all quests with randomized difficulty...');
+    console.log('🔄 Regenerating all active quests with randomized difficulty...');
 
-    // Archive current quests to history before regenerating
-    questSystemData.questHistory.push(...questSystemData.currentQuests);
+    // Get active and completed quests separately
+    const activeQuests = questSystemData.currentQuests.filter(q => q.status === 'active');
+    const completedQuests = questSystemData.currentQuests.filter(q => q.status === 'completed');
 
-    // Generate new quests with randomized difficulty
-    const newQuests = QuestEngine.regenerateAllQuests(questSystemData);
-    questSystemData.currentQuests = newQuests;
+    if (activeQuests.length === 0) {
+      console.log('No active quests to regenerate');
+      return;
+    }
+
+    // Increment regeneration count for each active quest that's being replaced
+    // (this represents the cost of using "regenerate all")
+    activeQuests.forEach(quest => {
+      if (!isDevMode) {
+        quest.regenerationsUsed = Math.min(quest.regenerationsUsed + 1, 3);
+      }
+    });
+
+    // Archive the active quests to history
+    questSystemData.questHistory.push(...activeQuests);
+
+    // Generate new quests to replace only the active ones
+    const numQuestsToGenerate = activeQuests.length;
+    const preferences = questSystemData.questPreferences;
+    const today = new Date();
+
+    // Get recent template IDs to avoid repetition
+    const recentTemplateIds = questSystemData.questHistory
+      .filter(quest => {
+        const questDate = new Date(quest.dateAssigned);
+        const daysDiff = Math.floor((today.getTime() - questDate.getTime()) / (1000 * 60 * 60 * 24));
+        return daysDiff <= 7;
+      })
+      .map(quest => quest.templateId);
+
+    // Generate difficulties with constraints
+    const difficulties: QuestDifficulty[] = [];
+    if (numQuestsToGenerate >= 2) {
+      // Ensure at least one hard/very hard quest
+      const hardQuests: QuestDifficulty[] = ['hard', 'very_hard'];
+      difficulties.push(hardQuests[Math.floor(Math.random() * hardQuests.length)]);
+
+      // Ensure at least one easy/moderate quest
+      const easyQuests: QuestDifficulty[] = ['easy', 'moderate'];
+      difficulties.push(easyQuests[Math.floor(Math.random() * easyQuests.length)]);
+
+      // Fill remaining with random difficulties
+      const allDifficulties: QuestDifficulty[] = ['easy', 'moderate', 'hard', 'very_hard'];
+      for (let i = 2; i < numQuestsToGenerate; i++) {
+        difficulties.push(allDifficulties[Math.floor(Math.random() * allDifficulties.length)]);
+      }
+    } else {
+      // If only one quest, make it random
+      const allDifficulties: QuestDifficulty[] = ['easy', 'moderate', 'hard', 'very_hard'];
+      difficulties.push(allDifficulties[Math.floor(Math.random() * allDifficulties.length)]);
+    }
+
+    const newQuests: DailyQuest[] = [];
+    const usedTemplateIds: string[] = [];
+
+    for (let i = 0; i < numQuestsToGenerate; i++) {
+      const difficulty = difficulties[i];
+      const excludeIds = [...recentTemplateIds, ...usedTemplateIds];
+
+      // Try quest library first
+      let template = getRandomQuest(
+        difficulty,
+        excludeIds,
+        preferences.preferredCategories
+      );
+
+      // Fallback to original templates if needed
+      if (!template) {
+        template = getRandomQuestTemplate(
+          difficulty,
+          excludeIds,
+          preferences.preferredCategories
+        );
+      }
+
+      if (template) {
+        const quest: DailyQuest = {
+          id: `quest_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          templateId: template.id,
+          title: template.title,
+          description: template.description,
+          category: template.category,
+          difficulty: template.difficulty,
+          xpReward: template.xpReward,
+          icon: template.icon,
+          estimatedTime: template.estimatedTime,
+          status: 'active',
+          dateAssigned: today,
+          regenerationsUsed: 0,
+          isRegenerated: true,
+        };
+
+        newQuests.push(quest);
+        usedTemplateIds.push(template.id);
+      }
+    }
+
+    // Combine completed quests with newly generated active quests
+    questSystemData.currentQuests = [...completedQuests, ...newQuests];
     questSystemData.lastQuestGeneration = new Date();
 
     await updateUserData({
@@ -262,7 +359,7 @@ export default function QuestDashboard() {
       questSystemData,
     });
 
-    console.log('✅ All quests regenerated successfully');
+    console.log(`✅ ${numQuestsToGenerate} active quests regenerated successfully`);
   };
 
   const skipQuest = async (questId: string) => {
