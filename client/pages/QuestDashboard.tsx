@@ -494,7 +494,20 @@ export default function QuestDashboard() {
           <TabsContent value="quests" className="space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold">Today's Quests</h2>
-              <Badge variant="secondary">{completedToday}/3 completed</Badge>
+              <div className="flex items-center space-x-2">
+                <Badge variant="secondary">{completedToday}/3 completed</Badge>
+                {(isDevMode || currentQuests.every(q => q.status !== 'active')) && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={regenerateAllQuests}
+                    className="rounded-lg"
+                  >
+                    <RefreshCw className="h-4 w-4 mr-1" />
+                    Regenerate All
+                  </Button>
+                )}
+              </div>
             </div>
 
             <div className="grid gap-4">
