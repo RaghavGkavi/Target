@@ -608,6 +608,59 @@ export default function QuestDashboard() {
               ))}
             </div>
 
+            {/* Completed Quests (shown below active ones) */}
+            {currentQuests.filter(q => q.status === 'completed').length > 0 && (
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
+                  <h3 className="text-lg font-semibold text-muted-foreground">Completed Today</h3>
+                  <Badge variant="outline" className="bg-success/10 text-success border-success/20">
+                    {currentQuests.filter(q => q.status === 'completed').length} completed
+                  </Badge>
+                </div>
+                <div className="grid gap-4">
+                  {currentQuests.filter(q => q.status === 'completed').map((quest) => (
+                    <Card
+                      key={quest.id}
+                      className={`rounded-xl border-l-4 transition-all duration-200 ${getDifficultyBorder(quest.difficulty)} opacity-75 bg-success/5`}
+                    >
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <span className="text-lg">{quest.icon}</span>
+                            <div>
+                              <CardTitle className="text-lg line-through text-muted-foreground">{quest.title}</CardTitle>
+                              <div className="flex items-center space-x-2 mt-1">
+                                <Badge variant="outline" className={getDifficultyColor(quest.difficulty)}>
+                                  {quest.difficulty.replace('_', ' ')} • {quest.xpReward} XP
+                                </Badge>
+                                <Badge variant="secondary" className="text-xs">
+                                  {quest.estimatedTime}
+                                </Badge>
+                              </div>
+                            </div>
+                          </div>
+                          <CheckCircle2 className="h-6 w-6 text-success" />
+                        </div>
+                        <CardDescription className="text-muted-foreground">{quest.description}</CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {quest.dateCompleted && (
+                          <div className="text-sm text-success font-medium">
+                            ✅ Completed at {new Date(quest.dateCompleted).toLocaleTimeString()}
+                          </div>
+                        )}
+                        {quest.regenerationsUsed > 0 && (
+                          <div className="text-xs text-muted-foreground">
+                            Regenerated {quest.regenerationsUsed}{isDevMode ? '' : '/3'} times{isDevMode ? ' (∞ available)' : ''}
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {currentQuests.length === 0 && (
               <Card className="rounded-xl border-dashed border-2">
                 <CardContent className="p-12 text-center">
