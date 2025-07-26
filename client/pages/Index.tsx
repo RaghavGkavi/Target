@@ -722,7 +722,7 @@ export default function Index() {
                   Target
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                  Master your goals, break your chains
+                  Master your quests, break your chains
                 </p>
               </div>
               <div className="sm:hidden">
@@ -1815,4 +1815,3 @@ export default function Index() {
     </div>
   );
 }
-
