@@ -34,6 +34,24 @@ export default function Profile() {
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
+  // Check if user is developer
+  const isDeveloper = user?.email === "raghav.gkavi@gmail.com";
+
+  // Get recent achievements
+  const getRecentAchievements = () => {
+    if (userData?.preferences?.useQuestSystem) {
+      const questAchievements = getEarnedQuestAchievements(userData?.achievements || []);
+      return questAchievements
+        .sort((a, b) => (b.earnedAt?.getTime() || 0) - (a.earnedAt?.getTime() || 0))
+        .slice(0, 3);
+    } else {
+      const traditionalAchievements = getEarnedAchievements(userData);
+      return traditionalAchievements
+        .sort((a, b) => (b.earnedAt?.getTime() || 0) - (a.earnedAt?.getTime() || 0))
+        .slice(0, 3);
+    }
+  };
+
   const handleShare = async () => {
     const shareText = `Check out my progress on Target! I'm currently rank ${userData?.disciplineData?.currentRank} with ${userData?.goals?.filter((g) => !g.isCompleted).length} active goals. Join me in building better habits!`;
 
