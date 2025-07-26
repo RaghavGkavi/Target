@@ -278,7 +278,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
   {
     id: 'hard_deep_work_session',
     title: 'Focus Warrior',
-    description: 'Complete 2 hours of focused work',
+    description: 'Complete 2 uninterrupted hours on your most important project with phone in another room and all distractions eliminated',
     category: 'productivity',
     difficulty: 'hard',
     xpReward: QUEST_XP_VALUES.hard,
