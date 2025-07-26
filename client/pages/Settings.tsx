@@ -135,6 +135,7 @@ export default function Settings() {
           ...userData?.preferences,
           notifications,
           useQuestSystem,
+          devModeEnabled,
         },
       });
 
@@ -568,7 +569,7 @@ function GoalResetDialog() {
             </h4>
             <ul className="text-sm space-y-1">
               <li>• All active goals and progress</li>
-              <li>• All recovery tracking data</li>
+              <li>�� All recovery tracking data</li>
               <li>• All completed goals and achievements</li>
               <li>• Discipline rank (reset to C rank)</li>
               <li>• All streaks and statistics</li>
