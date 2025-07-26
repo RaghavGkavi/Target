@@ -125,6 +125,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Load user data
         const userProgressData = getUserData(userData.id);
         if (userProgressData) {
+          // Initialize quest system if it doesn't exist and quest mode is enabled
+          if (userProgressData.preferences?.useQuestSystem && !userProgressData.questSystemData) {
+            userProgressData.questSystemData = QuestEngine.initializeQuestSystem(DEFAULT_QUEST_PREFERENCES);
+            saveUserData(userData.id, userProgressData);
+          }
+
+          // Process quest rotation if quest system exists
+          if (userProgressData.questSystemData) {
+            const processedQuestData = QuestEngine.processQuestRotation(userProgressData.questSystemData);
+            userProgressData.questSystemData = processedQuestData;
+            saveUserData(userData.id, userProgressData);
+          }
+
           setUserData(userProgressData);
         } else {
           // Initialize default user data
@@ -136,6 +149,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               theme: "system",
               notifications: true,
               onboardingCompleted: false,
+              useQuestSystem: false, // Default to traditional goal system
             },
           };
           setUserData(defaultData);
