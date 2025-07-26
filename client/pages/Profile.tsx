@@ -227,7 +227,16 @@ export default function Profile() {
               </Avatar>
 
               <div className="flex-1">
-                <h2 className="text-2xl font-bold">{user?.displayName}</h2>
+                <div className="flex items-center space-x-2">
+                  <h2 className={`text-2xl font-bold ${isDeveloper ? 'text-yellow-500' : ''}`}>
+                    {user?.displayName}
+                  </h2>
+                  {isDeveloper && (
+                    <Badge className="bg-yellow-500/20 text-yellow-600 border-yellow-500/30">
+                      Developer
+                    </Badge>
+                  )}
+                </div>
                 <p className="text-muted-foreground">{user?.email}</p>
                 <p className="text-sm text-muted-foreground mt-1">
                   Member since{" "}
