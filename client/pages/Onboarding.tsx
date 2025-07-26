@@ -159,7 +159,8 @@ const presetAddictions: PresetAddiction[] = [
 export default function Onboarding() {
   const navigate = useNavigate();
   const { user, updateUserData } = useAuth();
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [selectedMode, setSelectedMode] = useState<"quest" | "classic" | null>(null);
   const [selectedGoals, setSelectedGoals] = useState<string[]>([]);
   const [selectedAddictions, setSelectedAddictions] = useState<string[]>([]);
   const [disciplineAnswers, setDisciplineAnswers] = useState<
