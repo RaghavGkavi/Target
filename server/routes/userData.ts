@@ -134,10 +134,10 @@ export const checkUserData: RequestHandler = async (req, res) => {
 
     console.log(`Checking user data for userId: ${userId}`);
 
-    const userDocRef = doc(db, "users", userId);
-    const docSnap = await getDoc(userDocRef);
+    const userDocRef = db.collection("users").doc(userId);
+    const docSnap = await userDocRef.get();
 
-    const exists = docSnap.exists();
+    const exists = docSnap.exists;
     let lastModified = null;
 
     if (exists) {
