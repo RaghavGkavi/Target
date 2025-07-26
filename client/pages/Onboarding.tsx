@@ -505,7 +505,7 @@ export default function Onboarding() {
   );
 
   const renderDisciplineQuestionStep = () => {
-    if (currentStep === 3) {
+    if (currentStep === 4) {
       // Intro step
       return (
         <div className="space-y-6 text-center">
@@ -549,8 +549,8 @@ export default function Onboarding() {
       );
     }
 
-    // Individual question steps (steps 4-8)
-    const questionIndex = currentStep - 4;
+    // Individual question steps (steps 5-9)
+    const questionIndex = currentStep - 5;
     const question = DISCIPLINE_ASSESSMENT[questionIndex];
     const selectedAnswer = disciplineAnswers[question.id];
     const progress = ((questionIndex + 1) / DISCIPLINE_ASSESSMENT.length) * 100;
@@ -761,17 +761,17 @@ export default function Onboarding() {
         <div className="space-y-2">
           <div className="flex justify-between text-sm text-muted-foreground">
             <span>
-              Step {currentStep} of {3 + DISCIPLINE_ASSESSMENT.length + 1}
+              Step {currentStep + 1} of {4 + DISCIPLINE_ASSESSMENT.length + 1}
             </span>
             <span>
               {Math.round(
-                (currentStep / (3 + DISCIPLINE_ASSESSMENT.length + 1)) * 100,
+                ((currentStep + 1) / (4 + DISCIPLINE_ASSESSMENT.length + 1)) * 100,
               )}
               % complete
             </span>
           </div>
           <Progress
-            value={(currentStep / (3 + DISCIPLINE_ASSESSMENT.length + 1)) * 100}
+            value={((currentStep + 1) / (4 + DISCIPLINE_ASSESSMENT.length + 1)) * 100}
             className="h-2"
           />
         </div>
@@ -779,12 +779,13 @@ export default function Onboarding() {
         {/* Content Card */}
         <Card className="rounded-xl border-0 shadow-lg">
           <CardContent className="p-6">
+            {currentStep === 0 && renderModeSelectionStep()}
             {currentStep === 1 && renderGoalsStep()}
             {currentStep === 2 && renderRecoveryStep()}
             {currentStep >= 3 &&
-              currentStep <= 3 + DISCIPLINE_ASSESSMENT.length &&
+              currentStep <= 4 + DISCIPLINE_ASSESSMENT.length &&
               renderDisciplineQuestionStep()}
-            {currentStep === 3 + DISCIPLINE_ASSESSMENT.length + 1 &&
+            {currentStep === 4 + DISCIPLINE_ASSESSMENT.length + 1 &&
               renderCompletionStep()}
           </CardContent>
         </Card>
@@ -793,23 +794,24 @@ export default function Onboarding() {
         <div className="flex justify-between">
           <Button
             variant="outline"
-            onClick={() => setCurrentStep(Math.max(1, currentStep - 1))}
-            disabled={currentStep === 1}
+            onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
+            disabled={currentStep === 0}
             className="rounded-lg"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back
           </Button>
 
-          {currentStep < 3 + DISCIPLINE_ASSESSMENT.length + 1 ? (
+          {currentStep < 4 + DISCIPLINE_ASSESSMENT.length + 1 ? (
             <Button
               onClick={() => setCurrentStep(currentStep + 1)}
               disabled={
+                (currentStep === 0 && !selectedMode) ||
                 (currentStep === 1 && selectedGoals.length === 0) ||
-                (currentStep >= 4 &&
-                  currentStep <= 3 + DISCIPLINE_ASSESSMENT.length &&
+                (currentStep >= 5 &&
+                  currentStep <= 4 + DISCIPLINE_ASSESSMENT.length &&
                   !disciplineAnswers[
-                    DISCIPLINE_ASSESSMENT[currentStep - 4]?.id
+                    DISCIPLINE_ASSESSMENT[currentStep - 5]?.id
                   ])
               }
               className="rounded-lg"
@@ -826,13 +828,13 @@ export default function Onboarding() {
         </div>
 
         {/* Skip Option */}
-        {currentStep < 3 + DISCIPLINE_ASSESSMENT.length + 1 && (
+        {currentStep > 0 && currentStep < 4 + DISCIPLINE_ASSESSMENT.length + 1 && (
           <div className="text-center">
             <Button
               variant="ghost"
               size="sm"
               onClick={() =>
-                setCurrentStep(3 + DISCIPLINE_ASSESSMENT.length + 1)
+                setCurrentStep(4 + DISCIPLINE_ASSESSMENT.length + 1)
               }
               className="text-muted-foreground hover:text-foreground"
             >
