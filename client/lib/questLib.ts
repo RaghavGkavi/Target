@@ -126,7 +126,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
     category: 'fitness',
     difficulty: 'moderate',
     xpReward: QUEST_XP_VALUES.moderate,
-    icon: '����',
+    icon: '💪',
     estimatedTime: '30 minutes',
     requiresTracking: true,
   },
@@ -412,7 +412,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
   {
     id: 'very_hard_creative_exhibition',
     title: 'Creative Legend',
-    description: 'Create and publicly share creative work',
+    description: 'Create and publicly share significant creative work: publish a blog post/story, post artwork online, perform music, or showcase your creation to others',
     category: 'creativity',
     difficulty: 'very_hard',
     xpReward: QUEST_XP_VALUES.very_hard,
