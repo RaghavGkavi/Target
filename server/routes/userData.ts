@@ -99,13 +99,13 @@ export const updateUserData: RequestHandler = async (req, res) => {
       });
     }
 
-    const userDocRef = doc(db, "users", userId);
+    const userDocRef = db.collection("users").doc(userId);
     const updatesWithTimestamp = {
       ...updates,
-      lastModified: serverTimestamp(),
+      lastModified: FieldValue.serverTimestamp(),
     };
 
-    await updateDoc(userDocRef, updatesWithTimestamp);
+    await userDocRef.update(updatesWithTimestamp);
 
     res.json({
       success: true,
