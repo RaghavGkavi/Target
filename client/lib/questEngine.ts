@@ -192,11 +192,21 @@ export class QuestEngine {
 
     const excludeIds = [...recentTemplateIds, currentQuest.templateId];
 
-    const newTemplate = getRandomQuestTemplate(
+    // Try quest library first, fallback to templates
+    let newTemplate = getRandomQuest(
       currentQuest.difficulty,
       excludeIds,
       preferences.preferredCategories
     );
+
+    // Fallback to original templates if quest library doesn't have options
+    if (!newTemplate) {
+      newTemplate = getRandomQuestTemplate(
+        currentQuest.difficulty,
+        excludeIds,
+        preferences.preferredCategories
+      );
+    }
 
     if (!newTemplate) {
       return null; // No alternative template available
