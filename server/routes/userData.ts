@@ -134,6 +134,15 @@ export const checkUserData: RequestHandler = async (req, res) => {
 
     console.log(`Checking user data for userId: ${userId}`);
 
+    // Check if Firebase is properly initialized
+    if (!db) {
+      console.error("Firebase Admin SDK not properly initialized");
+      return res.status(500).json({
+        success: false,
+        error: "Firebase service unavailable. Please check server configuration.",
+      });
+    }
+
     const userDocRef = db.collection("users").doc(userId);
     const docSnap = await userDocRef.get();
 
@@ -163,10 +172,27 @@ export const checkUserData: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : "Unknown error",
       stack: error instanceof Error ? error.stack : "No stack trace",
       userId: req.params.userId,
+      errorCode: (error as any)?.code,
+      errorDetails: (error as any)?.details,
     });
+
+    // Provide more specific error messages based on error type
+    let errorMessage = "Failed to check user data";
+    if (error instanceof Error) {
+      if (error.message.includes("permission")) {
+        errorMessage = "Firebase permission denied. Check service account configuration.";
+      } else if (error.message.includes("not found")) {
+        errorMessage = "Firebase project not found. Check project configuration.";
+      } else if (error.message.includes("credential")) {
+        errorMessage = "Firebase authentication failed. Check service account credentials.";
+      } else {
+        errorMessage = `Firebase error: ${error.message}`;
+      }
+    }
+
     res.status(500).json({
       success: false,
-      error: `Failed to check user data: ${error instanceof Error ? error.message : "Unknown error"}`,
+      error: errorMessage,
     });
   }
 };
