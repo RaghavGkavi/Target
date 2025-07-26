@@ -1,27 +1,7 @@
 import "./global.css";
 import React from "react";
 
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyD8O4q7UTgepZinpcoJwP4IA-keyVxXPTY",
-  authDomain: "target-4c91b.firebaseapp.com",
-  projectId: "target-4c91b",
-  storageBucket: "target-4c91b.firebasestorage.app",
-  messagingSenderId: "966058326327",
-  appId: "1:966058326327:web:5e27730503ce6b6e7042b2",
-  measurementId: "G-QLD5NNECH6",
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// Firebase is initialized in client/lib/firebase.ts
 
 import { Toaster } from "@/components/ui/toaster";
 import { createRoot } from "react-dom/client";
