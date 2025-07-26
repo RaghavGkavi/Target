@@ -113,12 +113,20 @@ export default function QuestDashboard() {
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [timeUntilMidnight, setTimeUntilMidnight] = useState<string>("");
+  const [localQuestData, setLocalQuestData] = useState(userData?.questSystemData);
 
   // Dev mode detection from settings
   const isDevMode = user?.email === "raghav.gkavi@gmail.com" && userData?.preferences?.devModeEnabled === true;
 
-  // Get quest system data (moved before useEffects to fix initialization order)
-  const questSystemData = userData?.questSystemData;
+  // Update local quest data when userData changes
+  useEffect(() => {
+    if (userData?.questSystemData) {
+      setLocalQuestData(userData.questSystemData);
+    }
+  }, [userData?.questSystemData]);
+
+  // Get quest system data from local state
+  const questSystemData = localQuestData;
   const currentQuests = questSystemData?.currentQuests || [];
   const userLevel = questSystemData?.userLevel || { currentLevel: 1, currentXP: 0, xpToNextLevel: 50, totalXP: 0 };
   const weeklyStats = questSystemData?.weeklyStats || { questsCompleted: 0, totalXPEarned: 0, streak: 0 };
