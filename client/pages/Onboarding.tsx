@@ -252,7 +252,7 @@ export default function Onboarding() {
         theme: "system",
         notifications: true,
         onboardingCompleted: true,
-        useQuestSystem: false, // Traditional goal system
+        useQuestSystem: true, // Default to quest system now
       },
     });
 
