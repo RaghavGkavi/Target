@@ -198,6 +198,7 @@ export default function QuestDashboard() {
   useEffect(() => {
     if (questSystemData && userData) {
       // Only auto-generate if there are literally no current quests (fresh user or new day)
+      // Do NOT auto-generate if all quests are completed - let user manually regenerate
       if (questSystemData.currentQuests.length === 0) {
         const wasGenerated =
           QuestEngine.autoGenerateQuestsIfNeeded(questSystemData);
