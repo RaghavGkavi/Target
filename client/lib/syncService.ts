@@ -68,10 +68,17 @@ export class SyncService {
 
       // Check if cloud data exists
       const existsResponse = await fetch(`/api/users/${userId}/exists`);
+
+      if (!existsResponse.ok) {
+        throw new Error(
+          `Failed to check user data: ${existsResponse.status} ${existsResponse.statusText}`,
+        );
+      }
+
       const existsData: UserDataExistsResponse = await existsResponse.json();
 
       if (!existsData.success) {
-        throw new Error(existsData.error || "Failed to check cloud data");
+        throw new Error(existsData.error || "Failed to check user data");
       }
 
       let finalData: UserData;

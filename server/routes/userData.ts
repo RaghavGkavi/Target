@@ -138,21 +138,41 @@ export const checkUserData: RequestHandler = async (req, res) => {
       });
     }
 
+    console.log(`Checking user data for userId: ${userId}`);
+
     const userDocRef = doc(db, "users", userId);
     const docSnap = await getDoc(userDocRef);
 
+    const exists = docSnap.exists();
+    let lastModified = null;
+
+    if (exists) {
+      const data = docSnap.data();
+      if (
+        data?.lastModified &&
+        typeof data.lastModified.toDate === "function"
+      ) {
+        lastModified = data.lastModified.toDate().toISOString();
+      }
+    }
+
+    console.log(`User data exists: ${exists}, lastModified: ${lastModified}`);
+
     res.json({
       success: true,
-      exists: docSnap.exists(),
-      lastModified: docSnap.exists()
-        ? docSnap.data()?.lastModified?.toDate?.()?.toISOString()
-        : null,
+      exists,
+      lastModified,
     });
   } catch (error) {
     console.error("Error checking user data:", error);
+    console.error("Error details:", {
+      message: error instanceof Error ? error.message : "Unknown error",
+      stack: error instanceof Error ? error.stack : "No stack trace",
+      userId: req.params.userId,
+    });
     res.status(500).json({
       success: false,
-      error: "Failed to check user data",
+      error: `Failed to check user data: ${error instanceof Error ? error.message : "Unknown error"}`,
     });
   }
 };
