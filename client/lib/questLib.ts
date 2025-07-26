@@ -126,7 +126,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
     category: 'fitness',
     difficulty: 'moderate',
     xpReward: QUEST_XP_VALUES.moderate,
-    icon: '💪',
+    icon: '����',
     estimatedTime: '30 minutes',
     requiresTracking: true,
   },
@@ -401,7 +401,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
   {
     id: 'very_hard_mindful_fast',
     title: 'Ascetic Challenge',
-    description: 'Complete 24-hour mindful fast (safely)',
+    description: 'Complete a 24-hour mindful fast with only water, using the time for reflection, meditation, and mental clarity (consult doctor if needed)',
     category: 'mindfulness',
     difficulty: 'very_hard',
     xpReward: QUEST_XP_VALUES.very_hard,
