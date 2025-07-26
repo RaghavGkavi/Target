@@ -112,8 +112,8 @@ export default function QuestDashboard() {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [timeUntilMidnight, setTimeUntilMidnight] = useState<string>("");
 
-  // Dev mode detection
-  const isDevMode = user?.email === "raghav.gkavi@gmail.com";
+  // Dev mode detection from settings
+  const isDevMode = user?.email === "raghav.gkavi@gmail.com" && userData?.preferences?.devModeEnabled === true;
 
   // Get quest system data (moved before useEffects to fix initialization order)
   const questSystemData = userData?.questSystemData;
