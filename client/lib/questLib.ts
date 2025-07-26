@@ -445,7 +445,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
   {
     id: 'very_hard_fear_conquest',
     title: 'Fear Conqueror',
-    description: 'Face and overcome a significant personal fear',
+    description: 'Face a significant personal fear: give a public speech, ask for a raise, have a difficult conversation, or take action on something you\'ve been avoiding',
     category: 'personal',
     difficulty: 'very_hard',
     xpReward: QUEST_XP_VALUES.very_hard,
