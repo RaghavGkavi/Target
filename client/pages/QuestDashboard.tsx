@@ -221,7 +221,7 @@ export default function QuestDashboard() {
     const questToRegenerate = currentQuests.find(q => q.id === questId);
     if (!questToRegenerate) return;
 
-    const newQuest = QuestEngine.regenerateQuest(questToRegenerate, questSystemData);
+    const newQuest = QuestEngine.regenerateQuest(questToRegenerate, questSystemData, isDevMode);
     if (!newQuest) {
       console.log('Cannot regenerate quest - maximum regenerations reached or no alternatives available');
       return;
