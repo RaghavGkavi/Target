@@ -126,7 +126,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
     category: 'fitness',
     difficulty: 'moderate',
     xpReward: QUEST_XP_VALUES.moderate,
-    icon: '💪',
+    icon: '����',
     estimatedTime: '30 minutes',
     requiresTracking: true,
   },
@@ -423,7 +423,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
   {
     id: 'very_hard_social_impact',
     title: 'Community Leader',
-    description: 'Organize event that positively impacts others',
+    description: 'Organize or participate in a community event: volunteer for 4+ hours, organize a charity drive, mentor someone, or lead a community initiative',
     category: 'social',
     difficulty: 'very_hard',
     xpReward: QUEST_XP_VALUES.very_hard,
