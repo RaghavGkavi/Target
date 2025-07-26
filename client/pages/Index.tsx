@@ -346,10 +346,24 @@ export default function Index() {
       ];
 
       updateUserData({
-        ...userData, // <-- Ensure all user fields are preserved!
-        goals,
-        addictions,
-        completedGoals,
+        ...userData,
+        // Convert Date objects to ISO strings for backup
+        goals: goals.map((g) => ({
+          ...g,
+          lastUpdated: g.lastUpdated instanceof Date ? g.lastUpdated.toISOString() : g.lastUpdated,
+        })),
+        addictions: addictions.map((a) => ({
+          ...a,
+          lastRelapse: a.lastRelapse instanceof Date ? a.lastRelapse.toISOString() : a.lastRelapse,
+        })),
+        completedGoals: completedGoals.map((cg) => ({
+          ...cg,
+          completionDates: Array.isArray(cg.completionDates)
+            ? cg.completionDates.map((d) =>
+                d instanceof Date ? d.toISOString() : d
+              )
+            : [],
+        })),
         achievements: updatedAchievements,
       });
 
