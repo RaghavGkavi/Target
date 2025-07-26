@@ -234,7 +234,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
   {
     id: 'hard_intense_training',
     title: 'Beast Mode',
-    description: 'Complete challenging 45-minute workout',
+    description: 'Complete a 45-minute high-intensity workout: HIIT training, weight lifting, or challenging cardio that pushes your limits',
     category: 'fitness',
     difficulty: 'hard',
     xpReward: QUEST_XP_VALUES.hard,
