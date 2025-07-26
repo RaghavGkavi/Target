@@ -811,6 +811,7 @@ export default function Onboarding() {
                 (currentStep === 1 && selectedGoals.length === 0) ||
                 (currentStep >= 5 &&
                   currentStep <= 4 + DISCIPLINE_ASSESSMENT.length &&
+                  currentStep - 5 < DISCIPLINE_ASSESSMENT.length &&
                   !disciplineAnswers[
                     DISCIPLINE_ASSESSMENT[currentStep - 5]?.id
                   ])
