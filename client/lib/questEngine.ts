@@ -126,45 +126,116 @@ export class QuestEngine {
   }
 
   /**
-   * Select 3 difficulties for daily quests based on user preferences
+   * Select 3 difficulties for daily quests with guaranteed distribution
    */
   private static selectQuestDifficulties(preferences: QuestPreferences): QuestDifficulty[] {
-    const distribution = preferences.difficultyBalance || DEFAULT_DIFFICULTY_DISTRIBUTION;
     const difficulties: QuestDifficulty[] = [];
-    
-    // Create weighted array based on preferences
+
+    // Ensure at least one hard/very hard quest
+    const hardQuests: QuestDifficulty[] = ['hard', 'very_hard'];
+    const hardQuest = hardQuests[Math.floor(Math.random() * hardQuests.length)];
+    difficulties.push(hardQuest);
+
+    // Ensure at least one easy/moderate quest
+    const easyQuests: QuestDifficulty[] = ['easy', 'moderate'];
+    const easyQuest = easyQuests[Math.floor(Math.random() * easyQuests.length)];
+    difficulties.push(easyQuest);
+
+    // Third quest based on user preferences with some randomization
+    const distribution = preferences.difficultyBalance || DEFAULT_DIFFICULTY_DISTRIBUTION;
     const weightedDifficulties: QuestDifficulty[] = [];
     Object.entries(distribution).forEach(([difficulty, weight]) => {
-      const count = Math.round(weight * 100); // Convert to whole numbers
+      const count = Math.round(weight * 100);
       for (let i = 0; i < count; i++) {
         weightedDifficulties.push(difficulty as QuestDifficulty);
       }
     });
 
-    // Select 3 difficulties
-    for (let i = 0; i < 3; i++) {
-      if (weightedDifficulties.length > 0) {
-        const randomIndex = Math.floor(Math.random() * weightedDifficulties.length);
-        const selectedDifficulty = weightedDifficulties[randomIndex];
-        difficulties.push(selectedDifficulty);
-        
-        // Remove some instances to avoid too many of the same difficulty
-        const removeCount = Math.min(10, Math.floor(weightedDifficulties.length * 0.1));
-        for (let j = 0; j < removeCount; j++) {
-          const indexToRemove = weightedDifficulties.findIndex(d => d === selectedDifficulty);
-          if (indexToRemove !== -1) {
-            weightedDifficulties.splice(indexToRemove, 1);
-          }
-        }
-      }
-    }
-
-    // Fallback if we don't have enough difficulties
-    while (difficulties.length < 3) {
-      difficulties.push('moderate');
+    if (weightedDifficulties.length > 0) {
+      const randomIndex = Math.floor(Math.random() * weightedDifficulties.length);
+      difficulties.push(weightedDifficulties[randomIndex]);
+    } else {
+      difficulties.push('moderate'); // Fallback
     }
 
     return difficulties;
+  }
+
+  /**
+   * Regenerate all quests with randomized difficulty distribution
+   */
+  static regenerateAllQuests(questSystemData: QuestSystemData): DailyQuest[] {
+    const today = new Date();
+
+    // Create randomized difficulty distribution
+    const difficulties: QuestDifficulty[] = [];
+
+    // Ensure at least one hard/very hard quest
+    const hardQuests: QuestDifficulty[] = ['hard', 'very_hard'];
+    difficulties.push(hardQuests[Math.floor(Math.random() * hardQuests.length)]);
+
+    // Ensure at least one easy/moderate quest
+    const easyQuests: QuestDifficulty[] = ['easy', 'moderate'];
+    difficulties.push(easyQuests[Math.floor(Math.random() * easyQuests.length)]);
+
+    // Third quest is completely random
+    const allDifficulties: QuestDifficulty[] = ['easy', 'moderate', 'hard', 'very_hard'];
+    difficulties.push(allDifficulties[Math.floor(Math.random() * allDifficulties.length)]);
+
+    const preferences = questSystemData.questPreferences;
+    const recentTemplateIds = questSystemData.questHistory
+      .filter(quest => {
+        const questDate = new Date(quest.dateAssigned);
+        const daysDiff = Math.floor((today.getTime() - questDate.getTime()) / (1000 * 60 * 60 * 24));
+        return daysDiff <= 7;
+      })
+      .map(quest => quest.templateId);
+
+    const dailyQuests: DailyQuest[] = [];
+    const usedTemplateIds: string[] = [];
+
+    for (let i = 0; i < 3; i++) {
+      const difficulty = difficulties[i];
+      const excludeIds = [...recentTemplateIds, ...usedTemplateIds];
+
+      // Try quest library first, fallback to templates
+      let template = getRandomQuest(
+        difficulty,
+        excludeIds,
+        preferences.preferredCategories
+      );
+
+      if (!template) {
+        template = getRandomQuestTemplate(
+          difficulty,
+          excludeIds,
+          preferences.preferredCategories
+        );
+      }
+
+      if (template) {
+        const quest: DailyQuest = {
+          id: `quest_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          templateId: template.id,
+          title: template.title,
+          description: template.description,
+          category: template.category,
+          difficulty: template.difficulty,
+          xpReward: template.xpReward,
+          icon: template.icon,
+          estimatedTime: template.estimatedTime,
+          status: 'active',
+          dateAssigned: today,
+          regenerationsUsed: 0,
+          isRegenerated: true,
+        };
+
+        dailyQuests.push(quest);
+        usedTemplateIds.push(template.id);
+      }
+    }
+
+    return dailyQuests;
   }
 
   /**
