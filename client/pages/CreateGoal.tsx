@@ -133,7 +133,7 @@ export default function CreateGoal() {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Target className="h-5 w-5 text-primary" />
-                <span>Goal Details</span>
+                <span>Quest Details</span>
               </CardTitle>
               <CardDescription>Define what you want to achieve</CardDescription>
             </CardHeader>
