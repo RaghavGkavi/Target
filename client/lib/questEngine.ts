@@ -458,7 +458,7 @@ export class QuestEngine {
     // Generate new quests if:
     // 1. Different day than last generation
     // 2. No current quests exist
-    // 3. All current quests are completed/failed
+    // 3. All current quests are completed/failed AND allQuestsCompleted flag is false
 
     const isDifferentDay =
       today.toDateString() !== lastGeneration.toDateString();
@@ -466,6 +466,11 @@ export class QuestEngine {
     const allQuestsCompleted = questSystemData.currentQuests.every(
       (quest) => quest.status === "completed" || quest.status === "failed",
     );
+
+    // Don't auto-generate if user has completed all quests (wait for manual regeneration)
+    if (allQuestsCompleted && questSystemData.allQuestsCompleted) {
+      return false;
+    }
 
     return isDifferentDay || hasNoCurrentQuests || allQuestsCompleted;
   }
