@@ -302,13 +302,7 @@ export default function QuestDashboard() {
                 <span className="text-sm font-semibold">Level {userLevel.currentLevel}</span>
               </div>
 
-              {/* Dev Mode Indicator */}
-              {isDevMode && (
-                <div className="flex items-center space-x-2 bg-warning/10 rounded-xl px-3 py-2">
-                  <Zap className="h-4 w-4 text-warning" />
-                  <span className="text-sm font-semibold text-warning">DEV MODE</span>
-                </div>
-              )}
+
               
               {/* Theme Toggle */}
               <ThemeToggle />
