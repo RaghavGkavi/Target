@@ -155,7 +155,7 @@ function AppContent() {
           path="/"
           element={
             <ProtectedRoute>
-              <Index />
+              <DashboardRouter />
             </ProtectedRoute>
           }
         />
