@@ -406,7 +406,7 @@ export default function Index() {
       case "career":
         return "💼";
       case "addiction":
-        return "���";
+        return "�����";
       default:
         return "⭐";
     }
@@ -970,7 +970,7 @@ export default function Index() {
           {/* Goals Tab */}
           <TabsContent value="goals" className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Your Goals</h2>
+              <h2 className="text-xl font-semibold">Your Quests</h2>
               <Badge variant="secondary">{goals.length} total</Badge>
             </div>
 
