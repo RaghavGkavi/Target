@@ -187,12 +187,23 @@ export default function QuestDashboard() {
 
 
   const completeQuest = async (questId: string) => {
-    if (!questSystemData || !userData) return;
+    if (!questSystemData || !userData) {
+      console.error('Missing questSystemData or userData');
+      return;
+    }
+
+    console.log('Attempting to complete quest:', questId);
+    console.log('Current quests before completion:', questSystemData.currentQuests);
 
     const result = QuestEngine.completeQuest(questId, questSystemData);
-    if (!result) return;
+    if (!result) {
+      console.error('Failed to complete quest - QuestEngine.completeQuest returned null');
+      return;
+    }
 
     const { updatedQuest, newLevel, xpGained } = result;
+    console.log('Quest completion result:', result);
+    console.log('Current quests after completion:', questSystemData.currentQuests);
 
     // Check for new achievements
     const newAchievements = checkQuestAchievements(questSystemData, userData.achievements || []);
