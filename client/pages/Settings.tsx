@@ -61,6 +61,9 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { getQuestTemplateById } from "@shared/quest-templates";
+import { getQuestById } from "@/lib/questLib";
+import { Badge } from "@/components/ui/badge";
 
 export default function Settings() {
   const navigate = useNavigate();
