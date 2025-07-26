@@ -571,7 +571,7 @@ export default function Index() {
     MobileUtils.triggerNotificationHaptic();
 
     setAddictions((currentAddictions) => {
-      console.log("�� Current addictions before update:", currentAddictions);
+      console.log("🔧 Current addictions before update:", currentAddictions);
       const addiction = currentAddictions.find((a) => a.id === addictionId);
       if (!addiction) {
         console.log("🔧 Addiction not found!");
@@ -711,8 +711,10 @@ export default function Index() {
     // Do NOT delete from completedGoals
   };
 
+  const deviceInfo = useMobileDevice();
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 overflow-x-hidden safe-area-top safe-area-bottom">
       {/* Header */}
       <header
         className={`border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50 transition-transform duration-300 ${
