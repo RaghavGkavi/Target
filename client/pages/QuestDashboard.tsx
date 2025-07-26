@@ -162,16 +162,19 @@ export default function QuestDashboard() {
     return () => clearInterval(interval);
   }, []);
 
-  // Auto-generate quests if none available
+  // Auto-generate quests only if there are NO quests at all (not when all are completed)
   useEffect(() => {
     if (questSystemData && userData) {
-      const wasGenerated = QuestEngine.autoGenerateQuestsIfNeeded(questSystemData);
-      if (wasGenerated) {
-        console.log('🎯 Auto-generated quests for empty quest list');
-        updateUserData({
-          ...userData,
-          questSystemData,
-        });
+      // Only auto-generate if there are literally no current quests (fresh user or new day)
+      if (questSystemData.currentQuests.length === 0) {
+        const wasGenerated = QuestEngine.autoGenerateQuestsIfNeeded(questSystemData);
+        if (wasGenerated) {
+          console.log('🎯 Auto-generated initial quests for new day');
+          updateUserData({
+            ...userData,
+            questSystemData,
+          });
+        }
       }
     }
   }, [questSystemData, userData, updateUserData]);
