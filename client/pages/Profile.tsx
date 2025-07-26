@@ -42,12 +42,20 @@ export default function Profile() {
     if (userData?.preferences?.useQuestSystem) {
       const questAchievements = getEarnedQuestAchievements(userData?.achievements || []);
       return questAchievements
-        .sort((a, b) => (b.earnedAt?.getTime() || 0) - (a.earnedAt?.getTime() || 0))
+        .sort((a, b) => {
+          const aTime = a.earnedAt ? (typeof a.earnedAt === 'string' ? new Date(a.earnedAt).getTime() : a.earnedAt.getTime()) : 0;
+          const bTime = b.earnedAt ? (typeof b.earnedAt === 'string' ? new Date(b.earnedAt).getTime() : b.earnedAt.getTime()) : 0;
+          return bTime - aTime;
+        })
         .slice(0, 3);
     } else {
       const traditionalAchievements = getEarnedAchievements(userData);
       return traditionalAchievements
-        .sort((a, b) => (b.earnedAt?.getTime() || 0) - (a.earnedAt?.getTime() || 0))
+        .sort((a, b) => {
+          const aTime = a.earnedAt ? (typeof a.earnedAt === 'string' ? new Date(a.earnedAt).getTime() : a.earnedAt.getTime()) : 0;
+          const bTime = b.earnedAt ? (typeof b.earnedAt === 'string' ? new Date(b.earnedAt).getTime() : b.earnedAt.getTime()) : 0;
+          return bTime - aTime;
+        })
         .slice(0, 3);
     }
   };
