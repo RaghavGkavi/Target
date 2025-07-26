@@ -65,13 +65,13 @@ export const saveUserData: RequestHandler = async (req, res) => {
       });
     }
 
-    const userDocRef = doc(db, "users", userId);
+    const userDocRef = db.collection("users").doc(userId);
     const dataWithTimestamp = {
       ...userData,
-      lastModified: serverTimestamp(),
+      lastModified: FieldValue.serverTimestamp(),
     };
 
-    await setDoc(userDocRef, dataWithTimestamp, { merge: true });
+    await userDocRef.set(dataWithTimestamp, { merge: true });
 
     res.json({
       success: true,
