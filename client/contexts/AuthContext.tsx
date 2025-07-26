@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { QuestSystemData } from '@shared/quest-types';
+import { QuestEngine, DEFAULT_QUEST_PREFERENCES } from '@/lib/questEngine';
 
 export interface User {
   id: string;
