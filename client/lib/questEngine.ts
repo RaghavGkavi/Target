@@ -367,6 +367,40 @@ export class QuestEngine {
   }
 
   /**
+   * Flag a quest and regenerate it immediately
+   */
+  static flagQuest(
+    questId: string,
+    questSystemData: QuestSystemData,
+    isDevMode: boolean = false,
+  ): DailyQuest | null {
+    const questIndex = questSystemData.currentQuests.findIndex(
+      (q) => q.id === questId,
+    );
+    if (questIndex === -1) {
+      return null;
+    }
+
+    const currentQuest = questSystemData.currentQuests[questIndex];
+
+    // Add quest template to flagged list if not already there
+    if (!questSystemData.flaggedQuests.includes(currentQuest.templateId)) {
+      questSystemData.flaggedQuests.push(currentQuest.templateId);
+    }
+
+    // Generate a replacement quest
+    const replacementQuest = this.regenerateQuest(currentQuest, questSystemData, isDevMode);
+
+    if (replacementQuest) {
+      // Replace the quest in the current quests array
+      questSystemData.currentQuests[questIndex] = replacementQuest;
+      return replacementQuest;
+    }
+
+    return null;
+  }
+
+  /**
    * Complete a quest and award XP
    */
   static completeQuest(
