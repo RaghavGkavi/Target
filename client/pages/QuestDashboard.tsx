@@ -525,10 +525,12 @@ export default function QuestDashboard() {
                           size="sm"
                           variant="outline"
                           onClick={() => regenerateQuest(quest.id)}
-                          disabled={quest.regenerationsUsed >= 3}
+                          disabled={!isDevMode && quest.regenerationsUsed >= 3}
                           className="rounded-lg"
+                          title={isDevMode ? "Infinite regenerations (Dev Mode)" : `${3 - quest.regenerationsUsed} regenerations left`}
                         >
                           <RefreshCw className="h-4 w-4" />
+                          {isDevMode && <span className="ml-1 text-xs">∞</span>}
                         </Button>
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
