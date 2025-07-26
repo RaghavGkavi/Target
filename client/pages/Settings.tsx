@@ -309,9 +309,9 @@ export default function Settings() {
             {/* Goals Visibility */}
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label htmlFor="showGoals">Show Goals</Label>
+                <Label htmlFor="showGoals">Show Quests</Label>
                 <p className="text-xs text-muted-foreground">
-                  Display your current goals on your profile
+                  Display your current quests on your profile
                 </p>
               </div>
               <Switch
