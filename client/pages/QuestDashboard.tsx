@@ -244,6 +244,27 @@ export default function QuestDashboard() {
     console.log('Quest regenerated successfully');
   };
 
+  const regenerateAllQuests = async () => {
+    if (!questSystemData || !userData) return;
+
+    console.log('🔄 Regenerating all quests with randomized difficulty...');
+
+    // Archive current quests to history before regenerating
+    questSystemData.questHistory.push(...questSystemData.currentQuests);
+
+    // Generate new quests with randomized difficulty
+    const newQuests = QuestEngine.regenerateAllQuests(questSystemData);
+    questSystemData.currentQuests = newQuests;
+    questSystemData.lastQuestGeneration = new Date();
+
+    await updateUserData({
+      ...userData,
+      questSystemData,
+    });
+
+    console.log('✅ All quests regenerated successfully');
+  };
+
   const skipQuest = async (questId: string) => {
     if (!questSystemData || !userData) return;
 
