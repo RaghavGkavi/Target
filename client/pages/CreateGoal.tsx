@@ -156,7 +156,7 @@ export default function CreateGoal() {
                 <Label htmlFor="description">Description (Optional)</Label>
                 <Textarea
                   id="description"
-                  placeholder="Add more details about your goal..."
+                  placeholder="Add more details about your quest..."
                   value={formData.description}
                   onChange={(e) =>
                     setFormData({ ...formData, description: e.target.value })
