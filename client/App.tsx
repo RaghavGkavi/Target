@@ -264,6 +264,10 @@ const App = () => (
 // Handle hot reloading properly
 const container = document.getElementById("root")!;
 
-// Always create a fresh root to avoid context issues during hot reload
-const root = createRoot(container);
-root.render(<App />);
+// Check if we already have a root attached to avoid multiple root creation
+if (!container._reactRoot) {
+  container._reactRoot = createRoot(container);
+}
+
+// Always render the latest App version
+container._reactRoot.render(<App />);
