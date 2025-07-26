@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { QuestSystemData } from '@shared/quest-types';
+import { QuestEngine, DEFAULT_QUEST_PREFERENCES } from '@/lib/questEngine';
 
 export interface User {
   id: string;
@@ -14,6 +16,7 @@ export interface UserData {
   goals: any[];
   addictions: any[];
   completedGoals: any[];
+  questSystemData?: QuestSystemData; // New quest system integration
   disciplineData?: {
     baseScore: number; // 0-100, determined from onboarding assessment
     currentRank: string; // F-, F, F+, D-, D, D+, C-, C, C+, B-, B, B+, A-, A, A+
@@ -26,6 +29,7 @@ export interface UserData {
     notifications: boolean;
     reminderTime?: string;
     onboardingCompleted?: boolean;
+    useQuestSystem?: boolean; // Flag to enable quest mode
   };
   privacy?: {
     showGoals: boolean;
@@ -121,6 +125,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Load user data
         const userProgressData = getUserData(userData.id);
         if (userProgressData) {
+          // Initialize quest system if it doesn't exist and quest mode is enabled
+          if (userProgressData.preferences?.useQuestSystem && !userProgressData.questSystemData) {
+            userProgressData.questSystemData = QuestEngine.initializeQuestSystem(DEFAULT_QUEST_PREFERENCES);
+            saveUserData(userData.id, userProgressData);
+          }
+
+          // Process quest rotation if quest system exists
+          if (userProgressData.questSystemData) {
+            const processedQuestData = QuestEngine.processQuestRotation(userProgressData.questSystemData);
+            userProgressData.questSystemData = processedQuestData;
+            saveUserData(userData.id, userProgressData);
+          }
+
           setUserData(userProgressData);
         } else {
           // Initialize default user data
@@ -132,6 +149,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               theme: "system",
               notifications: true,
               onboardingCompleted: false,
+              useQuestSystem: true, // Default to quest system
             },
           };
           setUserData(defaultData);
@@ -171,6 +189,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Load user data
       const userProgressData = getUserData(updatedUser.id);
       if (userProgressData) {
+        // Process quest rotation on login if quest system exists
+        if (userProgressData.questSystemData) {
+          const processedQuestData = QuestEngine.processQuestRotation(userProgressData.questSystemData);
+          userProgressData.questSystemData = processedQuestData;
+          saveUserData(updatedUser.id, userProgressData);
+        }
         setUserData(userProgressData);
       }
 
@@ -222,6 +246,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           theme: "system",
           notifications: true,
           onboardingCompleted: false,
+          useQuestSystem: true,
         },
         privacy: {
           showGoals: true,
@@ -295,6 +320,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     theme: "system",
                     notifications: true,
                     onboardingCompleted: false,
+                    useQuestSystem: true,
                   },
                   privacy: {
                     showGoals: true,
@@ -353,6 +379,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 theme: "system",
                 notifications: true,
                 onboardingCompleted: false,
+                useQuestSystem: true,
               },
               privacy: {
                 showGoals: true,

@@ -23,6 +23,8 @@ import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/AuthContext";
 import { getDisciplineRankInfo } from "@/lib/disciplineRanking";
+import { getEarnedQuestAchievements, getRarityColor, getRarityBorder } from "@/lib/questAchievements";
+import { getEarnedAchievements } from "@/lib/achievements";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function Profile() {
@@ -31,6 +33,32 @@ export default function Profile() {
   const [copySuccess, setCopySuccess] = useState(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+
+  // Check if user is developer
+  const isDeveloper = user?.email === "raghav.gkavi@gmail.com";
+
+  // Get recent achievements
+  const getRecentAchievements = () => {
+    if (userData?.preferences?.useQuestSystem) {
+      const questAchievements = getEarnedQuestAchievements(userData?.achievements || []);
+      return questAchievements
+        .sort((a, b) => {
+          const aTime = a.earnedAt ? (typeof a.earnedAt === 'string' ? new Date(a.earnedAt).getTime() : a.earnedAt.getTime()) : 0;
+          const bTime = b.earnedAt ? (typeof b.earnedAt === 'string' ? new Date(b.earnedAt).getTime() : b.earnedAt.getTime()) : 0;
+          return bTime - aTime;
+        })
+        .slice(0, 3);
+    } else {
+      const traditionalAchievements = getEarnedAchievements(userData);
+      return traditionalAchievements
+        .sort((a, b) => {
+          const aTime = a.earnedAt ? (typeof a.earnedAt === 'string' ? new Date(a.earnedAt).getTime() : a.earnedAt.getTime()) : 0;
+          const bTime = b.earnedAt ? (typeof b.earnedAt === 'string' ? new Date(b.earnedAt).getTime() : b.earnedAt.getTime()) : 0;
+          return bTime - aTime;
+        })
+        .slice(0, 3);
+    }
+  };
 
   const handleShare = async () => {
     const shareText = `Check out my progress on Target! I'm currently rank ${userData?.disciplineData?.currentRank} with ${userData?.goals?.filter((g) => !g.isCompleted).length} active goals. Join me in building better habits!`;
@@ -207,7 +235,16 @@ export default function Profile() {
               </Avatar>
 
               <div className="flex-1">
-                <h2 className="text-2xl font-bold">{user?.displayName}</h2>
+                <div className="flex items-center space-x-2">
+                  <h2 className={`text-2xl font-bold ${isDeveloper ? 'text-yellow-500' : ''}`}>
+                    {user?.displayName}
+                  </h2>
+                  {isDeveloper && (
+                    <Badge className="bg-yellow-500/20 text-yellow-600 border-yellow-500/30">
+                      Developer
+                    </Badge>
+                  )}
+                </div>
                 <p className="text-muted-foreground">{user?.email}</p>
                 <p className="text-sm text-muted-foreground mt-1">
                   Member since{" "}
@@ -382,6 +419,55 @@ export default function Profile() {
             </CardContent>
           </Card>
         )}
+
+        {/* Recent Achievements */}
+        {(() => {
+          const recentAchievements = getRecentAchievements();
+          if (recentAchievements.length > 0) {
+            return (
+              <Card className="rounded-xl">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Trophy className="h-5 w-5 text-warning" />
+                    <span>Recent Achievements</span>
+                  </CardTitle>
+                  <CardDescription>
+                    Your latest accomplishments
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid gap-3">
+                    {recentAchievements.map((achievement) => (
+                      <div
+                        key={achievement.id}
+                        className={`flex items-center space-x-3 p-3 rounded-lg border-2 ${getRarityBorder ? getRarityBorder(achievement.rarity) : 'border-border'}`}
+                      >
+                        <div className="text-2xl">{achievement.icon}</div>
+                        <div className="flex-1">
+                          <h4 className={`font-semibold ${getRarityColor ? getRarityColor(achievement.rarity) : ''}`}>
+                            {achievement.title}
+                          </h4>
+                          <p className="text-sm text-muted-foreground">
+                            {achievement.description}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <Badge variant="outline" className={`capitalize ${getRarityColor ? getRarityColor(achievement.rarity) : ''}`}>
+                            {achievement.rarity}
+                          </Badge>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {achievement.earnedAt ? new Date(achievement.earnedAt).toLocaleDateString() : 'Recent'}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          }
+          return null;
+        })()}
 
         {/* Privacy Notice */}
         {userData?.privacy?.profileVisibility === "private" && (

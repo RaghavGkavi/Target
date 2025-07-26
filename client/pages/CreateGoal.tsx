@@ -117,7 +117,7 @@ export default function CreateGoal() {
               Back
             </Button>
             <div>
-              <h1 className="text-xl font-bold">Create New Goal</h1>
+              <h1 className="text-xl font-bold">Create New Quest</h1>
               <p className="text-sm text-muted-foreground">
                 Build a new habit or break an old one
               </p>
@@ -133,13 +133,13 @@ export default function CreateGoal() {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Target className="h-5 w-5 text-primary" />
-                <span>Goal Details</span>
+                <span>Quest Details</span>
               </CardTitle>
               <CardDescription>Define what you want to achieve</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="title">Goal Title</Label>
+                <Label htmlFor="title">Quest Title</Label>
                 <Input
                   id="title"
                   placeholder="e.g., Exercise for 30 minutes daily"
@@ -156,7 +156,7 @@ export default function CreateGoal() {
                 <Label htmlFor="description">Description (Optional)</Label>
                 <Textarea
                   id="description"
-                  placeholder="Add more details about your goal..."
+                  placeholder="Add more details about your quest..."
                   value={formData.description}
                   onChange={(e) =>
                     setFormData({ ...formData, description: e.target.value })
@@ -176,7 +176,7 @@ export default function CreateGoal() {
                 <span>Category</span>
               </CardTitle>
               <CardDescription>
-                Choose the area of life this goal belongs to
+                Choose the area of life this quest belongs to
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -215,7 +215,7 @@ export default function CreateGoal() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="duration">Goal Duration</Label>
+                <Label htmlFor="duration">Quest Duration</Label>
                 <Select
                   value={formData.duration}
                   onValueChange={(value) =>
@@ -259,7 +259,7 @@ export default function CreateGoal() {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <Flag className="h-5 w-5 text-primary" />
-                  <span>Goal Preview</span>
+                  <span>Quest Preview</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -311,7 +311,7 @@ export default function CreateGoal() {
               }
             >
               <Zap className="h-4 w-4 mr-2" />
-              Create Goal
+              Create Quest
             </Button>
           </div>
         </form>

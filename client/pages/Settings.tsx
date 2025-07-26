@@ -12,6 +12,8 @@ import {
   RotateCcw,
   Trash2,
   AlertTriangle,
+  Zap,
+  Target,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -76,6 +78,12 @@ export default function Settings() {
   const [notifications, setNotifications] = useState(
     userData?.preferences?.notifications ?? true,
   );
+  const [useQuestSystem, setUseQuestSystem] = useState(
+    userData?.preferences?.useQuestSystem ?? true, // Default to quest system
+  );
+  const [devModeEnabled, setDevModeEnabled] = useState(
+    userData?.preferences?.devModeEnabled ?? false,
+  );
   const [isSaving, setIsSaving] = useState(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -126,6 +134,8 @@ export default function Settings() {
         preferences: {
           ...userData?.preferences,
           notifications,
+          useQuestSystem,
+          devModeEnabled,
         },
       });
 
@@ -303,9 +313,9 @@ export default function Settings() {
             {/* Goals Visibility */}
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label htmlFor="showGoals">Show Goals</Label>
+                <Label htmlFor="showGoals">Show Quests</Label>
                 <p className="text-xs text-muted-foreground">
-                  Display your current goals on your profile
+                  Display your current quests on your profile
                 </p>
               </div>
               <Switch
@@ -358,6 +368,102 @@ export default function Settings() {
                 onCheckedChange={setNotifications}
               />
             </div>
+          </CardContent>
+        </Card>
+
+        {/* System Mode Settings */}
+        <Card className="rounded-xl">
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <Zap className="h-5 w-5" />
+              <span>System Mode</span>
+            </CardTitle>
+            <CardDescription>
+              Choose between traditional goals or gamified quests
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="questMode">Quest Mode</Label>
+                <p className="text-xs text-muted-foreground">
+                  Use daily quests, XP, levels, and achievements for a gamified experience (Default)
+                </p>
+              </div>
+              <Switch
+                id="questMode"
+                checked={useQuestSystem}
+                onCheckedChange={setUseQuestSystem}
+              />
+            </div>
+
+            {/* Dev Mode Toggle - Only visible to developer */}
+            {user?.email === "raghav.gkavi@gmail.com" && (
+              <>
+                <div className="border-t pt-4">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="devMode">Developer Mode</Label>
+                      <p className="text-xs text-muted-foreground">
+                        Enable infinite quest regenerations and other developer features
+                      </p>
+                    </div>
+                    <Switch
+                      id="devMode"
+                      checked={devModeEnabled}
+                      onCheckedChange={setDevModeEnabled}
+                    />
+                  </div>
+                </div>
+
+                {devModeEnabled && (
+                  <div className="bg-warning/10 rounded-lg p-4">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <Zap className="h-4 w-4 text-warning" />
+                      <span className="text-sm font-medium text-warning">Developer Features:</span>
+                    </div>
+                    <ul className="text-xs space-y-1 text-muted-foreground">
+                      <li>• Infinite quest regenerations</li>
+                      <li>• Enhanced debugging tools</li>
+                      <li>• Special visual indicators</li>
+                      <li>• Advanced quest controls</li>
+                    </ul>
+                  </div>
+                )}
+              </>
+            )}
+
+            {useQuestSystem && (
+              <div className="bg-primary/10 rounded-lg p-4">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Zap className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-medium">Quest Mode Features:</span>
+                </div>
+                <ul className="text-xs space-y-1 text-muted-foreground">
+                  <li>• Daily generated quests based on your preferences</li>
+                  <li>• XP points and leveling system</li>
+                  <li>• Achievement unlocking</li>
+                  <li>• Difficulty progression</li>
+                  <li>• Quest regeneration options</li>
+                </ul>
+              </div>
+            )}
+
+            {!useQuestSystem && (
+              <div className="bg-muted/50 rounded-lg p-4">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Target className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm font-medium">Traditional Mode Features:</span>
+                </div>
+                <ul className="text-xs space-y-1 text-muted-foreground">
+                  <li>• Custom goal creation and tracking</li>
+                  <li>• Addiction recovery tracking</li>
+                  <li>• Discipline ranking system</li>
+                  <li>• Flexible goal durations</li>
+                  <li>• Manual progress updates</li>
+                </ul>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -435,6 +541,7 @@ function GoalResetDialog() {
         addictions: [],
         completedGoals: [],
         achievements: [], // Clear achievements
+        questSystemData: undefined, // Clear quest system data
         disciplineData: {
           baseScore: 50, // Reset to middle baseline
           currentRank: "C",
@@ -445,7 +552,8 @@ function GoalResetDialog() {
         preferences: {
           theme: "system",
           notifications: true,
-          onboardingCompleted: true, // Keep onboarding completed
+          onboardingCompleted: false, // Reset to require onboarding again
+          useQuestSystem: false, // Reset to traditional system
         },
         privacy: {
           showGoals: true,

@@ -722,7 +722,7 @@ export default function Index() {
                   Target
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                  Master your goals, break your chains
+                  Master your quests, break your chains
                 </p>
               </div>
               <div className="sm:hidden">
@@ -746,7 +746,7 @@ export default function Index() {
               <Link to="/create-goal" className="hidden sm:block">
                 <Button className="rounded-xl">
                   <Plus className="h-4 w-4 mr-2" />
-                  New Goal
+                  New Quest
                 </Button>
               </Link>
               <Link to="/create-goal" className="sm:hidden">
@@ -865,7 +865,7 @@ export default function Index() {
                 <Target className="h-5 w-5 text-primary" />
                 <div>
                   <p className="text-2xl font-bold">{totalActiveGoals}</p>
-                  <p className="text-xs text-muted-foreground">Active Goals</p>
+                  <p className="text-xs text-muted-foreground">Active Quests</p>
                 </div>
               </div>
             </CardContent>
@@ -954,7 +954,7 @@ export default function Index() {
         <Tabs defaultValue="goals" className="space-y-6">
           <TabsList className="grid w-full grid-cols-4 rounded-xl">
             <TabsTrigger value="goals" className="rounded-lg">
-              Goals
+              Quests
             </TabsTrigger>
             <TabsTrigger value="addictions" className="rounded-lg">
               Recovery
@@ -970,7 +970,7 @@ export default function Index() {
           {/* Goals Tab */}
           <TabsContent value="goals" className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Your Goals</h2>
+              <h2 className="text-xl font-semibold">Your Quests</h2>
               <Badge variant="secondary">{goals.length} total</Badge>
             </div>
 
@@ -1420,13 +1420,13 @@ export default function Index() {
                         No achievements yet
                       </h3>
                       <p className="text-muted-foreground mb-6">
-                        Complete goals, build streaks, and improve your
+                        Complete quests, build streaks, and improve your
                         discipline to earn achievements!
                       </p>
                       <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto text-sm">
                         <div className="p-3 bg-muted/50 rounded-lg">
                           <span className="text-lg">🎯</span>
-                          <p className="font-medium">Complete goals</p>
+                          <p className="font-medium">Complete quests</p>
                         </div>
                         <div className="p-3 bg-muted/50 rounded-lg">
                           <span className="text-lg">🔥</span>
@@ -1815,4 +1815,3 @@ export default function Index() {
     </div>
   );
 }
-
