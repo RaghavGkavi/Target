@@ -409,6 +409,9 @@ export default function QuestDashboard() {
 
     questSystemData.currentQuests[questIndex].status = 'skipped';
 
+    // Update local state immediately
+    setLocalQuestData({...questSystemData});
+
     await updateUserData({
       ...userData,
       questSystemData,
