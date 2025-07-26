@@ -1,5 +1,5 @@
 import "./global.css";
-import React from "react";
+import React, { useEffect } from "react";
 
 // Firebase is initialized in client/lib/firebase.ts
 
@@ -7,6 +7,9 @@ import React from "react";
 if (import.meta.env.DEV) {
   import("@/lib/syncTestHelpers");
 }
+
+// Import mobile utilities
+import { MobileUtils } from "@/lib/mobile-utils";
 
 import { Toaster } from "@/components/ui/toaster";
 import { createRoot } from "react-dom/client";
