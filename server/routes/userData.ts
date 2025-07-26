@@ -1,11 +1,5 @@
 import { RequestHandler } from "express";
-import {
-  doc,
-  setDoc,
-  getDoc,
-  updateDoc,
-  serverTimestamp,
-} from "firebase/firestore";
+import { FieldValue } from "firebase-admin/firestore";
 import { db } from "../lib/firebase";
 
 export interface UserDataRequest {
