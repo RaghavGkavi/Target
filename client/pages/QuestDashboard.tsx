@@ -390,6 +390,9 @@ export default function QuestDashboard() {
     questSystemData.currentQuests = [...completedQuests, ...newQuests];
     questSystemData.lastQuestGeneration = new Date();
 
+    // Update local state immediately
+    setLocalQuestData({...questSystemData});
+
     await updateUserData({
       ...userData,
       questSystemData,
