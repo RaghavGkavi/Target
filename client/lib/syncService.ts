@@ -70,7 +70,9 @@ export class SyncService {
       const existsResponse = await fetch(`/api/users/${userId}/exists`);
 
       if (!existsResponse.ok) {
-        throw new Error(`Failed to check user data: ${existsResponse.status} ${existsResponse.statusText}`);
+        throw new Error(
+          `Failed to check user data: ${existsResponse.status} ${existsResponse.statusText}`,
+        );
       }
 
       const existsData: UserDataExistsResponse = await existsResponse.json();

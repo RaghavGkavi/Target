@@ -148,7 +148,10 @@ export const checkUserData: RequestHandler = async (req, res) => {
 
     if (exists) {
       const data = docSnap.data();
-      if (data?.lastModified && typeof data.lastModified.toDate === 'function') {
+      if (
+        data?.lastModified &&
+        typeof data.lastModified.toDate === "function"
+      ) {
         lastModified = data.lastModified.toDate().toISOString();
       }
     }
@@ -163,13 +166,13 @@ export const checkUserData: RequestHandler = async (req, res) => {
   } catch (error) {
     console.error("Error checking user data:", error);
     console.error("Error details:", {
-      message: error instanceof Error ? error.message : 'Unknown error',
-      stack: error instanceof Error ? error.stack : 'No stack trace',
-      userId: req.params.userId
+      message: error instanceof Error ? error.message : "Unknown error",
+      stack: error instanceof Error ? error.stack : "No stack trace",
+      userId: req.params.userId,
     });
     res.status(500).json({
       success: false,
-      error: `Failed to check user data: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      error: `Failed to check user data: ${error instanceof Error ? error.message : "Unknown error"}`,
     });
   }
 };
