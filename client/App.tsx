@@ -11,6 +11,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { MainLayout } from "@/components/MainLayout";
 import Index from "./pages/Index";
 import CreateGoal from "./pages/CreateGoal";
 import CompletedGoals from "./pages/CompletedGoals";
@@ -136,7 +137,9 @@ function AppContent() {
           path="/"
           element={
             <ProtectedRoute>
-              <DashboardRouter />
+              <MainLayout>
+                <DashboardRouter />
+              </MainLayout>
             </ProtectedRoute>
           }
         />
@@ -144,7 +147,9 @@ function AppContent() {
           path="/create-goal"
           element={
             <ProtectedRoute>
-              <CreateGoal />
+              <MainLayout>
+                <CreateGoal />
+              </MainLayout>
             </ProtectedRoute>
           }
         />
@@ -152,7 +157,9 @@ function AppContent() {
           path="/completed-goals"
           element={
             <ProtectedRoute>
-              <CompletedGoals />
+              <MainLayout>
+                <CompletedGoals />
+              </MainLayout>
             </ProtectedRoute>
           }
         />
@@ -160,7 +167,9 @@ function AppContent() {
           path="/profile"
           element={
             <ProtectedRoute>
-              <Profile />
+              <MainLayout>
+                <Profile />
+              </MainLayout>
             </ProtectedRoute>
           }
         />
@@ -168,7 +177,9 @@ function AppContent() {
           path="/settings"
           element={
             <ProtectedRoute>
-              <Settings />
+              <MainLayout>
+                <Settings />
+              </MainLayout>
             </ProtectedRoute>
           }
         />
