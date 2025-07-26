@@ -130,6 +130,12 @@ const getUserData = (userId: string): UserData | null => {
       qsd.weeklyStats.lastStreakDate = new Date(qsd.weeklyStats.lastStreakDate);
     }
 
+    // Convert daily stats dates
+    if (qsd.dailyStats) {
+      qsd.dailyStats.date = new Date(qsd.dailyStats.date);
+      qsd.dailyStats.lastUpdated = new Date(qsd.dailyStats.lastUpdated);
+    }
+
     data.questSystemData = qsd;
   }
 
