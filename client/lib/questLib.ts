@@ -326,7 +326,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
     category: 'fitness',
     difficulty: 'hard',
     xpReward: QUEST_XP_VALUES.hard,
-    icon: '🏃‍♂️',
+    icon: '🏃‍��️',
     estimatedTime: '1-2 hours',
     requiresTracking: true,
   },
@@ -346,7 +346,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
   {
     id: 'very_hard_endurance_epic',
     title: 'Epic Endurance',
-    description: 'Complete major endurance challenge (10K run, long hike)',
+    description: 'Complete a major endurance challenge: run 10K, hike for 3+ hours, bike 25+ miles, or swim 2+ miles',
     category: 'fitness',
     difficulty: 'very_hard',
     xpReward: QUEST_XP_VALUES.very_hard,
