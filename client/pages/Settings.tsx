@@ -393,7 +393,8 @@ export default function Settings() {
               <div className="space-y-0.5">
                 <Label htmlFor="questMode">Quest Mode</Label>
                 <p className="text-xs text-muted-foreground">
-                  Use daily quests, XP, levels, and achievements for a gamified experience (Default)
+                  Use daily quests, XP, levels, and achievements for a gamified
+                  experience (Default)
                 </p>
               </div>
               <Switch
@@ -411,7 +412,8 @@ export default function Settings() {
                     <div className="space-y-0.5">
                       <Label htmlFor="devMode">Developer Mode</Label>
                       <p className="text-xs text-muted-foreground">
-                        Enable infinite quest regenerations and other developer features
+                        Enable infinite quest regenerations and other developer
+                        features
                       </p>
                     </div>
                     <Switch
@@ -426,7 +428,9 @@ export default function Settings() {
                   <div className="bg-warning/10 rounded-lg p-4">
                     <div className="flex items-center space-x-2 mb-2">
                       <Zap className="h-4 w-4 text-warning" />
-                      <span className="text-sm font-medium text-warning">Developer Features:</span>
+                      <span className="text-sm font-medium text-warning">
+                        Developer Features:
+                      </span>
                     </div>
                     <ul className="text-xs space-y-1 text-muted-foreground">
                       <li>• Infinite quest regenerations</li>
@@ -443,7 +447,9 @@ export default function Settings() {
               <div className="bg-primary/10 rounded-lg p-4">
                 <div className="flex items-center space-x-2 mb-2">
                   <Zap className="h-4 w-4 text-primary" />
-                  <span className="text-sm font-medium">Quest Mode Features:</span>
+                  <span className="text-sm font-medium">
+                    Quest Mode Features:
+                  </span>
                 </div>
                 <ul className="text-xs space-y-1 text-muted-foreground">
                   <li>• Daily generated quests based on your preferences</li>
@@ -459,7 +465,9 @@ export default function Settings() {
               <div className="bg-muted/50 rounded-lg p-4">
                 <div className="flex items-center space-x-2 mb-2">
                   <Target className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm font-medium">Traditional Mode Features:</span>
+                  <span className="text-sm font-medium">
+                    Traditional Mode Features:
+                  </span>
                 </div>
                 <ul className="text-xs space-y-1 text-muted-foreground">
                   <li>• Custom goal creation and tracking</li>
@@ -482,7 +490,8 @@ export default function Settings() {
                 <span>Flagged Quests</span>
               </CardTitle>
               <CardDescription>
-                Manage quests you've flagged or disabled. Flagged quests won't appear in your daily quest rotation.
+                Manage quests you've flagged or disabled. Flagged quests won't
+                appear in your daily quest rotation.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -809,7 +818,9 @@ function FlaggedQuestsManager() {
 
     setIsLoading(true);
     try {
-      const updatedFlaggedQuests = flaggedQuests.filter(id => id !== templateId);
+      const updatedFlaggedQuests = flaggedQuests.filter(
+        (id) => id !== templateId,
+      );
 
       await updateUserData({
         ...userData,
@@ -843,8 +854,9 @@ function FlaggedQuestsManager() {
         <Flag className="h-12 w-12 mx-auto mb-4 text-muted-foreground/50" />
         <h3 className="text-lg font-semibold mb-2">No Flagged Quests</h3>
         <p className="text-muted-foreground text-sm">
-          When you flag quests using the flag button on the quest dashboard, they'll appear here.
-          Flagged quests are disabled and won't appear in your daily quest rotation.
+          When you flag quests using the flag button on the quest dashboard,
+          they'll appear here. Flagged quests are disabled and won't appear in
+          your daily quest rotation.
         </p>
       </div>
     );
@@ -854,7 +866,8 @@ function FlaggedQuestsManager() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
-          {flaggedQuests.length} quest{flaggedQuests.length === 1 ? '' : 's'} flagged
+          {flaggedQuests.length} quest{flaggedQuests.length === 1 ? "" : "s"}{" "}
+          flagged
         </p>
       </div>
 
@@ -864,12 +877,19 @@ function FlaggedQuestsManager() {
 
           if (!questInfo) {
             return (
-              <div key={templateId} className="flex items-center justify-between p-3 border rounded-lg bg-muted/20">
+              <div
+                key={templateId}
+                className="flex items-center justify-between p-3 border rounded-lg bg-muted/20"
+              >
                 <div className="flex items-center space-x-3">
                   <div className="text-lg">❓</div>
                   <div>
-                    <p className="font-medium text-muted-foreground">Unknown Quest</p>
-                    <p className="text-sm text-muted-foreground">Template ID: {templateId}</p>
+                    <p className="font-medium text-muted-foreground">
+                      Unknown Quest
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Template ID: {templateId}
+                    </p>
                   </div>
                 </div>
                 <Button
@@ -887,15 +907,21 @@ function FlaggedQuestsManager() {
           }
 
           return (
-            <div key={templateId} className="flex items-center justify-between p-3 border rounded-lg">
+            <div
+              key={templateId}
+              className="flex items-center justify-between p-3 border rounded-lg"
+            >
               <div className="flex items-center space-x-3">
                 <div className="text-lg">{questInfo.icon}</div>
                 <div className="flex-1">
                   <p className="font-medium">{questInfo.title}</p>
-                  <p className="text-sm text-muted-foreground">{questInfo.description}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {questInfo.description}
+                  </p>
                   <div className="flex items-center space-x-2 mt-1">
                     <Badge variant="outline" className="text-xs">
-                      {questInfo.difficulty.replace("_", " ")} • {questInfo.xpReward} XP
+                      {questInfo.difficulty.replace("_", " ")} •{" "}
+                      {questInfo.xpReward} XP
                     </Badge>
                     <Badge variant="secondary" className="text-xs">
                       {questInfo.category}
@@ -922,10 +948,14 @@ function FlaggedQuestsManager() {
       <div className="bg-info/10 rounded-lg p-4">
         <div className="flex items-center space-x-2 mb-2">
           <Flag className="h-4 w-4 text-info" />
-          <span className="text-sm font-medium text-info">About Flagged Quests:</span>
+          <span className="text-sm font-medium text-info">
+            About Flagged Quests:
+          </span>
         </div>
         <ul className="text-xs space-y-1 text-muted-foreground">
-          <li>• Flagged quests are excluded from your daily quest generation</li>
+          <li>
+            • Flagged quests are excluded from your daily quest generation
+          </li>
           <li>• Use the flag button on quests you don't want to see again</li>
           <li>• You can re-enable any flagged quest from this settings page</li>
           <li>• Flagging helps personalize your quest experience</li>

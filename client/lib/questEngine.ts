@@ -58,7 +58,11 @@ export class QuestEngine {
 
     for (let i = 0; i < 3; i++) {
       const difficulty = difficulties[i];
-      const excludeIds = [...recentTemplateIds, ...flaggedTemplateIds, ...usedTemplateIds];
+      const excludeIds = [
+        ...recentTemplateIds,
+        ...flaggedTemplateIds,
+        ...usedTemplateIds,
+      ];
 
       // Try quest library first, fallback to templates
       let template = getRandomQuest(
@@ -229,7 +233,11 @@ export class QuestEngine {
 
     for (let i = 0; i < 3; i++) {
       const difficulty = difficulties[i];
-      const excludeIds = [...recentTemplateIds, ...flaggedTemplateIds, ...usedTemplateIds];
+      const excludeIds = [
+        ...recentTemplateIds,
+        ...flaggedTemplateIds,
+        ...usedTemplateIds,
+      ];
 
       // Try quest library first, fallback to templates
       let template = getRandomQuest(
@@ -325,7 +333,11 @@ export class QuestEngine {
     // Include flagged/disabled quests in exclusion list
     const flaggedTemplateIds = questSystemData.flaggedQuests || [];
 
-    const excludeIds = [...recentTemplateIds, ...flaggedTemplateIds, currentQuest.templateId];
+    const excludeIds = [
+      ...recentTemplateIds,
+      ...flaggedTemplateIds,
+      currentQuest.templateId,
+    ];
 
     // Try quest library first, fallback to templates
     let newTemplate = getRandomQuest(
@@ -389,7 +401,11 @@ export class QuestEngine {
     }
 
     // Generate a replacement quest
-    const replacementQuest = this.regenerateQuest(currentQuest, questSystemData, isDevMode);
+    const replacementQuest = this.regenerateQuest(
+      currentQuest,
+      questSystemData,
+      isDevMode,
+    );
 
     if (replacementQuest) {
       // Replace the quest in the current quests array
