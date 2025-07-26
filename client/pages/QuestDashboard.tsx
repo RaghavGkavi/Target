@@ -133,7 +133,11 @@ export default function QuestDashboard() {
 
 
 
-  const completedToday = currentQuests.filter(q => q.status === 'completed').length;
+  // Get today's completion count from persistent daily stats
+  const today = new Date();
+  const todayDateString = today.toDateString();
+  const dailyStatsDate = questSystemData?.dailyStats?.date ? new Date(questSystemData.dailyStats.date).toDateString() : '';
+  const completedToday = (dailyStatsDate === todayDateString) ? (questSystemData?.dailyStats?.questsCompleted || 0) : 0;
   const activeQuests = currentQuests.filter(q => q.status === 'active').length;
 
   useEffect(() => {
