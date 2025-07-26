@@ -412,6 +412,55 @@ export default function Profile() {
           </Card>
         )}
 
+        {/* Recent Achievements */}
+        {(() => {
+          const recentAchievements = getRecentAchievements();
+          if (recentAchievements.length > 0) {
+            return (
+              <Card className="rounded-xl">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Trophy className="h-5 w-5 text-warning" />
+                    <span>Recent Achievements</span>
+                  </CardTitle>
+                  <CardDescription>
+                    Your latest accomplishments
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid gap-3">
+                    {recentAchievements.map((achievement) => (
+                      <div
+                        key={achievement.id}
+                        className={`flex items-center space-x-3 p-3 rounded-lg border-2 ${getRarityBorder ? getRarityBorder(achievement.rarity) : 'border-border'}`}
+                      >
+                        <div className="text-2xl">{achievement.icon}</div>
+                        <div className="flex-1">
+                          <h4 className={`font-semibold ${getRarityColor ? getRarityColor(achievement.rarity) : ''}`}>
+                            {achievement.title}
+                          </h4>
+                          <p className="text-sm text-muted-foreground">
+                            {achievement.description}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <Badge variant="outline" className={`capitalize ${getRarityColor ? getRarityColor(achievement.rarity) : ''}`}>
+                            {achievement.rarity}
+                          </Badge>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {achievement.earnedAt ? new Date(achievement.earnedAt).toLocaleDateString() : 'Recent'}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          }
+          return null;
+        })()}
+
         {/* Privacy Notice */}
         {userData?.privacy?.profileVisibility === "private" && (
           <Card className="rounded-xl border-muted">
