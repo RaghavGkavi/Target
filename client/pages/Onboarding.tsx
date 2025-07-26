@@ -8,6 +8,7 @@ import {
   Plus,
   Zap,
   Heart,
+  Settings,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
