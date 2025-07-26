@@ -168,13 +168,32 @@ export class QuestEngine {
   }
 
   /**
-   * Regenerate a specific quest (up to 3 times per quest)
+   * Auto-generate quests if none are available
+   */
+  static autoGenerateQuestsIfNeeded(questSystemData: QuestSystemData): boolean {
+    const activeQuests = questSystemData.currentQuests.filter(q => q.status === 'active');
+
+    if (activeQuests.length === 0) {
+      console.log('🎯 No active quests found, auto-generating 3 new quests...');
+      const newQuests = this.generateDailyQuests(questSystemData);
+      questSystemData.currentQuests = newQuests;
+      questSystemData.lastQuestGeneration = new Date();
+      return true; // Indicates quests were generated
+    }
+
+    return false; // No generation needed
+  }
+
+  /**
+   * Regenerate a specific quest (up to 3 times per quest, infinite in dev mode)
    */
   static regenerateQuest(
     currentQuest: DailyQuest,
-    questSystemData: QuestSystemData
+    questSystemData: QuestSystemData,
+    isDevMode: boolean = false
   ): DailyQuest | null {
-    if (currentQuest.regenerationsUsed >= 3) {
+    // Allow infinite regenerations in dev mode
+    if (!isDevMode && currentQuest.regenerationsUsed >= 3) {
       return null; // Maximum regenerations reached
     }
 
