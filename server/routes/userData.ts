@@ -1,11 +1,5 @@
 import { RequestHandler } from "express";
-import {
-  doc,
-  setDoc,
-  getDoc,
-  updateDoc,
-  serverTimestamp,
-} from "firebase/firestore";
+import { FieldValue } from "firebase-admin/firestore";
 import { db } from "../lib/firebase";
 
 export interface UserDataRequest {
@@ -32,10 +26,10 @@ export const getUserData: RequestHandler = async (req, res) => {
       });
     }
 
-    const userDocRef = doc(db, "users", userId);
-    const docSnap = await getDoc(userDocRef);
+    const userDocRef = db.collection("users").doc(userId);
+    const docSnap = await userDocRef.get();
 
-    if (!docSnap.exists()) {
+    if (!docSnap.exists) {
       return res.status(404).json({
         success: false,
         error: "User data not found",
@@ -71,13 +65,13 @@ export const saveUserData: RequestHandler = async (req, res) => {
       });
     }
 
-    const userDocRef = doc(db, "users", userId);
+    const userDocRef = db.collection("users").doc(userId);
     const dataWithTimestamp = {
       ...userData,
-      lastModified: serverTimestamp(),
+      lastModified: FieldValue.serverTimestamp(),
     };
 
-    await setDoc(userDocRef, dataWithTimestamp, { merge: true });
+    await userDocRef.set(dataWithTimestamp, { merge: true });
 
     res.json({
       success: true,
@@ -105,13 +99,13 @@ export const updateUserData: RequestHandler = async (req, res) => {
       });
     }
 
-    const userDocRef = doc(db, "users", userId);
+    const userDocRef = db.collection("users").doc(userId);
     const updatesWithTimestamp = {
       ...updates,
-      lastModified: serverTimestamp(),
+      lastModified: FieldValue.serverTimestamp(),
     };
 
-    await updateDoc(userDocRef, updatesWithTimestamp);
+    await userDocRef.update(updatesWithTimestamp);
 
     res.json({
       success: true,
@@ -140,10 +134,20 @@ export const checkUserData: RequestHandler = async (req, res) => {
 
     console.log(`Checking user data for userId: ${userId}`);
 
-    const userDocRef = doc(db, "users", userId);
-    const docSnap = await getDoc(userDocRef);
+    // Check if Firebase is properly initialized
+    if (!db) {
+      console.error("Firebase Admin SDK not properly initialized");
+      return res.status(500).json({
+        success: false,
+        error:
+          "Firebase service unavailable. Please check server configuration.",
+      });
+    }
 
-    const exists = docSnap.exists();
+    const userDocRef = db.collection("users").doc(userId);
+    const docSnap = await userDocRef.get();
+
+    const exists = docSnap.exists;
     let lastModified = null;
 
     if (exists) {
@@ -169,10 +173,30 @@ export const checkUserData: RequestHandler = async (req, res) => {
       message: error instanceof Error ? error.message : "Unknown error",
       stack: error instanceof Error ? error.stack : "No stack trace",
       userId: req.params.userId,
+      errorCode: (error as any)?.code,
+      errorDetails: (error as any)?.details,
     });
+
+    // Provide more specific error messages based on error type
+    let errorMessage = "Failed to check user data";
+    if (error instanceof Error) {
+      if (error.message.includes("permission")) {
+        errorMessage =
+          "Firebase permission denied. Check service account configuration.";
+      } else if (error.message.includes("not found")) {
+        errorMessage =
+          "Firebase project not found. Check project configuration.";
+      } else if (error.message.includes("credential")) {
+        errorMessage =
+          "Firebase authentication failed. Check service account credentials.";
+      } else {
+        errorMessage = `Firebase error: ${error.message}`;
+      }
+    }
+
     res.status(500).json({
       success: false,
-      error: `Failed to check user data: ${error instanceof Error ? error.message : "Unknown error"}`,
+      error: errorMessage,
     });
   }
 };
