@@ -131,15 +131,7 @@ export default function QuestDashboard() {
   const userLevel = questSystemData?.userLevel || { currentLevel: 1, currentXP: 0, xpToNextLevel: 50, totalXP: 0 };
   const weeklyStats = questSystemData?.weeklyStats || { questsCompleted: 0, totalXPEarned: 0, streak: 0 };
 
-  // Debug logging
-  console.log('🔍 Quest Dashboard Debug:', {
-    hasUserData: !!userData,
-    hasQuestSystemData: !!questSystemData,
-    hasLocalQuestData: !!localQuestData,
-    currentQuestsCount: currentQuests.length,
-    activeQuests: currentQuests.filter(q => q.status === 'active').length,
-    completedQuests: currentQuests.filter(q => q.status === 'completed').length
-  });
+
 
   const completedToday = currentQuests.filter(q => q.status === 'completed').length;
   const activeQuests = currentQuests.filter(q => q.status === 'active').length;
