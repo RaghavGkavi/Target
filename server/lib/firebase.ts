@@ -6,31 +6,36 @@ let app: App;
 
 try {
   if (getApps().length === 0) {
-    // Try to initialize with service account credentials if available
+    // For serverless environments like Netlify, we need minimal configuration
+    // The application should work with default credentials or environment-based auth
+    const projectId = "target-4c91b";
+
+    // Try to use service account if provided via environment variable
     const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
-    
+
     if (serviceAccountKey) {
-      // Use service account for authentication
-      const serviceAccount = JSON.parse(serviceAccountKey);
-      app = initializeApp({
-        credential: cert(serviceAccount),
-        projectId: "target-4c91b",
-      });
+      try {
+        const serviceAccount = JSON.parse(serviceAccountKey);
+        app = initializeApp({
+          credential: cert(serviceAccount),
+          projectId,
+        });
+        console.log("Firebase Admin initialized with service account");
+      } catch (parseError) {
+        console.warn("Failed to parse service account key, falling back to default auth");
+        app = initializeApp({ projectId });
+      }
     } else {
-      // Fallback to using project ID only (works in some environments)
-      app = initializeApp({
-        projectId: "target-4c91b",
-      });
+      // Use default authentication (works with Google Cloud environments)
+      app = initializeApp({ projectId });
+      console.log("Firebase Admin initialized with default credentials");
     }
   } else {
     app = getApps()[0];
   }
 } catch (error) {
-  console.error("Failed to initialize Firebase Admin:", error);
-  // Initialize with minimal config as fallback
-  app = initializeApp({
-    projectId: "target-4c91b",
-  });
+  console.error("Firebase Admin initialization error:", error);
+  throw new Error(`Firebase initialization failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
 }
 
 // Initialize Firestore with server-side SDK
