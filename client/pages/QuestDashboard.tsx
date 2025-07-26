@@ -182,14 +182,7 @@ export default function QuestDashboard() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
-  // Get quest system data
-  const questSystemData = userData?.questSystemData;
-  const currentQuests = questSystemData?.currentQuests || [];
-  const userLevel = questSystemData?.userLevel || { currentLevel: 1, currentXP: 0, xpToNextLevel: 50, totalXP: 0 };
-  const weeklyStats = questSystemData?.weeklyStats || { questsCompleted: 0, totalXPEarned: 0, streak: 0 };
 
-  const completedToday = currentQuests.filter(q => q.status === 'completed').length;
-  const activeQuests = currentQuests.filter(q => q.status === 'active').length;
 
   const completeQuest = async (questId: string) => {
     if (!questSystemData || !userData) return;
