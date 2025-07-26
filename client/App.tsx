@@ -263,13 +263,7 @@ const App = () => (
 
 // Handle hot reloading properly
 const container = document.getElementById("root")!;
-let root: ReturnType<typeof createRoot>;
 
-if (!container._reactRoot) {
-  root = createRoot(container);
-  container._reactRoot = root;
-} else {
-  root = container._reactRoot;
-}
-
+// Always create a fresh root to avoid context issues during hot reload
+const root = createRoot(container);
 root.render(<App />);
