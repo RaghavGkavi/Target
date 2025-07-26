@@ -16,9 +16,7 @@ export function MainLayout({
           <SyncStatus />
         </div>
       )}
-      <div className="mobile-scroll h-full overflow-y-auto">
-        {children}
-      </div>
+      <div className="mobile-scroll h-full overflow-y-auto">{children}</div>
     </div>
   );
 }

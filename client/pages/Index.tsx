@@ -248,13 +248,13 @@ export default function Index() {
           ...g,
           // Convert date strings back to Date objects if needed
           lastUpdated: g.lastUpdated ? new Date(g.lastUpdated) : new Date(),
-        }))
+        })),
       );
       setAddictions(
         (userData.addictions || []).map((a) => ({
           ...a,
           lastRelapse: a.lastRelapse ? new Date(a.lastRelapse) : undefined,
-        }))
+        })),
       );
       setCompletedGoals(
         (userData.completedGoals || []).map((cg) => ({
@@ -262,7 +262,7 @@ export default function Index() {
           completionDates: Array.isArray(cg.completionDates)
             ? cg.completionDates.map((d) => new Date(d))
             : [],
-        }))
+        })),
       );
 
       // Check if user just completed onboarding (has no tutorial completion flag)
@@ -352,17 +352,23 @@ export default function Index() {
         // Convert Date objects to ISO strings for backup
         goals: goals.map((g) => ({
           ...g,
-          lastUpdated: g.lastUpdated instanceof Date ? g.lastUpdated.toISOString() : g.lastUpdated,
+          lastUpdated:
+            g.lastUpdated instanceof Date
+              ? g.lastUpdated.toISOString()
+              : g.lastUpdated,
         })),
         addictions: addictions.map((a) => ({
           ...a,
-          lastRelapse: a.lastRelapse instanceof Date ? a.lastRelapse.toISOString() : a.lastRelapse,
+          lastRelapse:
+            a.lastRelapse instanceof Date
+              ? a.lastRelapse.toISOString()
+              : a.lastRelapse,
         })),
         completedGoals: completedGoals.map((cg) => ({
           ...cg,
           completionDates: Array.isArray(cg.completionDates)
             ? cg.completionDates.map((d) =>
-                d instanceof Date ? d.toISOString() : d
+                d instanceof Date ? d.toISOString() : d,
               )
             : [],
         })),
@@ -425,7 +431,7 @@ export default function Index() {
     console.log("🎯 Current goals state:", goals);
 
     // Add haptic feedback for mobile
-    MobileUtils.triggerHapticFeedback('medium');
+    MobileUtils.triggerHapticFeedback("medium");
 
     setGoals((currentGoals) => {
       console.log("🎯 Current goals before update:", currentGoals);
@@ -1018,11 +1024,10 @@ export default function Index() {
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Delete Goal
-                              </AlertDialogTitle>
+                              <AlertDialogTitle>Delete Goal</AlertDialogTitle>
                               <AlertDialogDescription>
-                                Are you sure you want to delete the goal "{goal.title}"? This action cannot be undone.
+                                Are you sure you want to delete the goal "
+                                {goal.title}"? This action cannot be undone.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>

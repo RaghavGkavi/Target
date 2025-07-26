@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { Device } from '@capacitor/device';
+import { useState, useEffect } from "react";
+import { Device } from "@capacitor/device";
 
 interface DeviceInfo {
-  platform: 'web' | 'ios' | 'android';
+  platform: "web" | "ios" | "android";
   isNativeMobile: boolean;
   model?: string;
   operatingSystem?: string;
@@ -11,7 +11,7 @@ interface DeviceInfo {
 
 export function useMobileDevice() {
   const [deviceInfo, setDeviceInfo] = useState<DeviceInfo>({
-    platform: 'web',
+    platform: "web",
     isNativeMobile: false,
   });
 
@@ -20,8 +20,8 @@ export function useMobileDevice() {
       try {
         const info = await Device.getInfo();
         setDeviceInfo({
-          platform: info.platform as 'web' | 'ios' | 'android',
-          isNativeMobile: info.platform !== 'web',
+          platform: info.platform as "web" | "ios" | "android",
+          isNativeMobile: info.platform !== "web",
           model: info.model,
           operatingSystem: info.operatingSystem,
           osVersion: info.osVersion,
@@ -29,7 +29,7 @@ export function useMobileDevice() {
       } catch (error) {
         // Fallback for web or when Capacitor is not available
         setDeviceInfo({
-          platform: 'web',
+          platform: "web",
           isNativeMobile: false,
         });
       }

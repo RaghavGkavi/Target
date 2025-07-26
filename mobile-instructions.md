@@ -5,11 +5,13 @@ This React web application has been successfully converted into a mobile app usi
 ## Features Added
 
 ### Mobile Framework
+
 - **Ionic Capacitor** integration for native mobile capabilities
 - Cross-platform compatibility (Android, iOS, Web)
 - Native mobile APIs access
 
 ### Mobile Optimizations
+
 - **Safe area support** for modern devices with notches
 - **Touch-optimized UI** with proper touch targets (44px minimum)
 - **Haptic feedback** for goal completions and interactions
@@ -17,6 +19,7 @@ This React web application has been successfully converted into a mobile app usi
 - **Device detection** for platform-specific features
 
 ### Native Features
+
 - **Splash screen** with app branding
 - **Status bar** styling that matches app theme
 - **Keyboard management** with proper viewport handling
@@ -26,6 +29,7 @@ This React web application has been successfully converted into a mobile app usi
 ## Development Scripts
 
 ### Build Commands
+
 ```bash
 # Build web app for mobile
 npm run mobile:build
@@ -46,11 +50,13 @@ npm run mobile:run:ios
 ## Prerequisites
 
 ### For Android Development
+
 - [Android Studio](https://developer.android.com/studio) installed
 - Android SDK configured
 - USB debugging enabled on device (for device testing)
 
 ### For iOS Development
+
 - [Xcode](https://developer.apple.com/xcode/) installed (macOS only)
 - iOS Simulator or physical iOS device
 - Apple Developer account (for device testing/App Store)
@@ -86,18 +92,23 @@ client/
 ## Mobile-Specific Features
 
 ### Haptic Feedback
+
 The app provides tactile feedback for important actions:
+
 - **Goal completion**: Medium impact feedback
 - **Clean day logging**: Success notification haptic
 - **Button interactions**: Light haptic feedback
 
 ### Safe Area Support
+
 The app properly handles device safe areas:
+
 - Status bar height consideration
 - Home indicator spacing
 - Notch and Dynamic Island support
 
 ### Touch Optimization
+
 - Minimum 44px touch targets for accessibility
 - Improved button spacing for thumb navigation
 - Smooth scrolling with momentum
@@ -105,11 +116,13 @@ The app properly handles device safe areas:
 ## Deployment
 
 ### Android Play Store
+
 1. Build production APK: `cd android && ./gradlew assembleRelease`
 2. Sign APK with your keystore
 3. Upload to Google Play Console
 
 ### iOS App Store
+
 1. Open Xcode: `npm run mobile:ios`
 2. Configure signing with your Apple Developer account
 3. Archive and upload to App Store Connect
@@ -117,29 +130,35 @@ The app properly handles device safe areas:
 ## Configuration Files
 
 ### capacitor.config.ts
+
 Main Capacitor configuration with:
+
 - App metadata (name, bundle ID)
 - Platform-specific settings
 - Plugin configurations
 
 ### Android Configuration
+
 - **strings.xml**: App name and labels
 - **colors.xml**: Theme colors matching web app
 - **styles.xml**: Material Design theme
 - **AndroidManifest.xml**: Permissions and app behavior
 
 ### iOS Configuration
+
 - **Info.plist**: App metadata and capabilities
 - **Assets.xcassets**: App icons and launch images
 
 ## Testing
 
 ### Web Testing
+
 ```bash
 npm run dev
 ```
 
 ### Mobile Testing
+
 ```bash
 # Test on Android device/emulator
 npm run mobile:run:android
@@ -158,6 +177,7 @@ npm run mobile:run:ios
 4. **Capacitor sync issues**: Run `npx cap sync` manually
 
 ### Useful Commands
+
 ```bash
 # Sync web assets with native platforms
 npx cap sync

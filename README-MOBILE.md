@@ -5,6 +5,7 @@ A powerful mobile application for goal tracking, habit building, and addiction r
 ## 🎯 Features
 
 ### Core Functionality
+
 - **Goal Management**: Create, track, and complete personal goals
 - **Habit Tracking**: Build positive habits with streak counters
 - **Addiction Recovery**: Track clean days and recovery progress
@@ -13,6 +14,7 @@ A powerful mobile application for goal tracking, habit building, and addiction r
 - **Progress Analytics**: View detailed insights and statistics
 
 ### Mobile-Optimized Experience
+
 - **Native Performance**: Smooth, responsive interface
 - **Haptic Feedback**: Tactile feedback for important actions
 - **Safe Area Support**: Perfect display on all device sizes
@@ -29,11 +31,13 @@ A powerful mobile application for goal tracking, habit building, and addiction r
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js 18+ and npm
 - For Android: Android Studio with SDK
 - For iOS: Xcode (macOS only)
 
 ### Installation
+
 ```bash
 # Clone the repository
 git clone <your-repo-url>
@@ -47,6 +51,7 @@ npm run mobile:build
 ```
 
 ### Development Commands
+
 ```bash
 # Start web development server
 npm run dev
@@ -70,12 +75,14 @@ npm run mobile:run:ios
 ## 🛠️ Development Setup
 
 ### Android Development
+
 1. Install [Android Studio](https://developer.android.com/studio)
 2. Configure Android SDK (API level 30+)
 3. Enable USB debugging on your device
 4. Run: `npm run mobile:android`
 
 ### iOS Development
+
 1. Install [Xcode](https://developer.apple.com/xcode/) (macOS only)
 2. Install Xcode Command Line Tools
 3. Run: `npm run mobile:ios`
@@ -99,16 +106,19 @@ npm run mobile:run:ios
 ## 🎨 Mobile Features
 
 ### Haptic Feedback
+
 - Goal completion: Medium impact
 - Achievement unlocked: Success notification
 - Button presses: Light selection feedback
 
 ### Safe Area Handling
+
 - Automatic safe area insets for all devices
 - Proper status bar integration
 - Home indicator awareness
 
 ### Performance Optimizations
+
 - Lazy loading for better startup time
 - Optimized touch handling
 - Smooth animations and transitions
@@ -116,6 +126,7 @@ npm run mobile:run:ios
 ## 🔧 Configuration
 
 ### App Settings (capacitor.config.ts)
+
 ```typescript
 {
   appId: 'com.target.mobile',
@@ -126,24 +137,29 @@ npm run mobile:run:ios
 ```
 
 ### Android Customization
+
 - **App Colors**: `android/app/src/main/res/values/colors.xml`
 - **App Name**: `android/app/src/main/res/values/strings.xml`
 - **Theme**: `android/app/src/main/res/values/styles.xml`
 
 ### iOS Customization
+
 - **App Info**: `ios/App/App/Info.plist`
 - **Icons**: `ios/App/App/Assets.xcassets/`
 
 ## 📦 Building for Production
 
 ### Android APK
+
 ```bash
 cd android
 ./gradlew assembleRelease
 ```
+
 APK location: `android/app/build/outputs/apk/release/`
 
 ### iOS Archive
+
 ```bash
 npm run mobile:ios
 # In Xcode: Product → Archive
@@ -152,12 +168,14 @@ npm run mobile:ios
 ## 🚀 Deployment
 
 ### Google Play Store
+
 1. Create signed APK/AAB
 2. Upload to Google Play Console
 3. Complete store listing
 4. Submit for review
 
 ### Apple App Store
+
 1. Archive in Xcode
 2. Upload to App Store Connect
 3. Complete app metadata
@@ -166,12 +184,14 @@ npm run mobile:ios
 ## 🔍 Testing
 
 ### Web Testing
+
 ```bash
 npm run dev
 # Open http://localhost:8080
 ```
 
 ### Mobile Testing
+
 ```bash
 # Test on real devices
 npm run mobile:run:android
@@ -183,24 +203,29 @@ npm run mobile:run:ios
 ### Common Issues
 
 **Build Fails**
+
 - Ensure `dist/spa` exists: `npm run build:client`
 - Check Node.js version (18+ required)
 
 **Android Studio Won't Open**
+
 - Verify Android Studio installation
 - Check PATH environment variable
 
 **iOS Build Issues**
+
 - Update Xcode to latest version
 - Clear derived data: `rm -rf ~/Library/Developer/Xcode/DerivedData`
 
 **Capacitor Sync Problems**
+
 ```bash
 npx cap sync
 npx cap doctor
 ```
 
 ### Debug Commands
+
 ```bash
 # Check Capacitor setup
 npx cap doctor
@@ -228,6 +253,7 @@ This project is licensed under the MIT License - see LICENSE file for details.
 ## 🆘 Support
 
 For issues and questions:
+
 1. Check the troubleshooting section above
 2. Review [Capacitor documentation](https://capacitorjs.com/docs)
 3. Open an issue in the repository
