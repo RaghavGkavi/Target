@@ -188,7 +188,7 @@ export const QUEST_LIBRARY: QuestTemplate[] = [
   {
     id: 'moderate_creative_project',
     title: 'Creative Sprint',
-    description: 'Work on creative project for 30 minutes',
+    description: 'Spend 30 minutes actively creating: write 500+ words, draw/sketch, practice an instrument, or work on a craft project',
     category: 'creativity',
     difficulty: 'moderate',
     xpReward: QUEST_XP_VALUES.moderate,
