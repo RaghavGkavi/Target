@@ -197,9 +197,9 @@ export default function QuestDashboard() {
   // Auto-generate quests only if there are NO quests at all (not when all are completed)
   useEffect(() => {
     if (questSystemData && userData) {
-      // Only auto-generate if there are literally no current quests (fresh user or new day)
+      // Only auto-generate if there are literally no current quests AND allQuestsCompleted is false
       // Do NOT auto-generate if all quests are completed - let user manually regenerate
-      if (questSystemData.currentQuests.length === 0) {
+      if (questSystemData.currentQuests.length === 0 && !questSystemData.allQuestsCompleted) {
         const wasGenerated =
           QuestEngine.autoGenerateQuestsIfNeeded(questSystemData);
         if (wasGenerated) {
@@ -210,8 +210,16 @@ export default function QuestDashboard() {
           });
         }
       }
-      // REMOVED: Auto-generation when all quests are completed
-      // This allows users to choose when to regenerate completed quests
+      // When all quests are completed, set the flag to prevent auto-regeneration
+      if (questSystemData.currentQuests.length > 0 &&
+          questSystemData.currentQuests.every(q => q.status === "completed") &&
+          !questSystemData.allQuestsCompleted) {
+        questSystemData.allQuestsCompleted = true;
+        updateUserData({
+          ...userData,
+          questSystemData,
+        });
+      }
     }
   }, [questSystemData, userData, updateUserData]);
 
