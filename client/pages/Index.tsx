@@ -424,6 +424,9 @@ export default function Index() {
     );
     console.log("🎯 Current goals state:", goals);
 
+    // Add haptic feedback for mobile
+    MobileUtils.triggerHapticFeedback('medium');
+
     setGoals((currentGoals) => {
       console.log("🎯 Current goals before update:", currentGoals);
       const goal = currentGoals.find((g) => g.id === goalId);
@@ -564,8 +567,11 @@ export default function Index() {
       forceAdd,
     );
 
+    // Add haptic feedback for mobile
+    MobileUtils.triggerNotificationHaptic();
+
     setAddictions((currentAddictions) => {
-      console.log("🔧 Current addictions before update:", currentAddictions);
+      console.log("�� Current addictions before update:", currentAddictions);
       const addiction = currentAddictions.find((a) => a.id === addictionId);
       if (!addiction) {
         console.log("🔧 Addiction not found!");
