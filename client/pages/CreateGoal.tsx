@@ -259,7 +259,7 @@ export default function CreateGoal() {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <Flag className="h-5 w-5 text-primary" />
-                  <span>Goal Preview</span>
+                  <span>Quest Preview</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
