@@ -30,7 +30,7 @@ export class SyncService {
     this.listeners.forEach(listener => listener(this.currentState));
   }
 
-  private static updateState(updates: Partial<SyncState>) {
+  static updateState(updates: Partial<SyncState>) {
     this.currentState = { ...this.currentState, ...updates };
     this.notifyListeners();
   }
