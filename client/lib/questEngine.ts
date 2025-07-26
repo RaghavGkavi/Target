@@ -379,6 +379,23 @@ export class QuestEngine {
       lastStreakDate: today,
     };
 
+    // Update daily stats
+    const todayDateString = today.toDateString();
+    const dailyStatsDate = questSystemData.dailyStats?.date ? new Date(questSystemData.dailyStats.date).toDateString() : '';
+
+    if (dailyStatsDate === todayDateString) {
+      // Same day, increment count
+      questSystemData.dailyStats.questsCompleted += 1;
+      questSystemData.dailyStats.lastUpdated = today;
+    } else {
+      // New day, reset count
+      questSystemData.dailyStats = {
+        date: today,
+        questsCompleted: 1,
+        lastUpdated: today,
+      };
+    }
+
     return { updatedQuest, newLevel, xpGained };
   }
 
