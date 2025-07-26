@@ -291,6 +291,21 @@ export class SyncService {
 // Listen for online/offline events
 if (typeof window !== "undefined") {
   window.addEventListener("online", () => {
+    // When coming back online, update status
+    const currentState = SyncService.getCurrentState();
+    if (currentState.pendingChanges) {
+      SyncService.updateState({ status: "offline" }); // Will be updated by next sync attempt
+    }
+  });
+
+  window.addEventListener("offline", () => {
+    SyncService.updateState({ status: "offline" });
+  });
+}
+
+// Listen for online/offline events
+if (typeof window !== "undefined") {
+  window.addEventListener("online", () => {
     SyncService.getCurrentState().status = "offline";
   });
   
