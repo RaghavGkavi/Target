@@ -752,6 +752,33 @@ export default function QuestDashboard() {
               ))}
             </div>
 
+            {/* All Quests Completed Message */}
+            {activeQuests === 0 && completedToday === 3 && (
+              <Card className="rounded-xl border-2 border-success/20 bg-success/5">
+                <CardContent className="p-6 text-center">
+                  <div className="space-y-4">
+                    <div className="h-16 w-16 mx-auto rounded-full bg-success/20 flex items-center justify-center">
+                      <Trophy className="h-8 w-8 text-success" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-success">
+                        🎉 All Quests Completed!
+                      </h3>
+                      <p className="text-muted-foreground mt-2">
+                        Congratulations! You've finished all 3 quests for today.
+                        Great work on building consistent habits!
+                      </p>
+                    </div>
+                    <div className="bg-success/10 rounded-lg p-4">
+                      <p className="text-sm text-success font-medium">
+                        ✨ You can regenerate new quests if you want to continue your journey today
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Completed Quests (shown below active ones) */}
             {currentQuests.filter(q => q.status === 'completed').length > 0 && (
               <div className="space-y-4">
