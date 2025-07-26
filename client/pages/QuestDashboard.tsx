@@ -121,6 +121,40 @@ export default function QuestDashboard() {
     );
   }, []);
 
+  // Countdown timer to midnight
+  useEffect(() => {
+    const updateCountdown = () => {
+      const now = new Date();
+      const midnight = new Date();
+      midnight.setHours(24, 0, 0, 0); // Next midnight
+
+      const timeDiff = midnight.getTime() - now.getTime();
+      const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+      const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+      setTimeUntilMidnight(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Auto-generate quests if none available
+  useEffect(() => {
+    if (questSystemData && userData) {
+      const wasGenerated = QuestEngine.autoGenerateQuestsIfNeeded(questSystemData);
+      if (wasGenerated) {
+        console.log('🎯 Auto-generated quests for empty quest list');
+        updateUserData({
+          ...userData,
+          questSystemData,
+        });
+      }
+    }
+  }, [questSystemData, userData, updateUserData]);
+
   // Handle scroll for header hiding
   useEffect(() => {
     const handleScroll = () => {
