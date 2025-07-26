@@ -553,6 +553,12 @@ export default function Onboarding() {
     // Individual question steps (steps 5-9)
     const questionIndex = currentStep - 5;
     const question = DISCIPLINE_ASSESSMENT[questionIndex];
+
+    // Safety check for question existence
+    if (!question) {
+      return <div>Loading...</div>;
+    }
+
     const selectedAnswer = disciplineAnswers[question.id];
     const progress = ((questionIndex + 1) / DISCIPLINE_ASSESSMENT.length) * 100;
 
