@@ -131,12 +131,20 @@ function AppContent() {
           }
         />
 
-        {/* Onboarding Route - requires auth but not full onboarding */}
+        {/* Onboarding Routes - requires auth but not full onboarding */}
         <Route
           path="/onboarding"
           element={
             <OnboardingRoute>
               <Onboarding />
+            </OnboardingRoute>
+          }
+        />
+        <Route
+          path="/quest-onboarding"
+          element={
+            <OnboardingRoute>
+              <QuestOnboarding />
             </OnboardingRoute>
           }
         />
