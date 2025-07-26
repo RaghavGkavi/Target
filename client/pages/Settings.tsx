@@ -387,7 +387,7 @@ export default function Settings() {
               <div className="space-y-0.5">
                 <Label htmlFor="questMode">Quest Mode</Label>
                 <p className="text-xs text-muted-foreground">
-                  Use daily quests, XP, levels, and achievements for a gamified experience
+                  Use daily quests, XP, levels, and achievements for a gamified experience (Default)
                 </p>
               </div>
               <Switch
@@ -396,6 +396,42 @@ export default function Settings() {
                 onCheckedChange={setUseQuestSystem}
               />
             </div>
+
+            {/* Dev Mode Toggle - Only visible to developer */}
+            {user?.email === "raghav.gkavi@gmail.com" && (
+              <>
+                <div className="border-t pt-4">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="devMode">Developer Mode</Label>
+                      <p className="text-xs text-muted-foreground">
+                        Enable infinite quest regenerations and other developer features
+                      </p>
+                    </div>
+                    <Switch
+                      id="devMode"
+                      checked={devModeEnabled}
+                      onCheckedChange={setDevModeEnabled}
+                    />
+                  </div>
+                </div>
+
+                {devModeEnabled && (
+                  <div className="bg-warning/10 rounded-lg p-4">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <Zap className="h-4 w-4 text-warning" />
+                      <span className="text-sm font-medium text-warning">Developer Features:</span>
+                    </div>
+                    <ul className="text-xs space-y-1 text-muted-foreground">
+                      <li>• Infinite quest regenerations</li>
+                      <li>• Enhanced debugging tools</li>
+                      <li>• Special visual indicators</li>
+                      <li>• Advanced quest controls</li>
+                    </ul>
+                  </div>
+                )}
+              </>
+            )}
 
             {useQuestSystem && (
               <div className="bg-primary/10 rounded-lg p-4">
@@ -569,7 +605,7 @@ function GoalResetDialog() {
             </h4>
             <ul className="text-sm space-y-1">
               <li>• All active goals and progress</li>
-              <li>�� All recovery tracking data</li>
+              <li>• All recovery tracking data</li>
               <li>• All completed goals and achievements</li>
               <li>• Discipline rank (reset to C rank)</li>
               <li>• All streaks and statistics</li>
