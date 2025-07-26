@@ -115,9 +115,18 @@ export default function QuestDashboard() {
   // Dev mode detection
   const isDevMode = user?.email === "raghav.gkavi@gmail.com";
 
+  // Get quest system data (moved before useEffects to fix initialization order)
+  const questSystemData = userData?.questSystemData;
+  const currentQuests = questSystemData?.currentQuests || [];
+  const userLevel = questSystemData?.userLevel || { currentLevel: 1, currentXP: 0, xpToNextLevel: 50, totalXP: 0 };
+  const weeklyStats = questSystemData?.weeklyStats || { questsCompleted: 0, totalXPEarned: 0, streak: 0 };
+
+  const completedToday = currentQuests.filter(q => q.status === 'completed').length;
+  const activeQuests = currentQuests.filter(q => q.status === 'active').length;
+
   useEffect(() => {
     setCurrentQuote(
-      motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)],
+      motivationalQuotes[Math.floor(Math.random() * motivationalQuests.length)],
     );
   }, []);
 
