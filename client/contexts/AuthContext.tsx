@@ -242,19 +242,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Set initial data
         setUserData(userProgressData);
 
-        // Try to sync with cloud
-        try {
-          const syncedData = await SyncService.syncUserData(
-            userData.id,
-            userProgressData,
-          );
-          if (syncedData !== userProgressData) {
-            setUserData(syncedData);
-            saveUserData(userData.id, syncedData);
-          }
-        } catch (error) {
-          console.error("Failed to sync on startup:", error);
-        }
+        // Try to sync with cloud in background (non-blocking)
+        SyncService.syncUserData(userData.id, userProgressData)
+          .then((syncedData) => {
+            if (syncedData !== userProgressData) {
+              setUserData(syncedData);
+              saveUserData(userData.id, syncedData);
+            }
+          })
+          .catch((error) => {
+            console.error("Failed to sync on startup:", error);
+            // Set sync state to offline if sync fails
+            SyncService.updateState({
+              status: "offline",
+              error: "Unable to connect to sync service"
+            });
+          });
       }
       setLoading(false);
     };
