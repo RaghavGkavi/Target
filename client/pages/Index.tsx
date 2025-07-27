@@ -724,7 +724,7 @@ if (isValidUser(user)) {
   const handleTutorialComplete = () => {
     setShowTutorial(false);
     if (user?.id) {
-      localStorage.setItem(`tutorial_completed_${user.id}`, "true");
+      safeStorage.setItem(`tutorial_completed_${user.id}`, "true");
     }
   };
 
