@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { safeStorage } from "@/lib/storage";
 
 type Theme = "dark" | "light" | "system";
 
