@@ -406,14 +406,14 @@ export default function Auth() {
         </Card>
 
         {/* Footer */}
-        <div className="text-center text-sm text-muted-foreground">
+        <div className="text-center text-sm text-muted-foreground animate-in fade-in-0 slide-in-from-bottom-2 duration-1000 delay-500">
           <p>
             By signing in, you agree to our{" "}
-            <Link to="/terms" className="underline hover:text-foreground">
+            <Link to="/terms" className="underline hover:text-foreground transition-colors duration-200">
               Terms of Service
             </Link>{" "}
             and{" "}
-            <Link to="/privacy" className="underline hover:text-foreground">
+            <Link to="/privacy" className="underline hover:text-foreground transition-colors duration-200">
               Privacy Policy
             </Link>
           </p>
