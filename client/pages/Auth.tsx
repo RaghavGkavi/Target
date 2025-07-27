@@ -80,10 +80,8 @@ export default function Auth() {
         signUpForm.displayName,
       );
       if (result.success) {
-        // Wait a bit for userData to be set, then navigate to trigger proper onboarding flow
-        setTimeout(() => {
-          navigate("/");
-        }, 100);
+        // Navigate immediately since userData is now set synchronously in AuthContext
+        navigate("/");
       } else {
         setError(result.error || "Sign up failed");
       }
@@ -101,10 +99,8 @@ export default function Auth() {
     try {
       const result = await signInWithGoogle();
       if (result.success) {
-        // Navigate after a brief delay to ensure state is set
-        setTimeout(() => {
-          navigate("/");
-        }, 100);
+        // Navigate immediately since userData is now set synchronously in AuthContext
+        navigate("/");
       } else {
         setError(result.error || "Google sign in failed");
       }

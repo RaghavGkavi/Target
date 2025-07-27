@@ -333,10 +333,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       };
 
       saveMockUsers(users);
-      setUser(newUser);
-      safeStorage.setItem("target_current_user", JSON.stringify(newUser));
 
-      // Initialize user data
+      // Initialize user data BEFORE setting user to prevent race condition
       const defaultData: UserData = {
         goals: [],
         addictions: [],
@@ -354,8 +352,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         },
       };
 
-      setUserData(defaultData);
+      // Save user data first
       saveUserData(newUser.id, defaultData);
+
+      // Set both user and userData together to prevent race condition
+      setUserData(defaultData);
+      setUser(newUser);
+      safeStorage.setItem("target_current_user", JSON.stringify(newUser));
 
       return { success: true };
     } catch (error) {
@@ -397,12 +400,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 lastLoginAt: new Date(),
               };
 
-              setUser(googleUser);
-              safeStorage.setItem(
-                "target_current_user",
-                JSON.stringify(googleUser),
-              );
-
               // Check if user data exists
               const existingData = getUserData(googleUser.id);
               let userDataToSet: UserData;
@@ -430,7 +427,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 saveUserData(googleUser.id, userDataToSet);
               }
 
+              // Set userData before setting user to prevent race condition
               setUserData(userDataToSet);
+              setUser(googleUser);
+              safeStorage.setItem(
+                "target_current_user",
+                JSON.stringify(googleUser),
+              );
               resolve({ success: true });
             } catch (error) {
               console.error("Error processing Google auth response:", error);
@@ -458,12 +461,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             lastLoginAt: new Date(),
           };
 
-          setUser(mockGoogleUser);
-          safeStorage.setItem(
-            "target_current_user",
-            JSON.stringify(mockGoogleUser),
-          );
-
           const existingData = getUserData(mockGoogleUser.id);
           let userDataToSet: UserData;
 
@@ -489,7 +486,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             saveUserData(mockGoogleUser.id, userDataToSet);
           }
 
+          // Set userData before setting user to prevent race condition
           setUserData(userDataToSet);
+          setUser(mockGoogleUser);
+          safeStorage.setItem(
+            "target_current_user",
+            JSON.stringify(mockGoogleUser),
+          );
           resolve({ success: true });
           return;
         }
