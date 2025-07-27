@@ -148,6 +148,7 @@ export class SyncService {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ userData }),
+      signal: AbortSignal.timeout(10000),
     });
 
     const result: UserDataResponse = await response.json();
