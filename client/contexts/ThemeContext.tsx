@@ -52,7 +52,7 @@ export function ThemeProvider({
   const value = {
     theme,
     setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme);
+      safeStorage.setItem(storageKey, theme);
       setTheme(theme);
     },
   };
