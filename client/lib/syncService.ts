@@ -69,7 +69,9 @@ export class SyncService {
       }
 
       // Check if cloud data exists
-      const existsResponse = await fetch(`/api/users/${userId}/exists`);
+      const existsResponse = await fetch(`/api/users/${userId}/exists`, {
+        signal: AbortSignal.timeout(5000),
+      });
 
       if (!existsResponse.ok) {
         throw new Error(
