@@ -27,8 +27,8 @@ if (typeof window !== "undefined" && import.meta.env.PROD) {
   analytics = getAnalytics(app);
 }
 
-// Connect to emulators in development
-if (import.meta.env.DEV && typeof window !== "undefined") {
+// Connect to emulators in development (web only)
+if (import.meta.env.DEV && typeof window !== "undefined" && !import.meta.env.VITE_MOBILE) {
   // Only connect to emulators if they haven't been connected already
   try {
     connectFirestoreEmulator(db, "localhost", 8080);
