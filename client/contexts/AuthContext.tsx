@@ -177,88 +177,87 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.log("AuthProvider: Starting auth check");
 
         const currentUser = safeStorage.getItem("target_current_user");
-      if (currentUser) {
-        const userData = JSON.parse(currentUser);
-        const userObj = {
-          ...userData,
-          createdAt: new Date(userData.createdAt),
-          lastLoginAt: new Date(userData.lastLoginAt),
-        };
-        setUser(userObj);
-
-        // Load local user data first
-        let userProgressData = getUserData(userData.id);
-
-        if (!userProgressData) {
-          // Initialize default user data
-          userProgressData = {
-            goals: [],
-            addictions: [],
-            completedGoals: [],
-            preferences: {
-              theme: "system",
-              notifications: true,
-              onboardingCompleted: false,
-              useQuestSystem: true,
-            },
+        if (currentUser) {
+          const userData = JSON.parse(currentUser);
+          const userObj = {
+            ...userData,
+            createdAt: new Date(userData.createdAt),
+            lastLoginAt: new Date(userData.lastLoginAt),
           };
-          saveUserData(userData.id, userProgressData);
-        }
+          setUser(userObj);
 
-        // Initialize quest system if needed
-        if (
-          userProgressData.preferences?.useQuestSystem &&
-          !userProgressData.questSystemData
-        ) {
-          userProgressData.questSystemData = QuestEngine.initializeQuestSystem(
-            DEFAULT_QUEST_PREFERENCES,
-          );
-        }
+          // Load local user data first
+          let userProgressData = getUserData(userData.id);
 
-        // Process quest rotation if quest system exists
-        if (userProgressData.questSystemData) {
-          // Migration: Add dailyStats if it doesn't exist
-          if (!userProgressData.questSystemData.dailyStats) {
-            const today = new Date();
-            const completedTodayCount =
-              userProgressData.questSystemData.currentQuests.filter(
-                (q) => q.status === "completed",
-              ).length;
-            userProgressData.questSystemData.dailyStats = {
-              date: today,
-              questsCompleted: completedTodayCount,
-              lastUpdated: today,
+          if (!userProgressData) {
+            // Initialize default user data
+            userProgressData = {
+              goals: [],
+              addictions: [],
+              completedGoals: [],
+              preferences: {
+                theme: "system",
+                notifications: true,
+                onboardingCompleted: false,
+                useQuestSystem: true,
+              },
             };
+            saveUserData(userData.id, userProgressData);
           }
 
-          // Migration: Add flaggedQuests if it doesn't exist
-          if (!userProgressData.questSystemData.flaggedQuests) {
-            userProgressData.questSystemData.flaggedQuests = [];
+          // Initialize quest system if needed
+          if (
+            userProgressData.preferences?.useQuestSystem &&
+            !userProgressData.questSystemData
+          ) {
+            userProgressData.questSystemData =
+              QuestEngine.initializeQuestSystem(DEFAULT_QUEST_PREFERENCES);
           }
 
-          const processedQuestData = QuestEngine.processQuestRotation(
-            userProgressData.questSystemData,
-          );
-          userProgressData.questSystemData = processedQuestData;
+          // Process quest rotation if quest system exists
+          if (userProgressData.questSystemData) {
+            // Migration: Add dailyStats if it doesn't exist
+            if (!userProgressData.questSystemData.dailyStats) {
+              const today = new Date();
+              const completedTodayCount =
+                userProgressData.questSystemData.currentQuests.filter(
+                  (q) => q.status === "completed",
+                ).length;
+              userProgressData.questSystemData.dailyStats = {
+                date: today,
+                questsCompleted: completedTodayCount,
+                lastUpdated: today,
+              };
+            }
+
+            // Migration: Add flaggedQuests if it doesn't exist
+            if (!userProgressData.questSystemData.flaggedQuests) {
+              userProgressData.questSystemData.flaggedQuests = [];
+            }
+
+            const processedQuestData = QuestEngine.processQuestRotation(
+              userProgressData.questSystemData,
+            );
+            userProgressData.questSystemData = processedQuestData;
+          }
+
+          // Set initial data
+          setUserData(userProgressData);
+
+          // Set sync status to offline initially to avoid startup sync errors
+          SyncService.updateState({
+            status: "offline",
+            pendingChanges: false,
+          });
         }
 
-        // Set initial data
-        setUserData(userProgressData);
-
-        // Set sync status to offline initially to avoid startup sync errors
-        SyncService.updateState({
-          status: "offline",
-          pendingChanges: false,
-        });
+        console.log("AuthProvider: Auth check completed");
+        setLoading(false);
+      } catch (error) {
+        console.error("AuthProvider: Error checking auth:", error);
+        // In case of error, still set loading to false so app doesn't hang
+        setLoading(false);
       }
-
-      console.log("AuthProvider: Auth check completed");
-      setLoading(false);
-    } catch (error) {
-      console.error("AuthProvider: Error checking auth:", error);
-      // In case of error, still set loading to false so app doesn't hang
-      setLoading(false);
-    }
     };
 
     // Subscribe to sync state changes
