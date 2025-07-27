@@ -277,16 +277,6 @@ export default function Index() {
       );
 
       // Check if user just completed onboarding (has no tutorial completion flag)
-      type User = {
-        id: string;
-        name?: string;
-        // add other fields as needed
-      };
-
-      function isValidUser(user: any): user is User {
-        return user && typeof user.id === "string";
-      }
-
       let hasSeenTutorial: string | null = null;
 
       if (isValidUser(user)) {
