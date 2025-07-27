@@ -159,7 +159,7 @@ const getUserData = (userId: string): UserData | null => {
 };
 
 const saveUserData = (userId: string, data: UserData) => {
-  localStorage.setItem(MOCK_USER_DATA_KEY + userId, JSON.stringify(data));
+  safeStorage.setItem(MOCK_USER_DATA_KEY + userId, JSON.stringify(data));
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -173,7 +173,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Check for existing session on mount
   useEffect(() => {
     const checkAuth = async () => {
-      const currentUser = localStorage.getItem("target_current_user");
+      const currentUser = safeStorage.getItem("target_current_user");
       if (currentUser) {
         const userData = JSON.parse(currentUser);
         const userObj = {
