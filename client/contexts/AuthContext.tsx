@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { QuestSystemData } from "@shared/quest-types";
 import { QuestEngine, DEFAULT_QUEST_PREFERENCES } from "@/lib/questEngine";
 import { SyncService, SyncState } from "@/lib/syncService";
+import { safeStorage } from "@/lib/storage";
 
 export interface User {
   id: string;
@@ -70,18 +71,18 @@ const MOCK_USERS_KEY = "target_users";
 const MOCK_USER_DATA_KEY = "target_user_data_";
 
 const getMockUsers = (): Record<string, { password: string; user: User }> => {
-  const stored = localStorage.getItem(MOCK_USERS_KEY);
+  const stored = safeStorage.getItem(MOCK_USERS_KEY);
   return stored ? JSON.parse(stored) : {};
 };
 
 const saveMockUsers = (
   users: Record<string, { password: string; user: User }>,
 ) => {
-  localStorage.setItem(MOCK_USERS_KEY, JSON.stringify(users));
+  safeStorage.setItem(MOCK_USERS_KEY, JSON.stringify(users));
 };
 
 const getUserData = (userId: string): UserData | null => {
-  const stored = localStorage.getItem(MOCK_USER_DATA_KEY + userId);
+  const stored = safeStorage.getItem(MOCK_USER_DATA_KEY + userId);
   if (!stored) return null;
 
   const data = JSON.parse(stored);
