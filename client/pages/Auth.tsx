@@ -156,7 +156,10 @@ export default function Auth() {
 
           <CardContent className="space-y-6 px-8 pb-8">
             {error && (
-              <Alert variant="destructive" className="rounded-xl animate-in fade-in-0 slide-in-from-top-2 duration-300">
+              <Alert
+                variant="destructive"
+                className="rounded-xl animate-in fade-in-0 slide-in-from-top-2 duration-300"
+              >
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
@@ -167,7 +170,7 @@ export default function Auth() {
                   value="signin"
                   className={cn(
                     "rounded-lg text-sm font-medium transition-all duration-200",
-                    "data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                    "data-[state=active]:bg-background data-[state=active]:shadow-sm",
                   )}
                 >
                   Sign In
@@ -176,7 +179,7 @@ export default function Auth() {
                   value="signup"
                   className={cn(
                     "rounded-lg text-sm font-medium transition-all duration-200",
-                    "data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                    "data-[state=active]:bg-background data-[state=active]:shadow-sm",
                   )}
                 >
                   Sign Up
@@ -184,7 +187,10 @@ export default function Auth() {
               </TabsList>
 
               {/* Sign In Tab */}
-              <TabsContent value="signin" className="space-y-5 animate-in fade-in-0 slide-in-from-right-2 duration-300">
+              <TabsContent
+                value="signin"
+                className="space-y-5 animate-in fade-in-0 slide-in-from-right-2 duration-300"
+              >
                 <form onSubmit={handleSignIn} className="space-y-5">
                   <div className="space-y-2">
                     <Label htmlFor="signin-email">Email</Label>
@@ -253,7 +259,10 @@ export default function Auth() {
               </TabsContent>
 
               {/* Sign Up Tab */}
-              <TabsContent value="signup" className="space-y-5 animate-in fade-in-0 slide-in-from-left-2 duration-300">
+              <TabsContent
+                value="signup"
+                className="space-y-5 animate-in fade-in-0 slide-in-from-left-2 duration-300"
+              >
                 <form onSubmit={handleSignUp} className="space-y-5">
                   <div className="space-y-2">
                     <Label htmlFor="signup-name">Display Name</Label>
@@ -412,11 +421,17 @@ export default function Auth() {
         <div className="text-center text-sm text-muted-foreground animate-in fade-in-0 slide-in-from-bottom-2 duration-1000 delay-500">
           <p>
             By signing in, you agree to our{" "}
-            <Link to="/terms" className="underline hover:text-foreground transition-colors duration-200">
+            <Link
+              to="/terms"
+              className="underline hover:text-foreground transition-colors duration-200"
+            >
               Terms of Service
             </Link>{" "}
             and{" "}
-            <Link to="/privacy" className="underline hover:text-foreground transition-colors duration-200">
+            <Link
+              to="/privacy"
+              className="underline hover:text-foreground transition-colors duration-200"
+            >
               Privacy Policy
             </Link>
           </p>
