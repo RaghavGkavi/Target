@@ -173,7 +173,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Check for existing session on mount
   useEffect(() => {
     const checkAuth = async () => {
-      const currentUser = safeStorage.getItem("target_current_user");
+      try {
+        console.log("AuthProvider: Starting auth check");
+
+        const currentUser = safeStorage.getItem("target_current_user");
       if (currentUser) {
         const userData = JSON.parse(currentUser);
         const userObj = {
@@ -248,7 +251,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           pendingChanges: false,
         });
       }
+
+      console.log("AuthProvider: Auth check completed");
       setLoading(false);
+    } catch (error) {
+      console.error("AuthProvider: Error checking auth:", error);
+      // In case of error, still set loading to false so app doesn't hang
+      setLoading(false);
+    }
     };
 
     // Subscribe to sync state changes
