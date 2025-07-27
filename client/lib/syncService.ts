@@ -42,10 +42,11 @@ export class SyncService {
     try {
       const response = await fetch("/api/ping", {
         method: "GET",
-        signal: AbortSignal.timeout(5000),
+        signal: AbortSignal.timeout(3000),
       });
       return response.ok;
-    } catch {
+    } catch (error) {
+      console.warn("Sync service offline - backend not available:", error);
       return false;
     }
   }
