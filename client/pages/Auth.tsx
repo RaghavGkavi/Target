@@ -80,7 +80,10 @@ export default function Auth() {
         signUpForm.displayName,
       );
       if (result.success) {
-        navigate("/");
+        // Wait a bit for userData to be set, then navigate to trigger proper onboarding flow
+        setTimeout(() => {
+          navigate("/");
+        }, 100);
       } else {
         setError(result.error || "Sign up failed");
       }
