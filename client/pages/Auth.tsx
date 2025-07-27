@@ -250,8 +250,8 @@ export default function Auth() {
               </TabsContent>
 
               {/* Sign Up Tab */}
-              <TabsContent value="signup" className="space-y-4">
-                <form onSubmit={handleSignUp} className="space-y-4">
+              <TabsContent value="signup" className="space-y-5 animate-in fade-in-0 slide-in-from-left-2 duration-300">
+                <form onSubmit={handleSignUp} className="space-y-5">
                   <div className="space-y-2">
                     <Label htmlFor="signup-name">Display Name</Label>
                     <div className="relative">
