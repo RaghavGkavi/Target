@@ -333,10 +333,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       };
 
       saveMockUsers(users);
-      setUser(newUser);
-      safeStorage.setItem("target_current_user", JSON.stringify(newUser));
 
-      // Initialize user data
+      // Initialize user data BEFORE setting user to prevent race condition
       const defaultData: UserData = {
         goals: [],
         addictions: [],
@@ -354,8 +352,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         },
       };
 
-      setUserData(defaultData);
+      // Save user data first
       saveUserData(newUser.id, defaultData);
+
+      // Set both user and userData together to prevent race condition
+      setUserData(defaultData);
+      setUser(newUser);
+      safeStorage.setItem("target_current_user", JSON.stringify(newUser));
 
       return { success: true };
     } catch (error) {
