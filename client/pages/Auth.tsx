@@ -151,19 +151,31 @@ export default function Auth() {
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-6 px-8 pb-8">
             {error && (
-              <Alert variant="destructive" className="rounded-lg">
+              <Alert variant="destructive" className="rounded-xl animate-in fade-in-0 slide-in-from-top-2 duration-300">
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
 
-            <Tabs defaultValue="signin" className="space-y-4">
-              <TabsList className="grid w-full grid-cols-2 rounded-lg">
-                <TabsTrigger value="signin" className="rounded-md">
+            <Tabs defaultValue="signin" className="space-y-6">
+              <TabsList className="grid w-full grid-cols-2 rounded-xl bg-muted/50 p-1 h-12">
+                <TabsTrigger
+                  value="signin"
+                  className={cn(
+                    "rounded-lg text-sm font-medium transition-all duration-200",
+                    "data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                  )}
+                >
                   Sign In
                 </TabsTrigger>
-                <TabsTrigger value="signup" className="rounded-md">
+                <TabsTrigger
+                  value="signup"
+                  className={cn(
+                    "rounded-lg text-sm font-medium transition-all duration-200",
+                    "data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                  )}
+                >
                   Sign Up
                 </TabsTrigger>
               </TabsList>
