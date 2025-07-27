@@ -59,8 +59,17 @@ function AppContent() {
       return <Navigate to="/auth" replace />;
     }
 
+    // If userData is not loaded yet, show loading
+    if (!userData) {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      );
+    }
+
     // Check if user needs onboarding
-    if (userData && !userData.preferences?.onboardingCompleted) {
+    if (!userData.preferences?.onboardingCompleted) {
       return <Navigate to="/onboarding" replace />;
     }
 
