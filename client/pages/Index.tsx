@@ -268,23 +268,23 @@ export default function Index() {
 
       // Check if user just completed onboarding (has no tutorial completion flag)
       type User = {
-  id: string;
-  name?: string;
-  // add other fields as needed
-};
+        id: string;
+        name?: string;
+        // add other fields as needed
+      };
 
-function isValidUser(user: any): user is User {
-  return user && typeof user.id === 'string';
-}
+      function isValidUser(user: any): user is User {
+        return user && typeof user.id === "string";
+      }
 
-let hasSeenTutorial: string | null = null;
+      let hasSeenTutorial: string | null = null;
 
-if (isValidUser(user)) {
-  const key = `tutorial_completed_${user.id}`;
-  hasSeenTutorial = safeStorage.getItem(key);
-} else {
-  console.warn("Invalid or missing user object.");
-}
+      if (isValidUser(user)) {
+        const key = `tutorial_completed_${user.id}`;
+        hasSeenTutorial = safeStorage.getItem(key);
+      } else {
+        console.warn("Invalid or missing user object.");
+      }
 
       if (
         !hasSeenTutorial &&

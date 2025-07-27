@@ -6,9 +6,11 @@
 class SafeStorage {
   private isAvailable(): boolean {
     try {
-      return typeof window !== 'undefined' && 
-             window.localStorage !== null && 
-             window.localStorage !== undefined;
+      return (
+        typeof window !== "undefined" &&
+        window.localStorage !== null &&
+        window.localStorage !== undefined
+      );
     } catch {
       return false;
     }
@@ -21,7 +23,7 @@ class SafeStorage {
       }
       return localStorage.getItem(key);
     } catch (error) {
-      console.warn('SafeStorage: Failed to get item', key, error);
+      console.warn("SafeStorage: Failed to get item", key, error);
       return null;
     }
   }
@@ -34,7 +36,7 @@ class SafeStorage {
       localStorage.setItem(key, value);
       return true;
     } catch (error) {
-      console.warn('SafeStorage: Failed to set item', key, error);
+      console.warn("SafeStorage: Failed to set item", key, error);
       return false;
     }
   }
@@ -47,7 +49,7 @@ class SafeStorage {
       localStorage.removeItem(key);
       return true;
     } catch (error) {
-      console.warn('SafeStorage: Failed to remove item', key, error);
+      console.warn("SafeStorage: Failed to remove item", key, error);
       return false;
     }
   }
@@ -60,7 +62,7 @@ class SafeStorage {
       localStorage.clear();
       return true;
     } catch (error) {
-      console.warn('SafeStorage: Failed to clear storage', error);
+      console.warn("SafeStorage: Failed to clear storage", error);
       return false;
     }
   }
