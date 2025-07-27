@@ -78,21 +78,27 @@ function AppContent() {
 
   // Public Route Component (redirect to dashboard if authenticated)
   function PublicRoute({ children }: { children: React.ReactNode }) {
-    const { user, loading } = useAuth();
+    try {
+      const { user, loading } = useAuth();
 
-    if (loading) {
-      return (
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-        </div>
-      );
+      if (loading) {
+        return (
+          <div className="min-h-screen flex items-center justify-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          </div>
+        );
+      }
+
+      if (user) {
+        return <Navigate to="/" replace />;
+      }
+
+      return <>{children}</>;
+    } catch (error) {
+      // If AuthProvider is not available, assume public route and render children
+      console.warn("AuthProvider not available in PublicRoute, rendering children");
+      return <>{children}</>;
     }
-
-    if (user) {
-      return <Navigate to="/" replace />;
-    }
-
-    return <>{children}</>;
   }
 
   // Onboarding Route Component (requires auth but redirects if already onboarded)
