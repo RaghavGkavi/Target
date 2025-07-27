@@ -347,6 +347,7 @@ const App = () => {
             <TooltipProvider>
               <Toaster />
               <Sonner />
+              <PWAInstallPrompt />
               <div className="mobile-app">
                 <AppContent />
               </div>
