@@ -1,4 +1,8 @@
 import { SyncStatus } from "./SyncStatus";
+import { PWAInstallPrompt } from './PWAInstallPrompt';
+
+// Add to the JSX
+
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -10,13 +14,16 @@ export function MainLayout({
   showSyncStatus = true,
 }: MainLayoutProps) {
   return (
-    <div className="min-h-screen bg-background mobile-app safe-area-top safe-area-bottom">
+    <div className="app-layout">
+  {<div className="min-h-screen bg-background mobile-app safe-area-top safe-area-bottom">
       {showSyncStatus && (
         <div className="fixed top-4 right-4 z-50 safe-area-top safe-area-right">
           <SyncStatus />
         </div>
       )}
       <div className="mobile-scroll h-full overflow-y-auto">{children}</div>
-    </div>
+    </div>}
+  <PWAInstallPrompt />
+</div>
   );
 }
