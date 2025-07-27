@@ -363,12 +363,12 @@ export default function Auth() {
             </Tabs>
 
             {/* Divider */}
-            <div className="relative">
+            <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
                 <Separator className="w-full" />
               </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">
+              <div className="relative flex justify-center text-sm uppercase tracking-wider">
+                <span className="bg-card px-4 text-muted-foreground font-medium">
                   Or continue with
                 </span>
               </div>
@@ -378,7 +378,7 @@ export default function Auth() {
             <Button
               type="button"
               variant="outline"
-              className="w-full rounded-lg"
+              className="w-full rounded-xl h-12 text-base transition-all duration-200 hover:shadow-md border-2"
               onClick={handleGoogleSignIn}
               disabled={isLoading}
             >
