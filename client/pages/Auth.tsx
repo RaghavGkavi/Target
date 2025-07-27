@@ -346,7 +346,7 @@ export default function Auth() {
 
                   <Button
                     type="submit"
-                    className="w-full rounded-lg"
+                    className="w-full rounded-xl h-12 text-base font-medium transition-all duration-200 hover:shadow-md"
                     disabled={isLoading}
                   >
                     {isLoading ? (
