@@ -114,33 +114,39 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 w-full h-full">
+        <div className="absolute top-10 left-10 w-72 h-72 bg-primary/3 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-accent/2 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      </div>
+
       {/* Theme Toggle - Fixed Position */}
       <div className="fixed top-4 right-4 z-50">
         <ThemeToggle />
       </div>
 
-      <div className="w-full max-w-md space-y-6">
-        {/* Logo and Header */}
-        <div className="text-center space-y-4">
-          <div className="h-16 w-16 mx-auto rounded-xl bg-gradient-to-r from-primary to-accent flex items-center justify-center">
-            <Target className="h-8 w-8 text-white" />
+      <div className="w-full max-w-md space-y-8 relative z-10">
+        {/* Logo and Header with smooth animations */}
+        <div className="text-center space-y-6 animate-in fade-in-0 slide-in-from-top-4 duration-1000">
+          <div className="h-20 w-20 mx-auto rounded-2xl bg-gradient-to-br from-primary via-primary to-accent flex items-center justify-center shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+            <Target className="h-10 w-10 text-white" />
           </div>
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+          <div className="space-y-2">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
               Target
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground text-lg">
               Master your goals, break your chains
             </p>
           </div>
         </div>
 
-        {/* Auth Card */}
-        <Card className="rounded-xl border-0 shadow-lg">
-          <CardHeader className="text-center pb-4">
-            <CardTitle>Welcome</CardTitle>
-            <CardDescription>
+        {/* Auth Card with enhanced styling */}
+        <Card className="rounded-2xl border-0 shadow-2xl backdrop-blur-sm bg-card/95 animate-in fade-in-0 slide-in-from-bottom-4 duration-1000 delay-300">
+          <CardHeader className="text-center pb-6 pt-8">
+            <CardTitle className="text-2xl">Welcome</CardTitle>
+            <CardDescription className="text-base">
               Sign in to your account or create a new one to start your journey
             </CardDescription>
           </CardHeader>
