@@ -77,7 +77,9 @@ function AppContent() {
       return <>{children}</>;
     } catch (error) {
       // If AuthProvider is not available, redirect to auth
-      console.warn("AuthProvider not available in ProtectedRoute, redirecting to auth");
+      console.warn(
+        "AuthProvider not available in ProtectedRoute, redirecting to auth",
+      );
       return <Navigate to="/auth" replace />;
     }
   }
@@ -102,7 +104,9 @@ function AppContent() {
       return <>{children}</>;
     } catch (error) {
       // If AuthProvider is not available, assume public route and render children
-      console.warn("AuthProvider not available in PublicRoute, rendering children");
+      console.warn(
+        "AuthProvider not available in PublicRoute, rendering children",
+      );
       return <>{children}</>;
     }
   }
@@ -131,7 +135,9 @@ function AppContent() {
       return <>{children}</>;
     } catch (error) {
       // If AuthProvider is not available, redirect to auth
-      console.warn("AuthProvider not available in OnboardingRoute, redirecting to auth");
+      console.warn(
+        "AuthProvider not available in OnboardingRoute, redirecting to auth",
+      );
       return <Navigate to="/auth" replace />;
     }
   }
