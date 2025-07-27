@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { QuestSystemData } from "@shared/quest-types";
 import { QuestEngine, DEFAULT_QUEST_PREFERENCES } from "@/lib/questEngine";
 import { SyncService, SyncState } from "@/lib/syncService";
+import { safeStorage } from "@/lib/storage";
 
 export interface User {
   id: string;
@@ -70,18 +71,18 @@ const MOCK_USERS_KEY = "target_users";
 const MOCK_USER_DATA_KEY = "target_user_data_";
 
 const getMockUsers = (): Record<string, { password: string; user: User }> => {
-  const stored = localStorage.getItem(MOCK_USERS_KEY);
+  const stored = safeStorage.getItem(MOCK_USERS_KEY);
   return stored ? JSON.parse(stored) : {};
 };
 
 const saveMockUsers = (
   users: Record<string, { password: string; user: User }>,
 ) => {
-  localStorage.setItem(MOCK_USERS_KEY, JSON.stringify(users));
+  safeStorage.setItem(MOCK_USERS_KEY, JSON.stringify(users));
 };
 
 const getUserData = (userId: string): UserData | null => {
-  const stored = localStorage.getItem(MOCK_USER_DATA_KEY + userId);
+  const stored = safeStorage.getItem(MOCK_USER_DATA_KEY + userId);
   if (!stored) return null;
 
   const data = JSON.parse(stored);
@@ -158,7 +159,7 @@ const getUserData = (userId: string): UserData | null => {
 };
 
 const saveUserData = (userId: string, data: UserData) => {
-  localStorage.setItem(MOCK_USER_DATA_KEY + userId, JSON.stringify(data));
+  safeStorage.setItem(MOCK_USER_DATA_KEY + userId, JSON.stringify(data));
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -172,7 +173,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Check for existing session on mount
   useEffect(() => {
     const checkAuth = async () => {
-      const currentUser = localStorage.getItem("target_current_user");
+      const currentUser = safeStorage.getItem("target_current_user");
       if (currentUser) {
         const userData = JSON.parse(currentUser);
         const userObj = {
@@ -288,7 +289,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       saveMockUsers(users);
 
       setUser(updatedUser);
-      localStorage.setItem("target_current_user", JSON.stringify(updatedUser));
+      safeStorage.setItem("target_current_user", JSON.stringify(updatedUser));
 
       // Load user data
       const userProgressData = getUserData(updatedUser.id);
@@ -341,7 +342,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       saveMockUsers(users);
       setUser(newUser);
-      localStorage.setItem("target_current_user", JSON.stringify(newUser));
+      safeStorage.setItem("target_current_user", JSON.stringify(newUser));
 
       // Initialize user data
       const defaultData: UserData = {
@@ -405,7 +406,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               };
 
               setUser(googleUser);
-              localStorage.setItem(
+              safeStorage.setItem(
                 "target_current_user",
                 JSON.stringify(googleUser),
               );
@@ -466,7 +467,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           };
 
           setUser(mockGoogleUser);
-          localStorage.setItem(
+          safeStorage.setItem(
             "target_current_user",
             JSON.stringify(mockGoogleUser),
           );
@@ -531,7 +532,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOut = async (): Promise<void> => {
     setUser(null);
     setUserData(null);
-    localStorage.removeItem("target_current_user");
+    safeStorage.removeItem("target_current_user");
   };
 
   const updateUserData = async (data: Partial<UserData>): Promise<void> => {

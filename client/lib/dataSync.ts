@@ -9,6 +9,7 @@ import {
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { UserData } from "@/contexts/AuthContext";
+import { safeStorage } from "./storage";
 
 export interface CloudUserData extends Omit<UserData, "achievements"> {
   lastModified: Timestamp;
@@ -24,10 +25,10 @@ export class DataSyncService {
 
   private static generateDeviceId(): string {
     // Generate a unique device ID that persists across sessions
-    let deviceId = localStorage.getItem("device_id");
+    let deviceId = safeStorage.getItem("device_id");
     if (!deviceId) {
       deviceId = `device_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      localStorage.setItem("device_id", deviceId);
+      safeStorage.setItem("device_id", deviceId);
     }
     return deviceId;
   }

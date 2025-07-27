@@ -1,6 +1,7 @@
 import { UserData } from "@/contexts/AuthContext";
 import { UserDataResponse, UserDataExistsResponse } from "@shared/api";
 import { ConflictResolver } from "./conflictResolver";
+import { safeStorage } from "./storage";
 
 export type SyncStatus = "syncing" | "synced" | "error" | "offline";
 
@@ -315,15 +316,15 @@ export class SyncService {
   }
 
   private static markLocalChanges(userId: string) {
-    localStorage.setItem(`pending_sync_${userId}`, "true");
+    safeStorage.setItem(`pending_sync_${userId}`, "true");
   }
 
   private static clearLocalChanges(userId: string) {
-    localStorage.removeItem(`pending_sync_${userId}`);
+    safeStorage.removeItem(`pending_sync_${userId}`);
   }
 
   private static hasLocalChanges(userId: string): boolean {
-    return localStorage.getItem(`pending_sync_${userId}`) === "true";
+    return safeStorage.getItem(`pending_sync_${userId}`) === "true";
   }
 
   static getCurrentState(): SyncState {

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useMobileDevice } from "@/hooks/use-mobile-device";
 import { MobileUtils } from "@/lib/mobile-utils";
+import { safeStorage } from "@/lib/storage";
 import {
   calculateDisciplineRank,
   calculateConsistencyScore,
@@ -213,6 +214,16 @@ export default function Index() {
   const [showTutorial, setShowTutorial] = useState(false);
   const [developerModeEnabled, setDeveloperModeEnabled] = useState(true);
 
+  // Helper types and functions
+  type ValidUser = {
+    id: string;
+    name?: string;
+  };
+
+  function isValidUser(user: any): user is ValidUser {
+    return user && typeof user.id === "string";
+  }
+
   useEffect(() => {
     setCurrentQuote(
       motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)],
@@ -266,24 +277,14 @@ export default function Index() {
       );
 
       // Check if user just completed onboarding (has no tutorial completion flag)
-      type User = {
-  id: string;
-  name?: string;
-  // add other fields as needed
-};
+      let hasSeenTutorial: string | null = null;
 
-function isValidUser(user: any): user is User {
-  return user && typeof user.id === 'string';
-}
-
-let hasSeenTutorial: string | null = null;
-
-if (isValidUser(user)) {
-  const key = `tutorial_completed_${user.id}`;
-  hasSeenTutorial = localStorage.getItem(key);
-} else {
-  console.warn("Invalid or missing user object.");
-}
+      if (isValidUser(user)) {
+        const key = `tutorial_completed_${user.id}`;
+        hasSeenTutorial = safeStorage.getItem(key);
+      } else {
+        console.warn("Invalid or missing user object.");
+      }
 
       if (
         !hasSeenTutorial &&
@@ -723,7 +724,7 @@ if (isValidUser(user)) {
   const handleTutorialComplete = () => {
     setShowTutorial(false);
     if (user?.id) {
-      localStorage.setItem(`tutorial_completed_${user.id}`, "true");
+      safeStorage.setItem(`tutorial_completed_${user.id}`, "true");
     }
   };
 
