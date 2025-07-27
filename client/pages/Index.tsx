@@ -214,6 +214,16 @@ export default function Index() {
   const [showTutorial, setShowTutorial] = useState(false);
   const [developerModeEnabled, setDeveloperModeEnabled] = useState(true);
 
+  // Helper types and functions
+  type ValidUser = {
+    id: string;
+    name?: string;
+  };
+
+  function isValidUser(user: any): user is ValidUser {
+    return user && typeof user.id === "string";
+  }
+
   useEffect(() => {
     setCurrentQuote(
       motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)],
