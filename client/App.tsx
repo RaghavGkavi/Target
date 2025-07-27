@@ -109,25 +109,31 @@ function AppContent() {
 
   // Onboarding Route Component (requires auth but redirects if already onboarded)
   function OnboardingRoute({ children }: { children: React.ReactNode }) {
-    const { user, userData, loading } = useAuth();
+    try {
+      const { user, userData, loading } = useAuth();
 
-    if (loading) {
-      return (
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-        </div>
-      );
-    }
+      if (loading) {
+        return (
+          <div className="min-h-screen flex items-center justify-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          </div>
+        );
+      }
 
-    if (!user) {
+      if (!user) {
+        return <Navigate to="/auth" replace />;
+      }
+
+      if (userData?.preferences?.onboardingCompleted) {
+        return <Navigate to="/" replace />;
+      }
+
+      return <>{children}</>;
+    } catch (error) {
+      // If AuthProvider is not available, redirect to auth
+      console.warn("AuthProvider not available in OnboardingRoute, redirecting to auth");
       return <Navigate to="/auth" replace />;
     }
-
-    if (userData?.preferences?.onboardingCompleted) {
-      return <Navigate to="/" replace />;
-    }
-
-    return <>{children}</>;
   }
 
   return (
