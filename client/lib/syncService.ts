@@ -152,14 +152,19 @@ export class SyncService {
     userId: string,
     userData: UserData,
   ): Promise<void> {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
     const response = await fetch(`/api/users/${userId}/data`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ userData }),
-      signal: AbortSignal.timeout(10000),
+      signal: controller.signal,
     });
+
+    clearTimeout(timeoutId);
 
     const result: UserDataResponse = await response.json();
 
