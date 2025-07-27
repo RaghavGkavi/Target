@@ -15,6 +15,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { createRoot } from "react-dom/client";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
@@ -32,24 +33,6 @@ import QuestDashboard from "./pages/QuestDashboard";
 import DashboardRouter from "./pages/DashboardRouter";
 import Placeholder from "./pages/Placeholder";
 import NotFound from "./pages/NotFound";
-
-useEffect(() => {
-  // Register service worker
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-        .then((registration) => {
-          console.log('SW registered: ', registration);
-        })
-        .catch((registrationError) => {
-          console.log('SW registration failed: ', registrationError);
-        });
-    });
-  }
-
-  // Initialize mobile app features
-  MobileUtils.initializeMobileApp();
-}, []);
 
 // Extend HTMLElement type to include our custom property
 declare global {
@@ -339,6 +322,20 @@ class ErrorBoundary extends React.Component<
 
 const App = () => {
   useEffect(() => {
+    // Register service worker
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker
+          .register("/sw.js")
+          .then((registration) => {
+            console.log("SW registered: ", registration);
+          })
+          .catch((registrationError) => {
+            console.log("SW registration failed: ", registrationError);
+          });
+      });
+    }
+
     // Initialize mobile app features
     MobileUtils.initializeMobileApp();
   }, []);
@@ -351,6 +348,7 @@ const App = () => {
             <TooltipProvider>
               <Toaster />
               <Sonner />
+              <PWAInstallPrompt />
               <div className="mobile-app">
                 <AppContent />
               </div>

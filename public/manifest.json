@@ -2,7 +2,7 @@
   "name": "Target - Goal & Habit Tracker",
   "short_name": "Target",
   "description": "Master your goals, break your chains. Track habits, overcome addictions, and build discipline.",
-  "start_url": "/",
+  "start_url": "/?utm_source=pwa",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#8B5CF6",
@@ -11,6 +11,7 @@
   "lang": "en",
   "dir": "ltr",
   "scope": "/",
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "/icons/icon-72x72.png",
