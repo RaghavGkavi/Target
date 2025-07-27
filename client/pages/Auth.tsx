@@ -181,8 +181,8 @@ export default function Auth() {
               </TabsList>
 
               {/* Sign In Tab */}
-              <TabsContent value="signin" className="space-y-4">
-                <form onSubmit={handleSignIn} className="space-y-4">
+              <TabsContent value="signin" className="space-y-5 animate-in fade-in-0 slide-in-from-right-2 duration-300">
+                <form onSubmit={handleSignIn} className="space-y-5">
                   <div className="space-y-2">
                     <Label htmlFor="signin-email">Email</Label>
                     <div className="relative">
