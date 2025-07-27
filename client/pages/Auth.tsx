@@ -16,6 +16,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { cn } from "@/lib/utils";
 
 export default function Auth() {
   const navigate = useNavigate();
@@ -79,7 +80,10 @@ export default function Auth() {
         signUpForm.displayName,
       );
       if (result.success) {
-        navigate("/");
+        // Wait a bit for userData to be set, then navigate to trigger proper onboarding flow
+        setTimeout(() => {
+          navigate("/");
+        }, 100);
       } else {
         setError(result.error || "Sign up failed");
       }
@@ -113,57 +117,81 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 w-full h-full">
+        <div className="absolute top-10 left-10 w-72 h-72 bg-primary/3 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-accent/2 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      </div>
+
       {/* Theme Toggle - Fixed Position */}
       <div className="fixed top-4 right-4 z-50">
         <ThemeToggle />
       </div>
 
-      <div className="w-full max-w-md space-y-6">
-        {/* Logo and Header */}
-        <div className="text-center space-y-4">
-          <div className="h-16 w-16 mx-auto rounded-xl bg-gradient-to-r from-primary to-accent flex items-center justify-center">
-            <Target className="h-8 w-8 text-white" />
+      <div className="w-full max-w-md space-y-8 relative z-10">
+        {/* Logo and Header with smooth animations */}
+        <div className="text-center space-y-6 animate-in fade-in-0 slide-in-from-top-4 duration-1000">
+          <div className="h-20 w-20 mx-auto rounded-2xl bg-gradient-to-br from-primary via-primary to-accent flex items-center justify-center shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+            <Target className="h-10 w-10 text-white" />
           </div>
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+          <div className="space-y-2">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
               Target
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground text-lg">
               Master your goals, break your chains
             </p>
           </div>
         </div>
 
-        {/* Auth Card */}
-        <Card className="rounded-xl border-0 shadow-lg">
-          <CardHeader className="text-center pb-4">
-            <CardTitle>Welcome</CardTitle>
-            <CardDescription>
+        {/* Auth Card with enhanced styling */}
+        <Card className="rounded-2xl border-0 shadow-2xl backdrop-blur-sm bg-card/95 animate-in fade-in-0 slide-in-from-bottom-4 duration-1000 delay-300">
+          <CardHeader className="text-center pb-6 pt-8">
+            <CardTitle className="text-2xl">Welcome</CardTitle>
+            <CardDescription className="text-base">
               Sign in to your account or create a new one to start your journey
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-6 px-8 pb-8">
             {error && (
-              <Alert variant="destructive" className="rounded-lg">
+              <Alert
+                variant="destructive"
+                className="rounded-xl animate-in fade-in-0 slide-in-from-top-2 duration-300"
+              >
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
 
-            <Tabs defaultValue="signin" className="space-y-4">
-              <TabsList className="grid w-full grid-cols-2 rounded-lg">
-                <TabsTrigger value="signin" className="rounded-md">
+            <Tabs defaultValue="signin" className="space-y-6">
+              <TabsList className="grid w-full grid-cols-2 rounded-xl bg-muted/50 p-1 h-12">
+                <TabsTrigger
+                  value="signin"
+                  className={cn(
+                    "rounded-lg text-sm font-medium transition-all duration-200",
+                    "data-[state=active]:bg-background data-[state=active]:shadow-sm",
+                  )}
+                >
                   Sign In
                 </TabsTrigger>
-                <TabsTrigger value="signup" className="rounded-md">
+                <TabsTrigger
+                  value="signup"
+                  className={cn(
+                    "rounded-lg text-sm font-medium transition-all duration-200",
+                    "data-[state=active]:bg-background data-[state=active]:shadow-sm",
+                  )}
+                >
                   Sign Up
                 </TabsTrigger>
               </TabsList>
 
               {/* Sign In Tab */}
-              <TabsContent value="signin" className="space-y-4">
-                <form onSubmit={handleSignIn} className="space-y-4">
+              <TabsContent
+                value="signin"
+                className="space-y-5 animate-in fade-in-0 slide-in-from-right-2 duration-300"
+              >
+                <form onSubmit={handleSignIn} className="space-y-5">
                   <div className="space-y-2">
                     <Label htmlFor="signin-email">Email</Label>
                     <div className="relative">
@@ -179,7 +207,7 @@ export default function Auth() {
                             email: e.target.value,
                           })
                         }
-                        className="pl-10 rounded-lg"
+                        className="pl-10 rounded-xl h-12 transition-all duration-200 focus:ring-2 focus:ring-primary/20"
                         required
                       />
                     </div>
@@ -200,7 +228,7 @@ export default function Auth() {
                             password: e.target.value,
                           })
                         }
-                        className="pl-10 pr-10 rounded-lg"
+                        className="pl-10 pr-10 rounded-xl h-12 transition-all duration-200 focus:ring-2 focus:ring-primary/20"
                         required
                       />
                       <button
@@ -215,7 +243,7 @@ export default function Auth() {
 
                   <Button
                     type="submit"
-                    className="w-full rounded-lg"
+                    className="w-full rounded-xl h-12 text-base font-medium transition-all duration-200 hover:shadow-md"
                     disabled={isLoading}
                   >
                     {isLoading ? (
@@ -231,8 +259,11 @@ export default function Auth() {
               </TabsContent>
 
               {/* Sign Up Tab */}
-              <TabsContent value="signup" className="space-y-4">
-                <form onSubmit={handleSignUp} className="space-y-4">
+              <TabsContent
+                value="signup"
+                className="space-y-5 animate-in fade-in-0 slide-in-from-left-2 duration-300"
+              >
+                <form onSubmit={handleSignUp} className="space-y-5">
                   <div className="space-y-2">
                     <Label htmlFor="signup-name">Display Name</Label>
                     <div className="relative">
@@ -248,7 +279,7 @@ export default function Auth() {
                             displayName: e.target.value,
                           })
                         }
-                        className="pl-10 rounded-lg"
+                        className="pl-10 rounded-xl h-12 transition-all duration-200 focus:ring-2 focus:ring-primary/20"
                         required
                       />
                     </div>
@@ -269,7 +300,7 @@ export default function Auth() {
                             email: e.target.value,
                           })
                         }
-                        className="pl-10 rounded-lg"
+                        className="pl-10 rounded-xl h-12 transition-all duration-200 focus:ring-2 focus:ring-primary/20"
                         required
                       />
                     </div>
@@ -290,7 +321,7 @@ export default function Auth() {
                             password: e.target.value,
                           })
                         }
-                        className="pl-10 pr-10 rounded-lg"
+                        className="pl-10 pr-10 rounded-xl h-12 transition-all duration-200 focus:ring-2 focus:ring-primary/20"
                         required
                         minLength={6}
                       />
@@ -319,7 +350,7 @@ export default function Auth() {
                             confirmPassword: e.target.value,
                           })
                         }
-                        className="pl-10 rounded-lg"
+                        className="pl-10 rounded-xl h-12 transition-all duration-200 focus:ring-2 focus:ring-primary/20"
                         required
                       />
                     </div>
@@ -327,7 +358,7 @@ export default function Auth() {
 
                   <Button
                     type="submit"
-                    className="w-full rounded-lg"
+                    className="w-full rounded-xl h-12 text-base font-medium transition-all duration-200 hover:shadow-md"
                     disabled={isLoading}
                   >
                     {isLoading ? (
@@ -344,12 +375,12 @@ export default function Auth() {
             </Tabs>
 
             {/* Divider */}
-            <div className="relative">
+            <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
                 <Separator className="w-full" />
               </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">
+              <div className="relative flex justify-center text-sm uppercase tracking-wider">
+                <span className="bg-card px-4 text-muted-foreground font-medium">
                   Or continue with
                 </span>
               </div>
@@ -359,7 +390,7 @@ export default function Auth() {
             <Button
               type="button"
               variant="outline"
-              className="w-full rounded-lg"
+              className="w-full rounded-xl h-12 text-base transition-all duration-200 hover:shadow-md border-2"
               onClick={handleGoogleSignIn}
               disabled={isLoading}
             >
@@ -387,14 +418,20 @@ export default function Auth() {
         </Card>
 
         {/* Footer */}
-        <div className="text-center text-sm text-muted-foreground">
+        <div className="text-center text-sm text-muted-foreground animate-in fade-in-0 slide-in-from-bottom-2 duration-1000 delay-500">
           <p>
             By signing in, you agree to our{" "}
-            <Link to="/terms" className="underline hover:text-foreground">
+            <Link
+              to="/terms"
+              className="underline hover:text-foreground transition-colors duration-200"
+            >
               Terms of Service
             </Link>{" "}
             and{" "}
-            <Link to="/privacy" className="underline hover:text-foreground">
+            <Link
+              to="/privacy"
+              className="underline hover:text-foreground transition-colors duration-200"
+            >
               Privacy Policy
             </Link>
           </p>

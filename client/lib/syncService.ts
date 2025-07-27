@@ -40,12 +40,18 @@ export class SyncService {
     if (!navigator.onLine) return false;
 
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3000);
+
       const response = await fetch("/api/ping", {
         method: "GET",
-        signal: AbortSignal.timeout(5000),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
       return response.ok;
-    } catch {
+    } catch (error) {
+      // Handle timeout and network errors gracefully
       return false;
     }
   }
@@ -68,7 +74,14 @@ export class SyncService {
       }
 
       // Check if cloud data exists
-      const existsResponse = await fetch(`/api/users/${userId}/exists`);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+      const existsResponse = await fetch(`/api/users/${userId}/exists`, {
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
 
       if (!existsResponse.ok) {
         throw new Error(
@@ -139,13 +152,19 @@ export class SyncService {
     userId: string,
     userData: UserData,
   ): Promise<void> {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
     const response = await fetch(`/api/users/${userId}/data`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ userData }),
+      signal: controller.signal,
     });
+
+    clearTimeout(timeoutId);
 
     const result: UserDataResponse = await response.json();
 
@@ -155,7 +174,14 @@ export class SyncService {
   }
 
   static async downloadUserData(userId: string): Promise<UserData | null> {
-    const response = await fetch(`/api/users/${userId}/data`);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+    const response = await fetch(`/api/users/${userId}/data`, {
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
 
     if (response.status === 404) {
       return null; // No data exists
