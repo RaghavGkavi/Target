@@ -219,7 +219,7 @@ export default function Auth() {
                             password: e.target.value,
                           })
                         }
-                        className="pl-10 pr-10 rounded-lg"
+                        className="pl-10 pr-10 rounded-xl h-12 transition-all duration-200 focus:ring-2 focus:ring-primary/20"
                         required
                       />
                       <button
