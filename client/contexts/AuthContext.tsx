@@ -400,12 +400,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 lastLoginAt: new Date(),
               };
 
-              setUser(googleUser);
-              safeStorage.setItem(
-                "target_current_user",
-                JSON.stringify(googleUser),
-              );
-
               // Check if user data exists
               const existingData = getUserData(googleUser.id);
               let userDataToSet: UserData;
@@ -433,7 +427,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 saveUserData(googleUser.id, userDataToSet);
               }
 
+              // Set userData before setting user to prevent race condition
               setUserData(userDataToSet);
+              setUser(googleUser);
+              safeStorage.setItem(
+                "target_current_user",
+                JSON.stringify(googleUser),
+              );
               resolve({ success: true });
             } catch (error) {
               console.error("Error processing Google auth response:", error);
