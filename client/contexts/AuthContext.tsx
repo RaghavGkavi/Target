@@ -255,7 +255,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             // Set sync state to offline if sync fails
             SyncService.updateState({
               status: "offline",
-              error: "Unable to connect to sync service"
+              error: "Unable to connect to sync service",
             });
           });
       }
