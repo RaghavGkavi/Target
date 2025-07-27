@@ -174,9 +174,14 @@ export class SyncService {
   }
 
   static async downloadUserData(userId: string): Promise<UserData | null> {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
     const response = await fetch(`/api/users/${userId}/data`, {
-      signal: AbortSignal.timeout(10000),
+      signal: controller.signal,
     });
+
+    clearTimeout(timeoutId);
 
     if (response.status === 404) {
       return null; // No data exists
