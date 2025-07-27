@@ -23,7 +23,8 @@
     "mobile:android": "npm run mobile:build && npx cap open android",
     "mobile:ios": "npm run mobile:build && npx cap open ios",
     "mobile:run:android": "npm run mobile:build && npx cap run android",
-    "mobile:run:ios": "npm run mobile:build && npx cap run ios"
+    "mobile:run:ios": "npm run mobile:build && npx cap run ios",
+    "clean:rebuild": "cd android && gradle clean && gradle build --warning-mode all --stacktrace && cd .."
   },
   "dependencies": {
     "@capacitor/android": "^7.4.2",

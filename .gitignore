@@ -54,3 +54,5 @@ ios/App/App.xcodeproj/xcuserdata/
 
 # Capacitor
 .capacitor/
+
+!gradle/wrapper/gradle-wrapper.jar

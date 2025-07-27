@@ -266,9 +266,25 @@ export default function Index() {
       );
 
       // Check if user just completed onboarding (has no tutorial completion flag)
-      const hasSeenTutorial = localStorage.getItem(
-        `tutorial_completed_${user?.id}`,
-      );
+      type User = {
+  id: string;
+  name?: string;
+  // add other fields as needed
+};
+
+function isValidUser(user: any): user is User {
+  return user && typeof user.id === 'string';
+}
+
+let hasSeenTutorial: string | null = null;
+
+if (isValidUser(user)) {
+  const key = `tutorial_completed_${user.id}`;
+  hasSeenTutorial = localStorage.getItem(key);
+} else {
+  console.warn("Invalid or missing user object.");
+}
+
       if (
         !hasSeenTutorial &&
         userData.preferences?.onboardingCompleted &&
