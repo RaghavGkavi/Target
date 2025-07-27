@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useMobileDevice } from "@/hooks/use-mobile-device";
 import { MobileUtils } from "@/lib/mobile-utils";
+import { safeStorage } from "@/lib/storage";
 import {
   calculateDisciplineRank,
   calculateConsistencyScore,
@@ -280,7 +281,7 @@ let hasSeenTutorial: string | null = null;
 
 if (isValidUser(user)) {
   const key = `tutorial_completed_${user.id}`;
-  hasSeenTutorial = localStorage.getItem(key);
+  hasSeenTutorial = safeStorage.getItem(key);
 } else {
   console.warn("Invalid or missing user object.");
 }
