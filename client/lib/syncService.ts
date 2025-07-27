@@ -40,13 +40,18 @@ export class SyncService {
     if (!navigator.onLine) return false;
 
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3000);
+
       const response = await fetch("/api/ping", {
         method: "GET",
-        signal: AbortSignal.timeout(3000),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
       return response.ok;
     } catch (error) {
-      console.warn("Sync service offline - backend not available:", error);
+      // Handle timeout and network errors gracefully
       return false;
     }
   }
