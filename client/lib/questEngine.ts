@@ -20,6 +20,15 @@ import {
   getQuestById,
   getAllQuestIds,
 } from "./questLib";
+import {
+  getUTCDateOnly,
+  toUTCDateOnly,
+  isSameUTCDay,
+  getDayDifferenceUTC,
+  isConsecutiveUTCDay,
+  getUTCDateString,
+  getUTCTimestamp,
+} from "./dateUtils";
 
 /**
  * Quest Engine - Manages daily quest generation, user progression, and quest lifecycle
