@@ -48,13 +48,16 @@ self.addEventListener('fetch', (event) => {
   // Skip non-GET requests
   if (request.method !== 'GET') return;
 
-  // Handle API requests separately
-  if (request.url.includes('/api/')) {
+  // Handle API requests and Firebase requests separately
+  if (request.url.includes('/api/') ||
+      request.url.includes('firestore.googleapis.com') ||
+      request.url.includes('firebase') ||
+      request.url.includes('googleapis.com')) {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          // Cache successful API responses for offline access
-          if (response.status === 200) {
+          // Cache successful API responses for offline access (but not Firebase auth)
+          if (response.status === 200 && request.url.includes('/api/')) {
             const responseClone = response.clone();
             caches.open(DYNAMIC_CACHE).then((cache) => {
               cache.put(request, responseClone);
@@ -63,8 +66,11 @@ self.addEventListener('fetch', (event) => {
           return response;
         })
         .catch(() => {
-          // Return cached API response if available
-          return caches.match(request);
+          // Return cached API response if available (only for /api/ requests)
+          if (request.url.includes('/api/')) {
+            return caches.match(request);
+          }
+          throw error;
         })
     );
     return;
