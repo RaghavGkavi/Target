@@ -543,7 +543,7 @@ export class QuestEngine {
     const initialQuestSystemData: QuestSystemData = {
       currentQuests: [],
       questHistory: [],
-      lastQuestGeneration: new Date(),
+      lastQuestGeneration: getUTCDateOnly(),
       questPreferences,
       userLevel: {
         currentLevel: 1,
