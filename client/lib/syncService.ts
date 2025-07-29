@@ -2,6 +2,7 @@ import { UserData } from "@/contexts/AuthContext";
 import { UserDataResponse, UserDataExistsResponse } from "@shared/api";
 import { ConflictResolver } from "./conflictResolver";
 import { safeStorage } from "./storage";
+import { DataSyncService } from "./dataSync";
 
 export type SyncStatus = "syncing" | "synced" | "error" | "offline";
 
@@ -40,6 +41,13 @@ export class SyncService {
     if (!navigator.onLine) return false;
 
     try {
+      // For PWA and mobile, check Firebase connectivity directly
+      const firebaseOnline = await DataSyncService.isOnline();
+      if (firebaseOnline) {
+        return true;
+      }
+
+      // Fallback to API ping for web version
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 3000);
 
@@ -73,58 +81,73 @@ export class SyncService {
         return localData;
       }
 
-      // Check if cloud data exists
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-      const existsResponse = await fetch(`/api/users/${userId}/exists`, {
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeoutId);
-
-      if (!existsResponse.ok) {
-        throw new Error(
-          `Failed to check user data: ${existsResponse.status} ${existsResponse.statusText}`,
-        );
-      }
-
-      const existsData: UserDataExistsResponse = await existsResponse.json();
-
-      if (!existsData.success) {
-        throw new Error(existsData.error || "Failed to check user data");
-      }
-
       let finalData: UserData;
 
-      if (!existsData.exists) {
-        // No cloud data exists, upload local data
-        await this.uploadUserData(userId, localData);
-        finalData = localData;
-      } else {
-        // Cloud data exists, download and merge
-        const cloudData = await this.downloadUserData(userId);
+      try {
+        // Try Firebase sync first (for PWA and mobile compatibility)
+        const cloudData = await DataSyncService.getUserDataFromCloud(userId);
 
-        if (cloudData) {
-          // Merge local and cloud data
-          const mergeResult = await this.mergeUserData(localData, cloudData);
-
-          if (mergeResult.hasConflicts) {
-            // Conflicts detected - will need manual resolution
-            this.updateState({
-              status: "error",
-              error: "Data conflicts detected. Manual resolution required.",
-              pendingChanges: true,
-            });
-            return localData; // Return local data for now
-          }
-
-          finalData = mergeResult.data;
+        if (!cloudData) {
+          // No cloud data exists, upload local data
+          await DataSyncService.saveUserDataToCloud(userId, localData);
+          finalData = localData;
+        } else {
+          // Cloud data exists, merge with local data
+          const mergedData = await DataSyncService.mergeUserData(
+            localData,
+            cloudData,
+          );
 
           // Upload merged data back to cloud
-          await this.uploadUserData(userId, finalData);
+          await DataSyncService.saveUserDataToCloud(userId, mergedData);
+          finalData = mergedData;
+        }
+      } catch (firebaseError) {
+        console.warn(
+          "Firebase sync failed, attempting API fallback:",
+          firebaseError,
+        );
+
+        // Fallback to API sync for web version
+        const existsResponse = await fetch(`/api/users/${userId}/exists`);
+
+        if (existsResponse.ok) {
+          const existsData: UserDataExistsResponse =
+            await existsResponse.json();
+
+          if (!existsData.success) {
+            throw new Error(existsData.error || "Failed to check user data");
+          }
+
+          if (!existsData.exists) {
+            await this.uploadUserData(userId, localData);
+            finalData = localData;
+          } else {
+            const cloudData = await this.downloadUserData(userId);
+
+            if (cloudData) {
+              const mergeResult = await this.mergeUserData(
+                localData,
+                cloudData,
+              );
+
+              if (mergeResult.hasConflicts) {
+                this.updateState({
+                  status: "error",
+                  error: "Data conflicts detected. Manual resolution required.",
+                  pendingChanges: true,
+                });
+                return localData;
+              }
+
+              finalData = mergeResult.data;
+              await this.uploadUserData(userId, finalData);
+            } else {
+              finalData = localData;
+            }
+          }
         } else {
-          finalData = localData;
+          throw firebaseError; // Re-throw Firebase error if API also fails
         }
       }
 
@@ -317,7 +340,17 @@ export class SyncService {
     const online = await this.isOnline();
     if (online) {
       try {
-        await this.uploadUserData(userId, userData);
+        // Try Firebase first for cross-platform compatibility
+        try {
+          await DataSyncService.saveUserDataToCloud(userId, userData);
+        } catch (firebaseError) {
+          console.warn(
+            "Firebase background sync failed, trying API fallback:",
+            firebaseError,
+          );
+          await this.uploadUserData(userId, userData);
+        }
+
         this.clearLocalChanges(userId);
         this.updateState({
           status: "synced",

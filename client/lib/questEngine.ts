@@ -20,6 +20,15 @@ import {
   getQuestById,
   getAllQuestIds,
 } from "./questLib";
+import {
+  getUTCDateOnly,
+  toUTCDateOnly,
+  isSameUTCDay,
+  getDayDifferenceUTC,
+  isConsecutiveUTCDay,
+  getUTCDateString,
+  getUTCTimestamp,
+} from "./dateUtils";
 
 /**
  * Quest Engine - Manages daily quest generation, user progression, and quest lifecycle
@@ -33,16 +42,14 @@ export class QuestEngine {
     questSystemData: QuestSystemData,
     lastLoginDate?: Date,
   ): DailyQuest[] {
-    const today = new Date();
+    const today = getUTCDateOnly();
     const preferences = questSystemData.questPreferences;
 
     // Get previously assigned quest template IDs to avoid immediate repetition
     const recentTemplateIds = questSystemData.questHistory
       .filter((quest) => {
         const questDate = new Date(quest.dateAssigned);
-        const daysDiff = Math.floor(
-          (today.getTime() - questDate.getTime()) / (1000 * 60 * 60 * 24),
-        );
+        const daysDiff = getDayDifferenceUTC(today, questDate);
         return daysDiff <= 7; // Don't repeat quests from last 7 days
       })
       .map((quest) => quest.templateId);
@@ -186,7 +193,7 @@ export class QuestEngine {
    * Regenerate all quests with randomized difficulty distribution
    */
   static regenerateAllQuests(questSystemData: QuestSystemData): DailyQuest[] {
-    const today = new Date();
+    const today = getUTCDateOnly();
 
     // Create randomized difficulty distribution
     const difficulties: QuestDifficulty[] = [];
@@ -319,13 +326,11 @@ export class QuestEngine {
     const preferences = questSystemData.questPreferences;
 
     // Get template IDs to exclude (current quest + recent history + flagged quests)
-    const today = new Date();
+    const today = getUTCDateOnly();
     const recentTemplateIds = questSystemData.questHistory
       .filter((quest) => {
         const questDate = new Date(quest.dateAssigned);
-        const daysDiff = Math.floor(
-          (today.getTime() - questDate.getTime()) / (1000 * 60 * 60 * 24),
-        );
+        const daysDiff = getDayDifferenceUTC(today, questDate);
         return daysDiff <= 7;
       })
       .map((quest) => quest.templateId);
@@ -451,15 +456,12 @@ export class QuestEngine {
     const newLevel = levelInfo.level > oldLevel ? levelInfo.level : undefined;
 
     // Update weekly stats
-    const today = new Date();
+    const today = getUTCDateOnly();
     const lastStreakDate = questSystemData.weeklyStats.lastStreakDate;
     // Ensure lastStreakDate is a Date object
     const lastStreakDateObj = lastStreakDate ? new Date(lastStreakDate) : null;
     const isConsecutiveDay =
-      lastStreakDateObj &&
-      Math.floor(
-        (today.getTime() - lastStreakDateObj.getTime()) / (1000 * 60 * 60 * 24),
-      ) === 1;
+      lastStreakDateObj && isConsecutiveUTCDay(today, lastStreakDateObj);
 
     const newStreak =
       !lastStreakDateObj || isConsecutiveDay
@@ -483,21 +485,20 @@ export class QuestEngine {
     };
 
     // Update daily stats
-    const todayDateString = today.toDateString();
     const dailyStatsDate = questSystemData.dailyStats?.date
-      ? new Date(questSystemData.dailyStats.date).toDateString()
-      : "";
+      ? new Date(questSystemData.dailyStats.date)
+      : null;
 
-    if (dailyStatsDate === todayDateString) {
+    if (dailyStatsDate && isSameUTCDay(today, dailyStatsDate)) {
       // Same day, increment count
       questSystemData.dailyStats.questsCompleted += 1;
-      questSystemData.dailyStats.lastUpdated = today;
+      questSystemData.dailyStats.lastUpdated = getUTCTimestamp();
     } else {
       // New day, reset count
       questSystemData.dailyStats = {
         date: today,
         questsCompleted: 1,
-        lastUpdated: today,
+        lastUpdated: getUTCTimestamp(),
       };
     }
 
@@ -511,7 +512,7 @@ export class QuestEngine {
     questSystemData: QuestSystemData,
     lastLoginDate: Date,
   ): boolean {
-    const today = new Date();
+    const today = getUTCDateOnly();
     const lastGeneration = new Date(questSystemData.lastQuestGeneration);
 
     // Generate new quests if:
@@ -519,8 +520,7 @@ export class QuestEngine {
     // 2. No current quests exist
     // 3. All current quests are completed/failed AND allQuestsCompleted flag is false
 
-    const isDifferentDay =
-      today.toDateString() !== lastGeneration.toDateString();
+    const isDifferentDay = !isSameUTCDay(today, lastGeneration);
     const hasNoCurrentQuests = questSystemData.currentQuests.length === 0;
     const allQuestsCompleted = questSystemData.currentQuests.every(
       (quest) => quest.status === "completed" || quest.status === "failed",
@@ -543,7 +543,7 @@ export class QuestEngine {
     const initialQuestSystemData: QuestSystemData = {
       currentQuests: [],
       questHistory: [],
-      lastQuestGeneration: new Date(),
+      lastQuestGeneration: getUTCDateOnly(),
       questPreferences,
       userLevel: {
         currentLevel: 1,
@@ -557,9 +557,9 @@ export class QuestEngine {
         streak: 0,
       },
       dailyStats: {
-        date: new Date(),
+        date: getUTCDateOnly(),
         questsCompleted: 0,
-        lastUpdated: new Date(),
+        lastUpdated: getUTCTimestamp(),
       },
       allQuestsCompleted: false,
       flaggedQuests: [],
@@ -578,8 +578,7 @@ export class QuestEngine {
   static processQuestRotation(
     questSystemData: QuestSystemData,
   ): QuestSystemData {
-    const today = new Date();
-    const todayDateString = today.toDateString();
+    const today = getUTCDateOnly();
 
     // Separate quests by status and date
     const activeQuests = questSystemData.currentQuests.filter(
@@ -590,15 +589,19 @@ export class QuestEngine {
     const completedQuestsToday = questSystemData.currentQuests.filter(
       (quest) =>
         quest.status === "completed" &&
-        new Date(quest.dateCompleted || quest.dateAssigned).toDateString() ===
-          todayDateString,
+        isSameUTCDay(
+          today,
+          new Date(quest.dateCompleted || quest.dateAssigned),
+        ),
     );
 
     const questsToArchive = questSystemData.currentQuests.filter(
       (quest) =>
         (quest.status === "completed" || quest.status === "failed") &&
-        new Date(quest.dateCompleted || quest.dateAssigned).toDateString() !==
-          todayDateString,
+        !isSameUTCDay(
+          today,
+          new Date(quest.dateCompleted || quest.dateAssigned),
+        ),
     );
 
     // If we need to generate new quests for today
@@ -625,8 +628,7 @@ export class QuestEngine {
     }
 
     // Keep only last 30 days of history to prevent bloat
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
     questSystemData.questHistory = questSystemData.questHistory.filter(
       (quest) => new Date(quest.dateAssigned) >= thirtyDaysAgo,
     );

@@ -13,6 +13,13 @@ export const initializeFirebase = async () => {
       throw new Error("Firebase not available in server environment");
     }
 
+    // Check if we're in PWA mode (different from regular web)
+    const isPWA =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.navigator.standalone ||
+      document.referrer.includes("android-app://") ||
+      window.location.protocol === "capacitor:";
+
     const { initializeApp } = await import("firebase/app");
     const { getFirestore } = await import("firebase/firestore");
     const { getAuth } = await import("firebase/auth");
@@ -35,10 +42,17 @@ export const initializeFirebase = async () => {
     db = getFirestore(app);
     auth = getAuth(app);
 
-    // Initialize analytics only in production and web environment
-    if (import.meta.env.PROD && !import.meta.env.VITE_MOBILE) {
-      const { getAnalytics } = await import("firebase/analytics");
-      analytics = getAnalytics(app);
+    // Initialize analytics only in production, web environment, and not PWA
+    if (import.meta.env.PROD && !import.meta.env.VITE_MOBILE && !isPWA) {
+      try {
+        const { getAnalytics } = await import("firebase/analytics");
+        analytics = getAnalytics(app);
+      } catch (analyticsError) {
+        console.warn(
+          "Analytics initialization failed (expected in PWA):",
+          analyticsError,
+        );
+      }
     }
 
     console.log("Firebase initialized successfully");

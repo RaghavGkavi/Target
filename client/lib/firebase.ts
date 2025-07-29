@@ -27,11 +27,12 @@ if (typeof window !== "undefined" && import.meta.env.PROD) {
   analytics = getAnalytics(app);
 }
 
-// Connect to emulators in development (web only)
+// Connect to emulators in development (web only, not PWA)
 if (
   import.meta.env.DEV &&
   typeof window !== "undefined" &&
-  !import.meta.env.VITE_MOBILE
+  !import.meta.env.VITE_MOBILE &&
+  window.location.hostname === "localhost"
 ) {
   // Only connect to emulators if they haven't been connected already
   try {

@@ -3,6 +3,11 @@ import { QuestSystemData } from "@shared/quest-types";
 import { QuestEngine, DEFAULT_QUEST_PREFERENCES } from "@/lib/questEngine";
 import { SyncService, SyncState } from "@/lib/syncService";
 import { safeStorage } from "@/lib/storage";
+import { getUTCDateOnly, getUTCTimestamp } from "@/lib/dateUtils";
+import {
+  initializeMobileGoogleAuth,
+  isMobileEnvironment,
+} from "@/lib/mobile-auth";
 
 export interface User {
   id: string;
@@ -176,6 +181,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         console.log("AuthProvider: Starting auth check");
 
+        // Initialize mobile Google Auth if on mobile platform
+        await initializeMobileGoogleAuth();
+
         const currentUser = safeStorage.getItem("target_current_user");
         if (currentUser) {
           const userData = JSON.parse(currentUser);
@@ -218,7 +226,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (userProgressData.questSystemData) {
             // Migration: Add dailyStats if it doesn't exist
             if (!userProgressData.questSystemData.dailyStats) {
-              const today = new Date();
+              const today = getUTCDateOnly();
               const completedTodayCount =
                 userProgressData.questSystemData.currentQuests.filter(
                   (q) => q.status === "completed",
@@ -226,7 +234,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               userProgressData.questSystemData.dailyStats = {
                 date: today,
                 questsCompleted: completedTodayCount,
-                lastUpdated: today,
+                lastUpdated: getUTCTimestamp(),
               };
             }
 
@@ -380,8 +388,72 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     error?: string;
   }> => {
     try {
+      if (isMobileEnvironment()) {
+        // Use native Google Auth for mobile
+        const { GoogleAuth } = await import(
+          "@codetrix-studio/capacitor-google-auth"
+        );
+
+        try {
+          const result = await GoogleAuth.signIn();
+
+          const googleUser: User = {
+            id: `google_${result.id}`,
+            email: result.email,
+            displayName: result.name,
+            photoURL: result.imageUrl,
+            provider: "google",
+            createdAt: new Date(),
+            lastLoginAt: new Date(),
+          };
+
+          // Check if user data exists
+          const existingData = getUserData(googleUser.id);
+          let userDataToSet: UserData;
+
+          if (existingData) {
+            userDataToSet = existingData;
+          } else {
+            // Initialize user data for new Google user
+            userDataToSet = {
+              goals: [],
+              addictions: [],
+              completedGoals: [],
+              preferences: {
+                theme: "system",
+                notifications: true,
+                onboardingCompleted: false,
+                useQuestSystem: true,
+              },
+              privacy: {
+                showGoals: true,
+                showRecoveries: false,
+                profileVisibility: "private",
+              },
+            };
+            saveUserData(googleUser.id, userDataToSet);
+          }
+
+          // Set userData before setting user to prevent race condition
+          setUserData(userDataToSet);
+          setUser(googleUser);
+          safeStorage.setItem(
+            "target_current_user",
+            JSON.stringify(googleUser),
+          );
+
+          return { success: true };
+        } catch (error: any) {
+          console.error("Native Google Auth error:", error);
+          return {
+            success: false,
+            error: error.message || "Google sign-in failed on mobile",
+          };
+        }
+      }
+
       return new Promise((resolve) => {
-        // Initialize Google Identity Services
+        // Initialize Google Identity Services for web
         if (typeof window.google === "undefined") {
           resolve({
             success: false,
