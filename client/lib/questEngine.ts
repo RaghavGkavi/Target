@@ -193,7 +193,7 @@ export class QuestEngine {
    * Regenerate all quests with randomized difficulty distribution
    */
   static regenerateAllQuests(questSystemData: QuestSystemData): DailyQuest[] {
-    const today = new Date();
+    const today = getUTCDateOnly();
 
     // Create randomized difficulty distribution
     const difficulties: QuestDifficulty[] = [];
