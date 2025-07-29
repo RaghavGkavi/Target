@@ -178,6 +178,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         console.log("AuthProvider: Starting auth check");
 
+        // Initialize mobile Google Auth if on mobile platform
+        await initializeMobileGoogleAuth();
+
         const currentUser = safeStorage.getItem("target_current_user");
         if (currentUser) {
           const userData = JSON.parse(currentUser);
