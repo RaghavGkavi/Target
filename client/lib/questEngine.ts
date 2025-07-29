@@ -458,15 +458,12 @@ export class QuestEngine {
     const newLevel = levelInfo.level > oldLevel ? levelInfo.level : undefined;
 
     // Update weekly stats
-    const today = new Date();
+    const today = getUTCDateOnly();
     const lastStreakDate = questSystemData.weeklyStats.lastStreakDate;
     // Ensure lastStreakDate is a Date object
     const lastStreakDateObj = lastStreakDate ? new Date(lastStreakDate) : null;
     const isConsecutiveDay =
-      lastStreakDateObj &&
-      Math.floor(
-        (today.getTime() - lastStreakDateObj.getTime()) / (1000 * 60 * 60 * 24),
-      ) === 1;
+      lastStreakDateObj && isConsecutiveUTCDay(today, lastStreakDateObj);
 
     const newStreak =
       !lastStreakDateObj || isConsecutiveDay
