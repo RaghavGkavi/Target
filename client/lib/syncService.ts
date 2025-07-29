@@ -330,7 +330,14 @@ export class SyncService {
     const online = await this.isOnline();
     if (online) {
       try {
-        await this.uploadUserData(userId, userData);
+        // Try Firebase first for cross-platform compatibility
+        try {
+          await DataSyncService.saveUserDataToCloud(userId, userData);
+        } catch (firebaseError) {
+          console.warn("Firebase background sync failed, trying API fallback:", firebaseError);
+          await this.uploadUserData(userId, userData);
+        }
+
         this.clearLocalChanges(userId);
         this.updateState({
           status: "synced",
