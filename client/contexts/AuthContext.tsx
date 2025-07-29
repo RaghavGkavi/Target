@@ -3,6 +3,7 @@ import { QuestSystemData } from "@shared/quest-types";
 import { QuestEngine, DEFAULT_QUEST_PREFERENCES } from "@/lib/questEngine";
 import { SyncService, SyncState } from "@/lib/syncService";
 import { safeStorage } from "@/lib/storage";
+import { getUTCDateOnly, getUTCTimestamp } from "@/lib/dateUtils";
 
 export interface User {
   id: string;
