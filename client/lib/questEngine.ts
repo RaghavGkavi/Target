@@ -557,9 +557,9 @@ export class QuestEngine {
         streak: 0,
       },
       dailyStats: {
-        date: new Date(),
+        date: getUTCDateOnly(),
         questsCompleted: 0,
-        lastUpdated: new Date(),
+        lastUpdated: getUTCTimestamp(),
       },
       allQuestsCompleted: false,
       flaggedQuests: [],
