@@ -1,15 +1,16 @@
-import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
-
 /**
  * Initialize Google Auth for mobile platforms
  */
 export async function initializeMobileGoogleAuth(): Promise<void> {
   try {
     // Check if we're in a mobile environment
-    const isMobile = import.meta.env.VITE_MOBILE === "true" || 
+    const isMobile = import.meta.env.VITE_MOBILE === "true" ||
                     (typeof window !== "undefined" && window.location.protocol === "capacitor:");
-    
+
     if (isMobile) {
+      // Dynamically import the Google Auth plugin only in mobile environment
+      const { GoogleAuth } = await import("@codetrix-studio/capacitor-google-auth");
+
       await GoogleAuth.initialize({
         clientId: "966058326327-vqqh1rgur3fv14drtb0m2gdv0bnb8kbi.apps.googleusercontent.com",
         scopes: ["profile", "email"],
