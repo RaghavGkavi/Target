@@ -219,7 +219,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (userProgressData.questSystemData) {
             // Migration: Add dailyStats if it doesn't exist
             if (!userProgressData.questSystemData.dailyStats) {
-              const today = new Date();
+              const today = getUTCDateOnly();
               const completedTodayCount =
                 userProgressData.questSystemData.currentQuests.filter(
                   (q) => q.status === "completed",
@@ -227,7 +227,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               userProgressData.questSystemData.dailyStats = {
                 date: today,
                 questsCompleted: completedTodayCount,
-                lastUpdated: today,
+                lastUpdated: getUTCTimestamp(),
               };
             }
 
