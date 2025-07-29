@@ -42,16 +42,14 @@ export class QuestEngine {
     questSystemData: QuestSystemData,
     lastLoginDate?: Date,
   ): DailyQuest[] {
-    const today = new Date();
+    const today = getUTCDateOnly();
     const preferences = questSystemData.questPreferences;
 
     // Get previously assigned quest template IDs to avoid immediate repetition
     const recentTemplateIds = questSystemData.questHistory
       .filter((quest) => {
         const questDate = new Date(quest.dateAssigned);
-        const daysDiff = Math.floor(
-          (today.getTime() - questDate.getTime()) / (1000 * 60 * 60 * 24),
-        );
+        const daysDiff = getDayDifferenceUTC(today, questDate);
         return daysDiff <= 7; // Don't repeat quests from last 7 days
       })
       .map((quest) => quest.templateId);
