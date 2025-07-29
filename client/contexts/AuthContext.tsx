@@ -385,11 +385,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     error?: string;
   }> => {
     try {
-      // Check if we're in a mobile environment
-      const isMobile = import.meta.env.VITE_MOBILE === "true" ||
-                      (typeof window !== "undefined" && window.location.protocol === "capacitor:");
-
-      if (isMobile) {
+      if (isMobileEnvironment()) {
         // Use native Google Auth for mobile
         const { GoogleAuth } = await import("@codetrix-studio/capacitor-google-auth");
 
