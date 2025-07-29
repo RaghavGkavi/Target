@@ -41,6 +41,13 @@ export class SyncService {
     if (!navigator.onLine) return false;
 
     try {
+      // For PWA and mobile, check Firebase connectivity directly
+      const firebaseOnline = await DataSyncService.isOnline();
+      if (firebaseOnline) {
+        return true;
+      }
+
+      // Fallback to API ping for web version
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 3000);
 
