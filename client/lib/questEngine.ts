@@ -487,21 +487,20 @@ export class QuestEngine {
     };
 
     // Update daily stats
-    const todayDateString = today.toDateString();
     const dailyStatsDate = questSystemData.dailyStats?.date
-      ? new Date(questSystemData.dailyStats.date).toDateString()
-      : "";
+      ? new Date(questSystemData.dailyStats.date)
+      : null;
 
-    if (dailyStatsDate === todayDateString) {
+    if (dailyStatsDate && isSameUTCDay(today, dailyStatsDate)) {
       // Same day, increment count
       questSystemData.dailyStats.questsCompleted += 1;
-      questSystemData.dailyStats.lastUpdated = today;
+      questSystemData.dailyStats.lastUpdated = getUTCTimestamp();
     } else {
       // New day, reset count
       questSystemData.dailyStats = {
         date: today,
         questsCompleted: 1,
-        lastUpdated: today,
+        lastUpdated: getUTCTimestamp(),
       };
     }
 
