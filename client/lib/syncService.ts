@@ -2,6 +2,7 @@ import { UserData } from "@/contexts/AuthContext";
 import { UserDataResponse, UserDataExistsResponse } from "@shared/api";
 import { ConflictResolver } from "./conflictResolver";
 import { safeStorage } from "./storage";
+import { DataSyncService } from "./dataSync";
 
 export type SyncStatus = "syncing" | "synced" | "error" | "offline";
 
