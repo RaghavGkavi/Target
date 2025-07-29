@@ -13,6 +13,12 @@ export const initializeFirebase = async () => {
       throw new Error("Firebase not available in server environment");
     }
 
+    // Check if we're in PWA mode (different from regular web)
+    const isPWA = window.matchMedia('(display-mode: standalone)').matches ||
+                  window.navigator.standalone ||
+                  document.referrer.includes('android-app://') ||
+                  window.location.protocol === "capacitor:";
+
     const { initializeApp } = await import("firebase/app");
     const { getFirestore } = await import("firebase/firestore");
     const { getAuth } = await import("firebase/auth");
