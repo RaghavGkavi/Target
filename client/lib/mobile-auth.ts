@@ -36,6 +36,7 @@ export function isMobileEnvironment(): boolean {
  */
 export async function getPlatformGoogleAuth() {
   if (isMobileEnvironment()) {
+    const { GoogleAuth } = await import("@codetrix-studio/capacitor-google-auth");
     return GoogleAuth;
   }
   return null;
