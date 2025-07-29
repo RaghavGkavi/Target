@@ -41,10 +41,14 @@ export const initializeFirebase = async () => {
     db = getFirestore(app);
     auth = getAuth(app);
 
-    // Initialize analytics only in production and web environment
-    if (import.meta.env.PROD && !import.meta.env.VITE_MOBILE) {
-      const { getAnalytics } = await import("firebase/analytics");
-      analytics = getAnalytics(app);
+    // Initialize analytics only in production, web environment, and not PWA
+    if (import.meta.env.PROD && !import.meta.env.VITE_MOBILE && !isPWA) {
+      try {
+        const { getAnalytics } = await import("firebase/analytics");
+        analytics = getAnalytics(app);
+      } catch (analyticsError) {
+        console.warn("Analytics initialization failed (expected in PWA):", analyticsError);
+      }
     }
 
     console.log("Firebase initialized successfully");
