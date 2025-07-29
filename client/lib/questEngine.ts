@@ -622,8 +622,7 @@ export class QuestEngine {
     }
 
     // Keep only last 30 days of history to prevent bloat
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
     questSystemData.questHistory = questSystemData.questHistory.filter(
       (quest) => new Date(quest.dateAssigned) >= thirtyDaysAgo,
     );
