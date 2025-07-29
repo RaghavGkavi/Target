@@ -514,7 +514,7 @@ export class QuestEngine {
     questSystemData: QuestSystemData,
     lastLoginDate: Date,
   ): boolean {
-    const today = new Date();
+    const today = getUTCDateOnly();
     const lastGeneration = new Date(questSystemData.lastQuestGeneration);
 
     // Generate new quests if:
@@ -522,8 +522,7 @@ export class QuestEngine {
     // 2. No current quests exist
     // 3. All current quests are completed/failed AND allQuestsCompleted flag is false
 
-    const isDifferentDay =
-      today.toDateString() !== lastGeneration.toDateString();
+    const isDifferentDay = !isSameUTCDay(today, lastGeneration);
     const hasNoCurrentQuests = questSystemData.currentQuests.length === 0;
     const allQuestsCompleted = questSystemData.currentQuests.every(
       (quest) => quest.status === "completed" || quest.status === "failed",
