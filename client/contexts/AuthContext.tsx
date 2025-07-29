@@ -4,6 +4,7 @@ import { QuestEngine, DEFAULT_QUEST_PREFERENCES } from "@/lib/questEngine";
 import { SyncService, SyncState } from "@/lib/syncService";
 import { safeStorage } from "@/lib/storage";
 import { getUTCDateOnly, getUTCTimestamp } from "@/lib/dateUtils";
+import { initializeMobileGoogleAuth, isMobileEnvironment } from "@/lib/mobile-auth";
 
 export interface User {
   id: string;
