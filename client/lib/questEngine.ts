@@ -589,13 +589,19 @@ export class QuestEngine {
     const completedQuestsToday = questSystemData.currentQuests.filter(
       (quest) =>
         quest.status === "completed" &&
-        isSameUTCDay(today, new Date(quest.dateCompleted || quest.dateAssigned)),
+        isSameUTCDay(
+          today,
+          new Date(quest.dateCompleted || quest.dateAssigned),
+        ),
     );
 
     const questsToArchive = questSystemData.currentQuests.filter(
       (quest) =>
         (quest.status === "completed" || quest.status === "failed") &&
-        !isSameUTCDay(today, new Date(quest.dateCompleted || quest.dateAssigned)),
+        !isSameUTCDay(
+          today,
+          new Date(quest.dateCompleted || quest.dateAssigned),
+        ),
     );
 
     // If we need to generate new quests for today
@@ -622,7 +628,7 @@ export class QuestEngine {
     }
 
     // Keep only last 30 days of history to prevent bloat
-    const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
+    const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
     questSystemData.questHistory = questSystemData.questHistory.filter(
       (quest) => new Date(quest.dateAssigned) >= thirtyDaysAgo,
     );

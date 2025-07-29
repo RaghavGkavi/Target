@@ -14,10 +14,11 @@ export const initializeFirebase = async () => {
     }
 
     // Check if we're in PWA mode (different from regular web)
-    const isPWA = window.matchMedia('(display-mode: standalone)').matches ||
-                  window.navigator.standalone ||
-                  document.referrer.includes('android-app://') ||
-                  window.location.protocol === "capacitor:";
+    const isPWA =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.navigator.standalone ||
+      document.referrer.includes("android-app://") ||
+      window.location.protocol === "capacitor:";
 
     const { initializeApp } = await import("firebase/app");
     const { getFirestore } = await import("firebase/firestore");
@@ -47,7 +48,10 @@ export const initializeFirebase = async () => {
         const { getAnalytics } = await import("firebase/analytics");
         analytics = getAnalytics(app);
       } catch (analyticsError) {
-        console.warn("Analytics initialization failed (expected in PWA):", analyticsError);
+        console.warn(
+          "Analytics initialization failed (expected in PWA):",
+          analyticsError,
+        );
       }
     }
 

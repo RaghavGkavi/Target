@@ -93,20 +93,27 @@ export class SyncService {
           finalData = localData;
         } else {
           // Cloud data exists, merge with local data
-          const mergedData = await DataSyncService.mergeUserData(localData, cloudData);
+          const mergedData = await DataSyncService.mergeUserData(
+            localData,
+            cloudData,
+          );
 
           // Upload merged data back to cloud
           await DataSyncService.saveUserDataToCloud(userId, mergedData);
           finalData = mergedData;
         }
       } catch (firebaseError) {
-        console.warn("Firebase sync failed, attempting API fallback:", firebaseError);
+        console.warn(
+          "Firebase sync failed, attempting API fallback:",
+          firebaseError,
+        );
 
         // Fallback to API sync for web version
         const existsResponse = await fetch(`/api/users/${userId}/exists`);
 
         if (existsResponse.ok) {
-          const existsData: UserDataExistsResponse = await existsResponse.json();
+          const existsData: UserDataExistsResponse =
+            await existsResponse.json();
 
           if (!existsData.success) {
             throw new Error(existsData.error || "Failed to check user data");
@@ -119,7 +126,10 @@ export class SyncService {
             const cloudData = await this.downloadUserData(userId);
 
             if (cloudData) {
-              const mergeResult = await this.mergeUserData(localData, cloudData);
+              const mergeResult = await this.mergeUserData(
+                localData,
+                cloudData,
+              );
 
               if (mergeResult.hasConflicts) {
                 this.updateState({
@@ -334,7 +344,10 @@ export class SyncService {
         try {
           await DataSyncService.saveUserDataToCloud(userId, userData);
         } catch (firebaseError) {
-          console.warn("Firebase background sync failed, trying API fallback:", firebaseError);
+          console.warn(
+            "Firebase background sync failed, trying API fallback:",
+            firebaseError,
+          );
           await this.uploadUserData(userId, userData);
         }
 

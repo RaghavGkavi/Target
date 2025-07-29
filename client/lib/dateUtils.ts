@@ -7,14 +7,18 @@
  */
 export function getUTCDateOnly(): Date {
   const now = new Date();
-  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+  return new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+  );
 }
 
 /**
  * Get a date in UTC with time set to midnight
  */
 export function toUTCDateOnly(date: Date): Date {
-  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+  return new Date(
+    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()),
+  );
 }
 
 /**
@@ -38,7 +42,10 @@ export function getDayDifferenceUTC(date1: Date, date2: Date): number {
 /**
  * Check if a date is consecutive to another date (next day in UTC)
  */
-export function isConsecutiveUTCDay(currentDate: Date, previousDate: Date): boolean {
+export function isConsecutiveUTCDay(
+  currentDate: Date,
+  previousDate: Date,
+): boolean {
   return getDayDifferenceUTC(currentDate, previousDate) === 1;
 }
 
@@ -46,7 +53,7 @@ export function isConsecutiveUTCDay(currentDate: Date, previousDate: Date): bool
  * Get the UTC date string in format YYYY-MM-DD
  */
 export function getUTCDateString(date: Date): string {
-  return date.toISOString().split('T')[0];
+  return date.toISOString().split("T")[0];
 }
 
 /**

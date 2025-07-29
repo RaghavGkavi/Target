@@ -4,7 +4,10 @@ import { QuestEngine, DEFAULT_QUEST_PREFERENCES } from "@/lib/questEngine";
 import { SyncService, SyncState } from "@/lib/syncService";
 import { safeStorage } from "@/lib/storage";
 import { getUTCDateOnly, getUTCTimestamp } from "@/lib/dateUtils";
-import { initializeMobileGoogleAuth, isMobileEnvironment } from "@/lib/mobile-auth";
+import {
+  initializeMobileGoogleAuth,
+  isMobileEnvironment,
+} from "@/lib/mobile-auth";
 
 export interface User {
   id: string;
@@ -387,7 +390,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       if (isMobileEnvironment()) {
         // Use native Google Auth for mobile
-        const { GoogleAuth } = await import("@codetrix-studio/capacitor-google-auth");
+        const { GoogleAuth } = await import(
+          "@codetrix-studio/capacitor-google-auth"
+        );
 
         try {
           const result = await GoogleAuth.signIn();
