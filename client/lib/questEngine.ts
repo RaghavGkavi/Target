@@ -326,13 +326,11 @@ export class QuestEngine {
     const preferences = questSystemData.questPreferences;
 
     // Get template IDs to exclude (current quest + recent history + flagged quests)
-    const today = new Date();
+    const today = getUTCDateOnly();
     const recentTemplateIds = questSystemData.questHistory
       .filter((quest) => {
         const questDate = new Date(quest.dateAssigned);
-        const daysDiff = Math.floor(
-          (today.getTime() - questDate.getTime()) / (1000 * 60 * 60 * 24),
-        );
+        const daysDiff = getDayDifferenceUTC(today, questDate);
         return daysDiff <= 7;
       })
       .map((quest) => quest.templateId);
