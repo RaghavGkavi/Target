@@ -580,8 +580,7 @@ export class QuestEngine {
   static processQuestRotation(
     questSystemData: QuestSystemData,
   ): QuestSystemData {
-    const today = new Date();
-    const todayDateString = today.toDateString();
+    const today = getUTCDateOnly();
 
     // Separate quests by status and date
     const activeQuests = questSystemData.currentQuests.filter(
@@ -592,15 +591,13 @@ export class QuestEngine {
     const completedQuestsToday = questSystemData.currentQuests.filter(
       (quest) =>
         quest.status === "completed" &&
-        new Date(quest.dateCompleted || quest.dateAssigned).toDateString() ===
-          todayDateString,
+        isSameUTCDay(today, new Date(quest.dateCompleted || quest.dateAssigned)),
     );
 
     const questsToArchive = questSystemData.currentQuests.filter(
       (quest) =>
         (quest.status === "completed" || quest.status === "failed") &&
-        new Date(quest.dateCompleted || quest.dateAssigned).toDateString() !==
-          todayDateString,
+        !isSameUTCDay(today, new Date(quest.dateCompleted || quest.dateAssigned)),
     );
 
     // If we need to generate new quests for today
