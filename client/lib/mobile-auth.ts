@@ -1,11 +1,11 @@
-import { isNativePlatform } from '@capacitor/core';
+import { Capacitor } from '@capacitor/core';
 
 /**
  * Initialize Google Auth for mobile platforms
  */
 export async function initializeMobileGoogleAuth(): Promise<void> {
   try {
-    // Check if we're in a mobile environment using the reliable Capacitor utility
+    // Check if we're in a mobile environment using the compatible method
     if (isMobileEnvironment()) {
       // Dynamically import the Google Auth plugin only in mobile environment
       const { GoogleAuth } = await import(
@@ -26,12 +26,12 @@ export async function initializeMobileGoogleAuth(): Promise<void> {
 
 /**
  * Check if we're running in a mobile environment.
- * This is the corrected, more reliable implementation.
+ * This implementation is backward-compatible with older Capacitor versions.
  */
 export function isMobileEnvironment(): boolean {
-  // isNativePlatform() correctly identifies if the code is running on a native device,
-  // regardless of whether it's a live reload or a production build.
-  return isNativePlatform();
+  const platform = Capacitor.getPlatform();
+  // This will be "android" or "ios" on a native device, and "web" otherwise.
+  return platform === 'android' || platform === 'ios';
 }
 
 /**
