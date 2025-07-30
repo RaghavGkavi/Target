@@ -1,5 +1,39 @@
+// C:/Users/valtr/Target/android/settings.gradle
+
+// --- ADD THIS ENTIRE BLOCK AT THE TOP ---
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+// C:/Users/valtr/Target/android/settings.gradle
+
+// ... (pluginManagement block remains the same)
+
+dependencyResolutionManagement {
+    //repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        // --- ADD THE FLATDIR BLOCK HERE ---
+        flatDir {
+            // Note the updated paths relative to the root project directory
+            dirs 'capacitor-cordova-android-plugins/src/main/libs', 'app/libs'
+        }
+        // --- END OF ADDED BLOCK ---
+    }
+}
+
+// ... (rest of the file remains the same)
+// --- END OF ADDED BLOCK ---
+
 include ':app'
 include ':capacitor-cordova-android-plugins'
 project(':capacitor-cordova-android-plugins').projectDir = new File('./capacitor-cordova-android-plugins/')
+include ':codetrix-studio-capacitor-google-auth'
+project(':codetrix-studio-capacitor-google-auth').projectDir = new File('../node_modules/@codetrix-studio/capacitor-google-auth/android')
 
 apply from: 'capacitor.settings.gradle'
+    

@@ -17,7 +17,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
-import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth' // Assuming you have a Google Auth plugin set up
 
 export default function Auth() {
   const navigate = useNavigate();

@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: "Target Mobile",
   webDir: "dist/spa",
   server: {
-    androidScheme: "https",
+    androidScheme: "http",
   },
   plugins: {
     SplashScreen: {

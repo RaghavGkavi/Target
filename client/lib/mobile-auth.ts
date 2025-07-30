@@ -1,23 +1,19 @@
+import { isNativePlatform } from '@capacitor/core';
+
 /**
  * Initialize Google Auth for mobile platforms
  */
 export async function initializeMobileGoogleAuth(): Promise<void> {
   try {
-    // Check if we're in a mobile environment
-    const isMobile =
-      import.meta.env.VITE_MOBILE === "true" ||
-      (typeof window !== "undefined" &&
-        window.location.protocol === "capacitor:");
-
-    if (isMobile) {
+    // Check if we're in a mobile environment using the reliable Capacitor utility
+    if (isMobileEnvironment()) {
       // Dynamically import the Google Auth plugin only in mobile environment
       const { GoogleAuth } = await import(
         "@codetrix-studio/capacitor-google-auth"
       );
 
       await GoogleAuth.initialize({
-        clientId:
-          "966058326327-vqqh1rgur3fv14drtb0m2gdv0bnb8kbi.apps.googleusercontent.com",
+        clientId: "536356601851-da4n93omgcdupo19scn650j011bph9sb.apps.googleusercontent.com",
         scopes: ["profile", "email"],
         grantOfflineAccess: true,
       });
@@ -29,13 +25,13 @@ export async function initializeMobileGoogleAuth(): Promise<void> {
 }
 
 /**
- * Check if we're running in a mobile environment
+ * Check if we're running in a mobile environment.
+ * This is the corrected, more reliable implementation.
  */
 export function isMobileEnvironment(): boolean {
-  return (
-    import.meta.env.VITE_MOBILE === "true" ||
-    (typeof window !== "undefined" && window.location.protocol === "capacitor:")
-  );
+  // isNativePlatform() correctly identifies if the code is running on a native device,
+  // regardless of whether it's a live reload or a production build.
+  return isNativePlatform();
 }
 
 /**

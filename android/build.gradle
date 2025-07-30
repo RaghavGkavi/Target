@@ -1,30 +1,28 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
+// The buildscript block must come before the plugins block.
 buildscript {
-    
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.11.1'
-        classpath 'com.google.gms:google-services:4.3.15'
+        // The google-services classpath is no longer needed here because the plugins block handles it.
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.20'
-
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
 
-apply from: "variables.gradle"
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
+// The plugins block is now at the top-level, where it belongs.
+plugins {
+    id 'com.google.gms.google-services' version '4.4.3' apply false
 }
+
+
+apply from: "variables.gradle"
 
 task clean(type: Delete) {
     delete rootProject.buildDir
